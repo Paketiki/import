@@ -13,8 +13,8 @@ from app.schemes.users import (
     SUserAdd,
     SUserAddRequest,
     SUserAuth,
-    SUserGetWithRels,
 )
+from app.schemes.relations_users_roles import SUserGetWithRels
 from app.services.base import BaseService
 import jwt
 from passlib.context import CryptContext
