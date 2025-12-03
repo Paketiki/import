@@ -1,47 +1,45 @@
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from typing import Optional
+
+from app.database.database import get_db
 from typing import Annotated
-
-from fastapi import Depends, Request
-from pydantic import BaseModel, Field
-
-from app.database.database import async_session_maker
-from app.exceptions.auth import (
-    InvalidJWTTokenError,
-    InvalidTokenHTTPError,
-    NoAccessTokenHTTPError,
-)
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.auth import AuthService
-from app.database.db_manager import DBManager
+from app.services.users import UserService
+from app.schemas.users import UserInDB
+from app.schemas.enums import UserRole
+from app.exceptions import AuthenticationError, InsufficientPermissionsError
+from app.utils.dependencies import get_user_service, get_auth_service
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
 
-class PaginationParams(BaseModel):
-    page: int | None = Field(default=1, ge=1)
-    per_page: int | None = Field(default=5, ge=1, le=30)
-
-
-PaginationDep = Annotated[PaginationParams, Depends()]
-
-
-def get_token(request: Request) -> str:
-    token = request.cookies.get("access_token", None)
-    if token is None:
-        raise NoAccessTokenHTTPError
-    return token
-
-
-def get_current_user_id(token: str = Depends(get_token)) -> int:
+async def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    auth_service: AuthService = Depends(get_auth_service),
+    user_service: UserService = Depends(get_user_service),
+) -> UserInDB:
     try:
-        data = AuthService.decode_token(token)
-    except InvalidJWTTokenError:
-        raise InvalidTokenHTTPError
-    return data["user_id"]
+        token_data = auth_service.verify_token(token)
+    except AuthenticationError:
+        raise AuthenticationError()
+    
+    user = await user_service.get_user(token_data.username)
+    if user is None:
+        raise AuthenticationError()
+    
+    return user
 
+async def get_current_active_user(
+    current_user: UserInDB = Depends(get_current_user),
+) -> UserInDB:
+    return current_user
 
-UserIdDep = Annotated[int, Depends(get_current_user_id)]
+async def get_current_admin_user(
+    current_user: UserInDB = Depends(get_current_user),
+) -> UserInDB:
+    if current_user.role != UserRole.ADMIN:
+        raise InsufficientPermissionsError()
+    return current_user
 
-
-async def get_db():
-    async with DBManager(session_factory=async_session_maker) as db:
-        yield db
-
-
-DBDep = Annotated[DBManager, Depends(get_db)]
+DBDep = Annotated[AsyncSession, Depends(get_db)]

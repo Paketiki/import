@@ -1,23 +1,23 @@
-from app.database.database import async_session_maker
-from app.repositories.roles import RolesRepository
-from app.repositories.users import UsersRepository
+from .database import engine, Base
+from app.models import users, movies, reviews, picks, roles
+from sqlalchemy import text
 
+async def init_db():
+    """
+    Инициализация базы данных - создание таблиц
+    """
+    try:
+        async with engine.begin() as conn:
+            # Для SQLite включаем поддержку внешних ключей
+            if "sqlite" in str(engine.url):
+                await conn.execute(text("PRAGMA foreign_keys=ON"))
 
-class DBManager:
-    def __init__(self, session_factory: async_session_maker):
-        self.session_factory = session_factory
-
-    async def __aenter__(self):
-        self.session = self.session_factory()
-        # TODO Добавить сюда созданные репозитории
-        # Пример:
-        self.users = UsersRepository(self.session)
-        self.roles = RolesRepository(self.session)
-        return self
-
-    async def __aexit__(self, *args):
-        await self.session.rollback()
-        await self.session.close()
-
-    async def commit(self):
-        await self.session.commit()
+            
+            # Создаем все таблицы
+            await conn.run_sync(Base.metadata.create_all)
+            
+        print("✓ Database tables created successfully")
+        return True
+    except Exception as e:
+        print(f"✗ Error creating database tables: {e}")
+        raise

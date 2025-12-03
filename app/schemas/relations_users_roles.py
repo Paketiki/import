@@ -1,6 +1,5 @@
-from app.schemes.users import SUserGet
-from app.schemes.roles import SRoleGet
-
+from app.schemas.users import SUserGet
+from app.schemas.roles import SRoleGet
 
 class SRoleGetWithRels(SRoleGet):
     users: list[SUserGet] | None = None

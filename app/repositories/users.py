@@ -1,28 +1,22 @@
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, update, delete, func, desc, and_, or_
+from typing import List, Optional
+from app.models.users import User
+from .base import BaseRepository
 
-from app.models.users import UserModel
-from app.repositories.base import BaseRepository
-from app.schemes.users import SUserGet
-from app.schemes.relations_users_roles import SUserGetWithRels
-
-
-class UsersRepository(BaseRepository):
-    model = UserModel
-    schema = SUserGet
-
-    async def get_one_or_none_with_role(self, **filter_by):
-        query = (
-            select(self.model)
-            .filter_by(**filter_by)
-            .options(selectinload(self.model.role))
+class UserRepository(BaseRepository[User]):
+    def __init__(self, db: AsyncSession):
+        super().__init__(User, db)
+    
+    async def get_by_username(self, username: str) -> Optional[User]:
+        return await self.get_by_field("username", username)
+    
+    async def get_users_by_role(self, role: str, skip: int = 0, limit: int = 100) -> List[User]:
+        return await self.get_all(
+            skip=skip,
+            limit=limit,
+            filters={"role": role}
         )
-
-        result = await self.session.execute(query)
-
-        model = result.scalars().one_or_none()
-        if model is None:
-            return None
-
-        result = SUserGetWithRels.model_validate(model, from_attributes=True)
-        return result
+    
+    async def update_password(self, username: str, hashed_password: str) -> Optional[User]:
+        return await self.update(username, {"password": hashed_password})

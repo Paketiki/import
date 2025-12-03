@@ -1,60 +1,41 @@
-from fastapi import APIRouter
-from starlette.responses import Response
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from datetime import timedelta
 
-from app.api.dependencies import DBDep, UserIdDep
-from app.exceptions.auth import (
-    UserAlreadyExistsError,
-    UserAlreadyExistsHTTPError,
-    UserNotFoundError,
-    UserNotFoundHTTPError,
-    InvalidPasswordError,
-    InvalidPasswordHTTPError,
-)
-from app.schemes.users import SUserAddRequest, SUserAuth
-from app.schemes.relations_users_roles import SUserGetWithRels
+from app.services.users import UserService
 from app.services.auth import AuthService
+from app.schemas.auth import Token
+from app.schemas.users import UserCreate, UserInDB
+from app.utils.config import settings
+from app.utils.dependencies import get_user_service, get_auth_service
 
-router = APIRouter(prefix="/auth", tags=["Авторизация и аутентификация"])
+router = APIRouter(tags=["kinovzor-auth"])
 
+@router.post("/auth/login", response_model=Token)
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    user_service: UserService = Depends(get_user_service),
+    auth_service: AuthService = Depends(get_auth_service),
+):
+    user = await user_service.authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
+    access_token = auth_service.create_access_token(
+        data={"sub": user.username, "role": user.role.value},
+        expires_delta=access_token_expires
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/register", summary="Регистрация нового пользователя")
-async def register_user(
-    db: DBDep,
-    user_data: SUserAddRequest,
-) -> dict[str, str]:
-    try:
-        await AuthService(db).register_user(user_data)
-    except UserAlreadyExistsError:
-        raise UserAlreadyExistsHTTPError
-    return {"status": "OK"}
-
-
-@router.post("/login", summary="Аутентификация пользователя")
-async def login_user(
-    db: DBDep,
-    response: Response,
-    user_data: SUserAuth,
-) -> dict[str, str]:
-    try:
-        access_token: str = await AuthService(db).login_user(user_data)
-    except UserNotFoundError:
-        raise UserNotFoundHTTPError
-    except InvalidPasswordError:
-        raise InvalidPasswordHTTPError
-    response.set_cookie("access_token", access_token)
-    return {"access_token": access_token}
-
-
-@router.get("/me", summary="Получение текущего пользователя для профиля")
-async def get_me(db: DBDep, user_id: UserIdDep) -> SUserGetWithRels | None:
-    try:
-        user: None | SUserGetWithRels = await AuthService(db).get_me(user_id)
-    except UserNotFoundError:
-        raise UserNotFoundHTTPError
-    return user
-
-
-@router.post("/logout", summary="Выход пользователя из системы")
-async def logout(response: Response) -> dict[str, str]:
-    response.delete_cookie("access_token")
-    return {"status": "OK"}
+@router.post("/auth/register", response_model=UserInDB)
+async def register(
+    user_create: UserCreate,
+    user_service: UserService = Depends(get_user_service),
+):
+    return await user_service.create_user(user_create)

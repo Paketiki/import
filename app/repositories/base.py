@@ -1,98 +1,89 @@
-from pydantic import BaseModel
-from sqlalchemy import delete, insert, select, update
-from sqlalchemy.exc import IntegrityError
-
-
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, update, delete, func, desc, and_, or_
+from sqlalchemy.orm import selectinload
+from typing import List, Optional, Dict, Any, Type, TypeVar, Generic
 from app.database.database import Base
-from app.exceptions.base import ObjectAlreadyExistsError
+from app.exceptions.base import NotFoundError
 
+ModelType = TypeVar("ModelType", bound=Base) # type: ignore
 
-class BaseRepository:
-    model: Base = None
-    schema: BaseModel = None
-
-    def __init__(self, session):
-        self.session = session
-
-    async def get_filtered(
-        self,
-        limit: int | None = None,
-        offset: int | None = None,
-        *filter,
-        **filter_by,
-    ) -> list[BaseModel]:
-        filter_by = {k: v for k, v in filter_by.items() if v is not None}
-        filter_ = [v for v in filter if v is not None]
-
-        query = select(self.model).filter(*filter_).filter_by(**filter_by)
-
-        if limit is not None and offset is not None:
-            query = query.limit(limit).offset(offset)
-        # print(query.compile(bind=engine, compile_kwargs={"literal_binds": True}))
-        result = await self.session.execute(query)
-        result = [
-            self.schema.model_validate(model, from_attributes=True)
-            for model in result.scalars().all()
-        ]
-
-        return result
-
-    async def get_all(self, *args, **kwargs) -> list[BaseModel]:
-        """Возращает все записи в БД из связаной таблицы"""
-        return await self.get_filtered(*args, **kwargs)
-
-    async def get_one_or_none(self, **filter_by) -> None | BaseModel:
-        query = select(self.model).filter_by(**filter_by)
-
-        result = await self.session.execute(query)
-
-        model = result.scalars().one_or_none()
-        if model is None:
-            return None
-        result = self.schema.model_validate(model, from_attributes=True)
-        return result
-
-    async def add(self, data: BaseModel):
-        try:
-            add_stmt = (
-                insert(self.model).values(**data.model_dump()).returning(self.model)
-            )
-            # print(add_stmt.compile(compile_kwargs={"literal_binds": True}))
-
-            result = await self.session.execute(add_stmt)
-
-            model = result.scalars().one_or_none()
-            if model is None:
-                return None
-            return self.schema.model_validate(model, from_attributes=True)
-
-        except IntegrityError as exc:
-            raise ObjectAlreadyExistsError from exc
-
-    async def add_bulk(self, data: list[BaseModel]) -> None | BaseModel:
-        """
-        Метод для множественного добавления данных в таблицу
-        """
-        add_stmt = insert(self.model).values([item.model_dump() for item in data])
-        # print(add_stmt.compile(compile_kwargs={"literal_binds": True}))
-        await self.session.execute(add_stmt)
-
-    async def delete(self, *filters, **filter_by) -> None:
-        delete_stmt = delete(self.model)
-        if filters:
-            delete_stmt = delete_stmt.where(*filters)
-        if filter_by:
-            delete_stmt = delete_stmt.filter_by(**filter_by)
-
-        await self.session.execute(delete_stmt)
-        await self.session.commit()
-
-    async def edit(
-        self, data: BaseModel, exclude_unset: bool = False, **filter_by
-    ) -> None:
-        edit_stmt = (
-            update(self.model)
-            .filter_by(**filter_by)
-            .values(**data.model_dump(exclude_unset=exclude_unset))
+class BaseRepository(Generic[ModelType]):
+    def __init__(self, model: Type[ModelType], db: AsyncSession):
+        self.model = model
+        self.db = db
+    
+    async def get(self, id: Any) -> Optional[ModelType]:
+        result = await self.db.execute(
+            select(self.model).where(self.model.id == id)
         )
-        await self.session.execute(edit_stmt)
+        return result.scalar_one_or_none()
+    
+    async def get_by_field(self, field_name: str, value: Any) -> Optional[ModelType]:
+        result = await self.db.execute(
+            select(self.model).where(getattr(self.model, field_name) == value)
+        )
+        return result.scalar_one_or_none()
+    
+    async def get_all(
+        self,
+        skip: int = 0,
+        limit: int = 100,
+        filters: Optional[Dict[str, Any]] = None,
+        order_by: Optional[str] = None
+    ) -> List[ModelType]:
+        query = select(self.model)
+        
+        if filters:
+            for field, value in filters.items():
+                if hasattr(self.model, field):
+                    if isinstance(value, list):
+                        query = query.where(getattr(self.model, field).in_(value))
+                    else:
+                        query = query.where(getattr(self.model, field) == value)
+        
+        if order_by:
+            if order_by.startswith("-"):
+                query = query.order_by(desc(getattr(self.model, order_by[1:])))
+            else:
+                query = query.order_by(getattr(self.model, order_by))
+        
+        query = query.offset(skip).limit(limit)
+        result = await self.db.execute(query)
+        return result.scalars().all()
+    
+    async def create(self, obj_in: Dict[str, Any]) -> ModelType:
+        db_obj = self.model(**obj_in)
+        self.db.add(db_obj)
+        await self.db.commit()
+        await self.db.refresh(db_obj)
+        return db_obj
+    
+    async def update(self, id: Any, obj_in: Dict[str, Any]) -> Optional[ModelType]:
+        result = await self.db.execute(
+            update(self.model)
+            .where(self.model.id == id)
+            .values(**obj_in)
+        )
+        await self.db.commit()
+        
+        if result.rowcount > 0:
+            return await self.get(id)
+        return None
+    
+    async def delete(self, id: Any) -> bool:
+        result = await self.db.execute(
+            delete(self.model).where(self.model.id == id)
+        )
+        await self.db.commit()
+        return result.rowcount > 0
+    
+    async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
+        query = select(func.count()).select_from(self.model)
+        
+        if filters:
+            for field, value in filters.items():
+                if hasattr(self.model, field):
+                    query = query.where(getattr(self.model, field) == value)
+        
+        result = await self.db.execute(query)
+        return result.scalar()

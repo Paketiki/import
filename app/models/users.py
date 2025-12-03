@@ -1,19 +1,16 @@
-from typing import TYPE_CHECKING
-
-from sqlalchemy import String, Float, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Column, String, TIMESTAMP
+from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.database.database import Base
+from app.schemas.enums import UserRole  # Импортируем из схем
 
-if TYPE_CHECKING:
-    from app.models.roles import RoleModel
-
-
-class UserModel(Base):
+class User(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-    email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(String(300), nullable=False)
-
-    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), nullable=False)
-    role: Mapped["RoleModel"] = relationship(back_populates="users")
+    
+    username = Column(String(50), primary_key=True, index=True)
+    password = Column(String(255), nullable=False)
+    role = Column(String(10), nullable=False, default=UserRole.VIEWER.value)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    
+    reviews = relationship("Review", back_populates="user", cascade="all, delete-orphan")

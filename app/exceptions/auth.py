@@ -1,51 +1,17 @@
-from app.exceptions.base import MyAppError, MyAppHTTPError
+from fastapi import HTTPException, status
 
+# Удаляем несуществующий импорт и создаем свои классы
+class AuthenticationError(HTTPException):
+    def __init__(self, detail: str = "Could not validate credentials"):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=detail,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-class UserAlreadyExistsError(MyAppError):
-    detail = "Пользователь с таким email уже существует"
-
-
-class InvalidJWTTokenError(MyAppError):
-    detail = "Неверный токен"
-
-
-class JWTTokenExpiredError(MyAppError):
-    detail = "Токен истек, необходимо снова авторизоваться"
-
-
-class InvalidPasswordError(MyAppError):
-    detail = "Неверный пароль"
-
-
-class UserNotFoundError(MyAppError):
-    detail = "Пользователя не существует"
-
-
-class InvalidTokenHTTPError(MyAppHTTPError):
-    status_code = 401
-    detail = "Неверный токен доступа"
-
-
-class JWTTokenExpiredHTTPError(MyAppHTTPError):
-    status_code = 401
-    detail = "Токен истек, необходимо снова авторизоваться"
-
-
-class NoAccessTokenHTTPError(MyAppHTTPError):
-    detail = "Вы не предоставили токен доступа"
-    status_code = 401
-
-
-class UserAlreadyExistsHTTPError(MyAppHTTPError):
-    status_code = 409
-    detail = "Пользователь с таким email уже существует"
-
-
-class UserNotFoundHTTPError(MyAppHTTPError):
-    status_code = 401
-    detail = "Пользователя не существует"
-
-
-class InvalidPasswordHTTPError(MyAppHTTPError):
-    status_code = 401
-    detail = "Неверный пароль"
+class InsufficientPermissionsError(HTTPException):
+    def __init__(self, detail: str = "Not enough permissions"):
+        super().__init__(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=detail,
+        )
