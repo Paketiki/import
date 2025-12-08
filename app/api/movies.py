@@ -69,7 +69,6 @@ async def read_movie(
 @router.post("/movies", response_model=MovieInDB)
 async def create_movie(
     movie: MovieCreate,
-    current_user = Depends(get_current_admin_user),
     movie_service: MovieService = Depends(get_movie_service),
 ):
     return await movie_service.create_movie(movie)
@@ -78,7 +77,6 @@ async def create_movie(
 async def update_movie(
     movie_id: int,
     movie_update: MovieUpdate,
-    current_user = Depends(get_current_admin_user),
     movie_service: MovieService = Depends(get_movie_service),
 ):
     return await movie_service.update_movie(movie_id, movie_update)
@@ -86,7 +84,6 @@ async def update_movie(
 @router.delete("/movies/{movie_id}")
 async def delete_movie(
     movie_id: int,
-    current_user = Depends(get_current_admin_user),
     movie_service: MovieService = Depends(get_movie_service),
 ):
     await movie_service.delete_movie(movie_id)
@@ -103,7 +100,6 @@ async def get_movie_stats(
 async def add_movie_pick(
     movie_id: int,
     pick_id: int,
-    current_user = Depends(get_current_admin_user),
     movie_service: MovieService = Depends(get_movie_service),
 ):
     await movie_service.add_pick_to_movie(movie_id, pick_id)
@@ -113,7 +109,6 @@ async def add_movie_pick(
 async def remove_movie_pick(
     movie_id: int,
     pick_id: int,
-    current_user = Depends(get_current_admin_user),
     movie_service: MovieService = Depends(get_movie_service),
 ):
     await movie_service.remove_pick_from_movie(movie_id, pick_id)

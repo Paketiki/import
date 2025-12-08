@@ -4,5 +4,6 @@ from .reviews import Review
 from .picks import Pick
 from .roles import Role
 from .movie_stats import MovieStat
+from .base import Base
 
-__all__ = ["User", "Movie", "MoviePick", "Review", "Pick", "Role", "MovieStat"]
+__all__ = ["User", "Movie", "MoviePick", "Review", "Pick", "Role", "MovieStat", "Base"]

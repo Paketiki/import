@@ -1,43 +1,40 @@
 from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.pool import QueuePool
 import logging
-from typing import Generator
-from contextlib import contextmanager
+from typing import Generator, AsyncGenerator
+from contextlib import asynccontextmanager
 
 from app.config import settings
 
 # Настройка логирования
 logger = logging.getLogger(__name__)
 
-# Создаем движок базы данных с оптимизациями
-engine = create_engine(
-    settings.DATABASE_URL, # ← исправлено: было settings.database_url
-    poolclass=QueuePool,
-    pool_size=10,
-    max_overflow=20,
-    pool_timeout=30,
-    pool_recycle=3600,
-    echo=settings.DEBUG,  # Используем настройку DEBUG из конфига
+# Создаем асинхронный движок базы данных
+engine = create_async_engine(
+    settings.DATABASE_URL.replace("sqlite:///", "sqlite+aiosqlite:///"),
+    echo=settings.DEBUG,
     connect_args={"check_same_thread": False}
-    if settings.DATABASE_URL.startswith("sqlite") 
+    if settings.DATABASE_URL.startswith("sqlite")
     else {}
 )
+
 
 # Для SQLite добавляем обработчики событий
 if settings.DATABASE_URL.startswith("sqlite"):
     
-    @event.listens_for(engine, "connect")
+    @event.listens_for(engine.sync_engine, "connect")
     def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("PRAGMA journal_mode=WAL")
         cursor.execute("PRAGMA synchronous=NORMAL")
         cursor.close()
-
-# Создаем фабрику сессий
+# Создаем фабрику асинхронных сессий
 SessionLocal = sessionmaker(
+    class_=AsyncSession,
     autocommit=False,
     autoflush=False,
     bind=engine,
@@ -56,10 +53,10 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Генератор зависимости для FastAPI
-def get_db() -> Generator:
+# Асинхронный генератор зависимости для FastAPI
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
-    Dependency для получения сессии базы данных.
+    Dependency для получения асинхронной сессии базы данных.
     Используется в FastAPI Depends.
     """
     db = SessionLocal()
@@ -68,29 +65,29 @@ def get_db() -> Generator:
         logger.debug("Database session yielded successfully")
     except Exception as e:
         logger.error(f"Database session error: {e}")
-        db.rollback()
+        await db.rollback()
         raise
     finally:
-        db.close()
+        await db.close()
         logger.debug("Database session closed")
 
-# Контекстный менеджер для работы с БД
-@contextmanager
-def db_session():
+# Асинхронный контекстный менеджер для работы с БД
+@asynccontextmanager
+async def db_session():
     """
-    Контекстный менеджер для работы с сессией БД.
+    Асинхронный контекстный менеджер для работы с сессией БД.
     """
     session = SessionLocal()
     try:
         yield session
-        session.commit()
+        await session.commit()
         logger.debug("Transaction committed successfully")
     except Exception as e:
-        session.rollback()
+        await session.rollback()
         logger.error(f"Transaction rolled back due to error: {e}")
         raise
     finally:
-        session.close()
+        await session.close()
         logger.debug("Session closed")
 
 # Проверка подключения к БД

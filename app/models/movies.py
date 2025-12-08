@@ -7,12 +7,14 @@ class Movie(Base):
     __tablename__ = 'movies'
     
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(200), nullable=False)
+    title = Column(String(200), index=True, nullable=False)
     description = Column(Text)
     release_year = Column(Integer)
     genre = Column(String(100))
     duration = Column(Integer)
     rating = Column(Float)
+    overview = Column(Text)
+    poster = Column(String(500))
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True)
     creator = relationship("User", back_populates="movies")
     stat = relationship("MovieStat", back_populates="movie", uselist=False)

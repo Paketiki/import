@@ -63,7 +63,7 @@ class MovieService:
         return result
     
     async def create_movie(self, movie_create: MovieCreate) -> MovieInDB:
-        movie_dict = movie_create.dict()
+        movie_dict = movie.dict()
         movie = await self.movie_repo.create(movie_dict)
         return MovieInDB.from_orm(movie)
     

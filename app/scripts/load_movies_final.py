@@ -25,7 +25,8 @@ def get_or_create_system_user(db):
     try:
         new_user = User(
             username="system_loader",
-            email="system@movieapp.com"
+            email="system@movieapp.com",
+            password_hash="system_loader_hash"  # Добавляем обязательное поле
         )
         db.add(new_user)
         db.commit()
@@ -54,7 +55,7 @@ def load_movies_safe(use_system_user=True):
         
         # Загружаем фильмы
         loader = MovieLoader(db)
-        result = loader.load_movies_to_db(
+        result = loader.load_movies_from_list(
             created_by_user_id=user_id,
             skip_existing=True
         )
@@ -65,32 +66,32 @@ def load_movies_safe(use_system_user=True):
         print("=" * 50)
         
         if "error" in result:
-            print(f"❌ Ошибка: {result['error']}")
+            print(f"Error: {result['error']}")
             return 1
         
-        print(f"📊 Всего фильмов в файле: {result['total_in_file']}")
-        print(f"✅ Успешно загружено: {result['loaded']}")
-        print(f"⏭️ Пропущено (уже существуют): {result['skipped']}")
+        print(f"Total movies in file: {result['total_in_file']}")
+        print(f"Successfully loaded: {result['loaded']}")
+        print(f"Skipped (already exist): {result['skipped']}")
         
         if result['errors']:
-            print(f"\n⚠️ Ошибки ({len(result['errors'])}):")
+            print(f"\nErrors ({len(result['errors'])}):")
             for i, error in enumerate(result['errors'], 1):
                 print(f"  {i}. {error}")
         
-        print(f"\n💡 Использован user_id: {user_id if user_id else 'не указан'}")
+        print(f"\nUsed user_id: {user_id if user_id else 'not specified'}")
         
         # Показываем пример загруженных данных
         if result['loaded'] > 0:
             from app.models.movies import Movie
             latest_movies = db.query(Movie).order_by(Movie.id.desc()).limit(3).all()
-            print(f"\n📝 Последние добавленные фильмы:")
+            print(f"\nLatest added movies:")
             for movie in latest_movies:
                 print(f"  • {movie.title} ({movie.release_year})")
         
         return 0
         
     except Exception as e:
-        print(f"\n❌ Критическая ошибка: {e}")
+        print(f"\nCritical error: {e}")
         import traceback
         traceback.print_exc()
         return 1
@@ -101,13 +102,9 @@ if __name__ == "__main__":
     # Параметры загрузки
     USE_SYSTEM_USER = True  # Измените на False, если не хотите создавать пользователя
     
-    print("Настройки загрузки:")
-    print(f"  • Использовать системного пользователя: {'Да' if USE_SYSTEM_USER else 'Нет'}")
-    print(f"  • Пропускать существующие фильмы: Да")
+    print("Loading settings:")
+    print(f"  • Use system user: {'Yes' if USE_SYSTEM_USER else 'No'}")
+    print(f"  • Skip existing movies: Yes")
     
-    response = input("\nНачать загрузку? (y/n): ")
-    if response.lower() == 'y':
-        sys.exit(load_movies_safe(USE_SYSTEM_USER))
-    else:
-        print("Загрузка отменена")
-        sys.exit(0)
+    # Автоматически начинаем загрузку без запроса подтверждения
+    sys.exit(load_movies_safe(USE_SYSTEM_USER))

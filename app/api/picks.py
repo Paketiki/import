@@ -34,7 +34,6 @@ async def read_pick_by_name(
 @router.post("/picks", response_model=PickInDB)
 async def create_pick(
     pick: PickCreate,
-    current_user = Depends(get_current_admin_user),
     pick_service: PickService = Depends(get_pick_service),
 ):
     return await pick_service.create_pick(pick)
@@ -43,7 +42,6 @@ async def create_pick(
 async def update_pick(
     pick_id: int,
     pick_update: PickCreate,
-    current_user = Depends(get_current_admin_user),
     pick_service: PickService = Depends(get_pick_service),
 ):
     return await pick_service.update_pick(pick_id, pick_update)
@@ -51,7 +49,6 @@ async def update_pick(
 @router.delete("/picks/{pick_id}")
 async def delete_pick(
     pick_id: int,
-    current_user = Depends(get_current_admin_user),
     pick_service: PickService = Depends(get_pick_service),
 ):
     await pick_service.delete_pick(pick_id)

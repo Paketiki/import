@@ -7,6 +7,7 @@ class Review(Base):
     __tablename__ = "reviews"
     
     id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text)
     movie_id = Column(Integer, ForeignKey("movies.id", ondelete="CASCADE"), nullable=False, index=True)
     username = Column(String(50), ForeignKey("users.username", ondelete="CASCADE"), nullable=False, index=True)
     rating = Column(Integer, nullable=False, index=True)

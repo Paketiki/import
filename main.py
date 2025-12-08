@@ -29,6 +29,9 @@ from app.api.movie_stats import router as movie_stats_router
 
 from fastapi import FastAPI
 
+from app.schemas.movies import MovieCreate
+from app.services.movies import MovieService
+
 app = FastAPI()
 
 @app.get("/items/")
@@ -43,8 +46,8 @@ logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(settings.LOG_FILE),
-        logging.StreamHandler()
+        logging.FileHandler(settings.LOG_FILE, encoding='utf-8'),
+        logging.StreamHandler(sys.stdout)
     ]
 )
 
@@ -67,8 +70,8 @@ async def lifespan(app: FastAPI):
         raise
     
     logger.info("✅ Приложение успешно запущено")
-    logger.info(f"📖 API документация: http://localhost:8000{settings.api_prefix}/docs")
-    logger.info(f"📖 ReDoc документация: http://localhost:8000{settings.api_prefix}/redoc")
+    logger.info(f"API документация: http://localhost:8000{settings.api_prefix}/docs")
+    logger.info(f"ReDoc документация: http://localhost:8000{settings.api_prefix}/redoc")
     
     # Проверяем наличие папок для фронтенда
     templates_dir = current_dir / "templates"
@@ -125,6 +128,7 @@ app = FastAPI(
     redoc_url=f"{settings.API_V1_PREFIX}/redoc",
     swagger_ui_oauth2_redirect_url=None,
     swagger_ui_init_oauth=None,
+    swagger_ui_parameters={"deepLinking": False, "displayOperationId": False},
     lifespan=lifespan,
 )
 
@@ -330,6 +334,12 @@ async def health_check():
     
     return system_info
 
+# В вашем эндпоинте
+@app.post("/movies")
+async def create_movie(movie: MovieCreate):  # Проверьте MovieCreate схему
+    return await MovieService.create_movie(movie)
+
+
 @app.get("/info", tags=["monitoring"], include_in_schema=False)
 async def app_info():
     """
@@ -366,13 +376,3 @@ async def app_info():
         }
     }
 
-# Запуск приложения
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host="127.0.0.1",
-        port=8000,
-        reload=settings.debug,
-        log_level="info" if settings.debug else "warning",
-        access_log=True,
-    )

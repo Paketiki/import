@@ -41,7 +41,7 @@ class MovieRepository(BaseRepository[Movie]):
             )
         
         if year:
-            query = query.where(Movie.year == year)
+            query = query.where(Movie.release_year == year)
         
         if genre:
             query = query.where(Movie.genre.ilike(f"%{genre}%"))
@@ -58,7 +58,8 @@ class MovieRepository(BaseRepository[Movie]):
         query = query.order_by(desc(Movie.rating)).offset(skip).limit(limit)
         
         result = await self.db.execute(query)
-        return result.scalars().all()
+        movies = result.scalars().all()
+        return movies
     
     async def get_top_movies(self, limit: int = 10) -> List[Movie]:
         result = await self.db.execute(
