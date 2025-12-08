@@ -8,10 +8,11 @@ from fastapi.responses import RedirectResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
+from datetime import datetime
+import logging
 
+from app.database.database import engine, Base, init_db as init_database
 from app.config import settings
-from app.database.db_manager import init_db
-from app.exceptions import setup_exception_handlers
 
 # Импорт роутеров
 from app.api.sample import router as sample_router
@@ -24,8 +25,30 @@ from app.api.picks import router as picks_router
 from app.api.movie_picks import router as movie_picks_router
 from app.api.movie_stats import router as movie_stats_router
 
+
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/items/")
+async def read_items():
+    return {"message": "No auth required"}
+
 current_dir = Path(__file__).parent
 sys.path.append(str(current_dir))
+
+# Настройка логирования
+logging.basicConfig(
+    level=getattr(logging, settings.LOG_LEVEL),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(settings.LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,28 +56,28 @@ async def lifespan(app: FastAPI):
     Контекстный менеджер для управления жизненным циклом приложения
     """
     # Startup логика
-    print("Starting KinoVzor API...")
+    logger.info(f"🚀 Запуск {settings.APP_NAME} v{settings.APP_VERSION}")
     
     # Инициализация базы данных
     try:
-        await init_db()
-        print("✓ Database initialized successfully")
+        Base.metadata.create_all(bind=engine)
+        logger.info("✅ Таблицы базы данных созданы")
     except Exception as e:
-        print(f"✗ Database initialization failed: {e}")
+        logger.error(f"❌ Ошибка создания таблиц: {e}")
         raise
     
-    print("Application started successfully")
-    print(f"API Documentation: http://localhost:8000{settings.api_prefix}/docs")
-    print(f"ReDoc Documentation: http://localhost:8000{settings.api_prefix}/redoc")
+    logger.info("✅ Приложение успешно запущено")
+    logger.info(f"📖 API документация: http://localhost:8000{settings.api_prefix}/docs")
+    logger.info(f"📖 ReDoc документация: http://localhost:8000{settings.api_prefix}/redoc")
     
     # Проверяем наличие папок для фронтенда
     templates_dir = current_dir / "templates"
     static_dir = current_dir / "static"
     
     if not templates_dir.exists():
-        print(f"⚠ Warning: templates directory not found at {templates_dir}")
+        logger.warning(f"⚠️ Директория templates не найдена: {templates_dir}")
         templates_dir.mkdir(exist_ok=True)
-        print("  Created templates directory")
+        logger.info("✅ Создана директория templates")
         
         # Создаем простой index.html если его нет
         index_file = templates_dir / "index.html"
@@ -72,23 +95,24 @@ async def lifespan(app: FastAPI):
 </body>
 </html>"""
             index_file.write_text(simple_html, encoding='utf-8')
-            print("  Created basic index.html")
+            logger.info("✅ Создан базовый index.html")
     
     if not static_dir.exists():
-        print(f"⚠ Warning: static directory not found at {static_dir}")
+        logger.warning(f"⚠️ Директория static не найдена: {static_dir}")
         static_dir.mkdir(exist_ok=True)
-        print("  Created static directory")
+        logger.info("✅ Создана директория static")
     
     yield
     
     # Shutdown логика
-    print("Shutting down KinoVzor API...")
+    logger.info("🛑 Остановка KinoVzor API...")
 
 # Создание приложения FastAPI
 app = FastAPI(
-    title=settings.project_name,
-    description="API для кинопортала KinoVzor с управлением пользователями, фильмами, рецензиями и категориями",
-    version=settings.project_version,
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    debug=settings.DEBUG,
+    description="Movie database application",
     contact={
         "name": "KinoVzor Team",
         "url": "https://github.com/username/kinovzor",
@@ -97,9 +121,10 @@ app = FastAPI(
         "name": "MIT",
         "url": "https://opensource.org/licenses/MIT",
     },
-    openapi_url=f"{settings.api_prefix}/openapi.json",
-    docs_url=f"{settings.api_prefix}/docs",
-    redoc_url=f"{settings.api_prefix}/redoc",
+    openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
+    redoc_url=f"{settings.API_V1_PREFIX}/redoc",
+    swagger_ui_oauth2_redirect_url=None,
+    swagger_ui_init_oauth=None,
     lifespan=lifespan,
 )
 
@@ -259,9 +284,7 @@ async def health_check():
     """
     Проверка состояния приложения
     """
-    from datetime import datetime
     import psutil
-    import os
     
     # Базовая информация о системе
     system_info = {
@@ -347,76 +370,9 @@ async def app_info():
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=8000,
         reload=settings.debug,
         log_level="info" if settings.debug else "warning",
         access_log=True,
     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from fastapi import FastAPI
-from app.config import settings
-from app.database.database import engine, Base
-from app.api import movies, users  # и другие роутеры
-import logging
-# Настройка логирования
-logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-
-app = FastAPI(
-    title=settings.APP_NAME,
-    version=settings.APP_VERSION,
-    debug=settings.DEBUG
-)
-
-# Импортируем и подключаем роутеры
-app.include_router(movies.router, prefix=settings.API_V1_PREFIX)
-# app.include_router(users.router, prefix=settings.API_V1_PREFIX)
-
-@app.on_event("startup")
-async def startup_event():
-    """Действия при запуске приложения"""
-    # Создаем таблицы в БД
-    Base.metadata.create_all(bind=engine)
-    
-    # Загружаем фильмы из JS файла, если настроено
-    if settings.LOAD_MOVIES_ON_STARTUP:
-        logger = logging.getLogger(__name__)
-        logger.info("Автоматическая загрузка фильмов...")
-        
-        from app.scripts.load_movies import load_movies
-        try:
-            result = load_movies()
-            if result == 0:
-                logger.info("Автозагрузка фильмов завершена успешно")
-            else:
-                logger.warning("Автозагрузка фильмов завершена с ошибками")
-        except Exception as e:
-            logger.error(f"Ошибка автозагрузки фильмов: {e}")
-
-@app.get("/")
-async def root():
-    return {
-        "app": settings.APP_NAME,
-        "version": settings.APP_VERSION,
-        "debug": settings.DEBUG
-    }
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}

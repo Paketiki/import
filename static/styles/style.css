@@ -189,6 +189,28 @@ body.theme-light .secondary-button {
   font-size: 16px;
 }
 
+/* favorite (star) button */
+.fav-button {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--color-text-soft);
+}
+
+.fav-button.active {
+  background: linear-gradient(135deg, #ffd27a, #ffb13b);
+  color: #2a1900;
+  border-color: rgba(255,140,30,0.9);
+  box-shadow: 0 6px 18px rgba(255, 122, 26, 0.18);
+}
+
 body.theme-light .icon-button {
   background: rgba(0, 0, 0, 0.04);
 }
@@ -1076,7 +1098,7 @@ body.theme-light .tabs {
   /* ensure every card on desktop is exactly the same size and has 3% bottom spacing */
   /* fixed card size relative to viewport as requested */
   .movie-card {
-    width: 9vw;           /* 9% of viewport width */
+    width: calc(9vw * 1.2); /* increased by 20% (previously 9vw) */
     height: 27vh;         /* 27% of viewport height */
     box-sizing: border-box;
     display: flex;
@@ -1131,4 +1153,29 @@ body.theme-light .tabs {
 .movie-card.expanded {
   box-shadow: 0 14px 36px rgba(0,0,0,0.55);
   border-color: rgba(255,122,26,0.7);
+}
+
+/* compact movie card inside profile modal */
+#profileModal .movie-card {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 8px;
+  border-radius: 10px;
+}
+
+body.theme-light #profileModal .movie-card {
+  border-color: rgba(0,0,0,0.06);
+}
+/* ensure modal content for profile matches size */
+#profileModal .modal-content {
+  max-width: 520px;
+}
+/* make favorites list behave like a column inside modal */
+#favoritesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }

@@ -1,39 +1,27 @@
-from .database import engine, Base
-from app.models import users, movies, reviews, picks, roles
-from sqlalchemy import text
+# app/database/db_manager.py
+from .database import engine, Base, init_db as db_init_db
+from sqlalchemy.orm import Session
 
-async def init_db():
-    """
-    Инициализация базы данных - создание таблиц
-    """
-    try:
-        async with engine.begin() as conn:
-            # Для SQLite включаем поддержку внешних ключей
-            if "sqlite" in str(engine.url):
-                await conn.execute(text("PRAGMA foreign_keys=ON"))
+def init_db():
+    """Публичная функция для инициализации БД"""
+    return db_init_db()
 
-            
-            # Создаем все таблицы
-            await conn.run_sync(Base.metadata.create_all)
-            # Для локальной разработки: если модель была изменена после создания БД,
-            # попытаться добавить отсутствующие колонки (только для SQLite).
-            if "sqlite" in str(engine.url):
-                # Проверяем и добавляем column `description` в таблицу roles
-                res = await conn.execute(text("PRAGMA table_info('roles')"))
-                existing = [row[1] for row in res.fetchall()]
-                if "description" not in existing:
-                    await conn.execute(text("ALTER TABLE roles ADD COLUMN description VARCHAR(500)"))
-                    print("✓ Added column roles.description")
+def create_tables():
+    """Создание таблиц в БД"""
+    Base.metadata.create_all(bind=engine)
+    print("✅ Таблицы базы данных созданы")
 
-                # Проверяем и добавляем column `creator_id` в таблицу picks
-                res = await conn.execute(text("PRAGMA table_info('picks')"))
-                existing = [row[1] for row in res.fetchall()]
-                if "creator_id" not in existing:
-                    await conn.execute(text("ALTER TABLE picks ADD COLUMN creator_id INTEGER"))
-                    print("✓ Added column picks.creator_id")
+def drop_tables():
+    """Удаление всех таблиц (только для разработки!)"""
+    if __name__ == "__main__":  # Защита от случайного запуска
+        Base.metadata.drop_all(bind=engine)
+        print("⚠️ Все таблицы удалены")
 
-        print("✓ Database tables created successfully")
-        return True
-    except Exception as e:
-        print(f"✗ Error creating database tables: {e}")
-        raise
+def get_session() -> Session:
+    """Получение новой сессии БД"""
+    from .database import SessionLocal
+    return SessionLocal()
+
+# Если файл запускается напрямую
+if __name__ == "__main__":
+    create_tables()

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>КиноВзор</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/static/styles/style.css" />
+  <link rel="stylesheet" href="static/styles/style.css" />
 </head>
 <body class="theme-dark">
   <div id="app">
@@ -56,9 +56,19 @@
             <option value="all">Все жанры</option>
           </select>
         </div>
-        
+
+        <div class="filter-block">
+          <span class="filter-label">Оценка</span>
+          <div class="rating-filter">
+            <button class="chip-button active" data-rating="all">Все</button>
+            <button class="chip-button" data-rating="8">8+</button>
+            <button class="chip-button" data-rating="7">7+</button>
+            <button class="chip-button" data-rating="6">6+</button>
+          </div>
+        </div>
+
         <section id="adminPanel" class="admin-panel hidden">
-          <h3 class="admin-title">Добавить фильм (только модератор)</h3>
+          <h3 class="admin-title">Добавить фильм (только админ)</h3>
           <form id="adminAddForm" class="form admin-form">
             <div class="form-row">
               <label class="form-label" for="adminTitle">Название</label>
@@ -153,8 +163,8 @@
       <h2 class="modal-title">Вход в КиноВзор</h2>
 
       <div class="tabs">
-        <button class="tab-button active" data-tab="login">Логин и пароль</button>
-        <button class="tab-button" data-tab="quick">Быстрый вход</button>
+        <button class="tab-button active" data-tab="login">Логин</button>
+        <button class="tab-button" data-tab="register">Регистрация</button>
       </div>
 
       <div class="tab-panel active" data-panel="login">
@@ -182,7 +192,7 @@
           <p class="hint">
             Демо-доступ: <br />
             • Зритель — логин <b>user</b>, пароль <b>1234</b><br />
-            • Модератор — логин <b>admin</b>, пароль <b>1234</b>
+            • Модератор — логин <b>moderator</b>, пароль <b>1234</b>
           </p>
           <div id="loginError" class="error-text hidden"></div>
           <button type="submit" class="primary-button full-width">
@@ -191,23 +201,62 @@
         </form>
       </div>
 
-      <div class="tab-panel" data-panel="quick">
-        <p class="hint">
-          Выберите роль для быстрого входа без логина и пароля.
-        </p>
-        <div class="quick-roles">
-          <button class="primary-button full-width" data-quick-role="viewer">
-            Войти как зритель
+      <div class="tab-panel" data-panel="register">
+        <form id="registerForm" class="form">
+          <div class="form-row">
+            <label for="registerUsername" class="form-label">Логин</label>
+            <input
+              type="text"
+              id="registerUsername"
+              class="input"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <label for="registerPassword" class="form-label">Пароль</label>
+            <input
+              type="password"
+              id="registerPassword"
+              class="input"
+              autocomplete="new-password"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <label for="registerPasswordConfirm" class="form-label">Повтор пароля</label>
+            <input
+              type="password"
+              id="registerPasswordConfirm"
+              class="input"
+              autocomplete="new-password"
+              required
+            />
+          </div>
+          <p class="hint">Новые пользователи регистрируются как <b>Зритель</b>.</p>
+          <div id="registerError" class="error-text hidden"></div>
+          <button type="submit" class="primary-button full-width">
+            Зарегистрироваться
           </button>
-          <button class="secondary-button full-width" data-quick-role="admin">
-            Войти как модератор
-          </button>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 
-  <script src="/static/js/script.js" defer></script>
+  <!-- User profile / favorites modal -->
+  <div id="profileModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="closeProfileModal" class="icon-button modal-close">✕</button>
+      <h2 class="modal-title">Личный кабинет</h2>
+      <div id="profileContent">
+        <p class="placeholder-text">Ваши избранные фильмы будут здесь.</p>
+        <ul id="favoritesList" class="movies-list" style="margin-top:8px;"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="static/js/script.js" defer></script>
 </body>
 </html>
 

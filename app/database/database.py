@@ -1,70 +1,63 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.pool import NullPool
-import os
-from app.utils.config import settings
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event, text
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import QueuePool
+import logging
+from typing import Generator
+from contextlib import contextmanager
+
 from app.config import settings
 
-# Определяем URL базы данных
-DATABASE_URL = settings.database_url
+# Настройка логирования
+logger = logging.getLogger(__name__)
 
-if DATABASE_URL.startswith("sqlite"):
-    # Для SQLite используем специальные настройки
-    engine = create_async_engine(
-        DATABASE_URL,
-        echo=settings.debug,
-        connect_args={"check_same_thread": False},
-        poolclass=NullPool
-    )
-elif DATABASE_URL.startswith("postgresql"):
-    # Для PostgreSQL
-    engine = create_async_engine(DATABASE_URL, echo=settings.debug)
-else:
-    # По умолчанию SQLite
-    DATABASE_URL = "sqlite+aiosqlite:///./test.db"
-    engine = create_async_engine(
-        DATABASE_URL,
-        echo=settings.debug,
-        connect_args={"check_same_thread": False},
-        poolclass=NullPool
-    )
-
-AsyncSessionLocal = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
-Base = declarative_base()
-
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
-        finally:
-            await session.close()
-
-
-
-
-
+# Создаем движок базы данных с оптимизациями
 engine = create_engine(
-    settings.DATABASE_URL,
-    connect_args={"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+    settings.DATABASE_URL, # ← исправлено: было settings.database_url
+    poolclass=QueuePool,
+    pool_size=10,
+    max_overflow=20,
+    pool_timeout=30,
+    pool_recycle=3600,
+    echo=settings.DEBUG,  # Используем настройку DEBUG из конфига
+    connect_args={"check_same_thread": False}
+    if settings.DATABASE_URL.startswith("sqlite") 
+    else {}
 )
+
+# Для SQLite добавляем обработчики событий
+if settings.DATABASE_URL.startswith("sqlite"):
+    
+    @event.listens_for(engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.close()
 
 # Создаем фабрику сессий
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+    expire_on_commit=False,
+)
+
 
 # Базовый класс для моделей
 Base = declarative_base()
 
-# Функция для получения сессии БД
-def get_db():
+
+engine = create_engine(
+    settings.DATABASE_URL,
+    connect_args={"check_same_thread": False}  # Только для SQLite
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Генератор зависимости для FastAPI
+def get_db() -> Generator:
     """
     Dependency для получения сессии базы данных.
     Используется в FastAPI Depends.
@@ -72,5 +65,67 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
+        logger.debug("Database session yielded successfully")
+    except Exception as e:
+        logger.error(f"Database session error: {e}")
+        db.rollback()
+        raise
     finally:
         db.close()
+        logger.debug("Database session closed")
+
+# Контекстный менеджер для работы с БД
+@contextmanager
+def db_session():
+    """
+    Контекстный менеджер для работы с сессией БД.
+    """
+    session = SessionLocal()
+    try:
+        yield session
+        session.commit()
+        logger.debug("Transaction committed successfully")
+    except Exception as e:
+        session.rollback()
+        logger.error(f"Transaction rolled back due to error: {e}")
+        raise
+    finally:
+        session.close()
+        logger.debug("Session closed")
+
+# Проверка подключения к БД
+def check_connection():
+    """Проверка подключения к базе данных"""
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        logger.info("✅ Database connection: OK")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Database connection failed: {e}")
+        return False
+
+# Инициализация базы данных
+def init_db():
+    """
+    Инициализация базы данных - создание всех таблиц.
+    """
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("✅ Database tables created successfully")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize database: {e}")
+        return False
+
+# Экспортируем всё необходимое
+__all__ = [
+    'engine',
+    'SessionLocal',
+    'SessionScoped',
+    'Base',
+    'get_db',
+    'db_session',
+    'check_connection',
+    'init_db',
+]
