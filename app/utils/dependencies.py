@@ -7,6 +7,7 @@ from app.services.users import UserService
 from app.services.movies import MovieService
 from app.services.reviews import ReviewService
 from app.services.picks import PickService
+from app.services.roles import RoleService
 from app.services.auth import AuthService
 
 # Service dependencies
@@ -21,6 +22,9 @@ async def get_review_service(db: AsyncSession = Depends(get_db)) -> ReviewServic
 
 async def get_pick_service(db: AsyncSession = Depends(get_db)) -> PickService:
     return PickService(db)
+
+async def get_role_service(db: AsyncSession = Depends(get_db)) -> RoleService:
+    return RoleService(db)
 
 def get_auth_service() -> AuthService:
     return AuthService()

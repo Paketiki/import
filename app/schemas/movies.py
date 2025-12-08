@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional, List
 from datetime import datetime
 from .picks import PickInDB
+from pydantic import BaseModel
+from typing import Optional
 
 class MovieBase(BaseModel):
     title: str = Field(..., max_length=255)

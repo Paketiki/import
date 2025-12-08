@@ -1,5 +1,9 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from typing import List, Optional
+from sqlalchemy.orm import Session
+
+from app.database.database import get_db
+from app.services.movie_loader import MovieLoader
 
 from app.schemas.movies import MovieCreate, MovieUpdate, MovieInDB, MovieWithPicks
 from app.services.movies import MovieService
@@ -8,6 +12,22 @@ from app.utils.dependencies import get_movie_service
 
 # Убираем prefix из роутера, так как он добавляется в main.py
 router = APIRouter(tags=["movies"])
+
+@router.post("/load-from-js")
+async def load_movies_from_js(
+    created_by_user_id: int = 1,
+    db: Session = Depends(get_db)
+):
+    """
+    Загрузить фильмы из script.js в базу данных
+    """
+    loader = MovieLoader(db)
+    result = loader.load_movies_to_db(created_by_user_id=created_by_user_id)
+    
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    
+    return result
 
 @router.get("/movies", response_model=List[MovieWithPicks])
 async def read_movies(

@@ -1,42 +1,56 @@
-from app.exceptions.base import ObjectAlreadyExistsError
-from app.exceptions.roles import RoleNotFoundError, RoleAlreadyExistsError
-from app.schemas.roles import SRoleAdd
-from app.schemas.relations_users_roles import SRoleGetWithRels
-from app.services.base import BaseService
+from typing import List, Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.repositories.roles import RoleRepository
+from app.schemas.roles import RoleCreate, RoleUpdate, Role
+from app.exceptions.base import NotFoundException, ConflictException
 
 
-class RoleService(BaseService):
+class RoleService:
+    def __init__(self, db: AsyncSession):
+        self.repository = RoleRepository(db)
 
-    async def create_role(self, role_data: SRoleAdd):
-        try:
-            await self.db.roles.add(role_data)
-        except ObjectAlreadyExistsError:
-            raise RoleAlreadyExistsError
-        await self.db.commit()
-
-    async def get_role(self, role_id: int):
-        role: SRoleGetWithRels | None = await self.db.roles.get_one_or_none_with_users(
-            id=role_id
-        )
+    async def get_role(self, role_id: int) -> Optional[Role]:
+        role = await self.repository.get(role_id)
         if not role:
-            raise RoleNotFoundError
+            raise NotFoundException("Роль не найдена")
         return role
 
-    async def edit_role(self, role_id: int, role_data: SRoleAdd):
-        role: SRoleGetWithRels | None = await self.db.roles.get_one_or_none(id=role_id)
-        if not role:
-            raise RoleNotFoundError
-        await self.db.roles.edit(role_data)
-        await self.db.commit()
-        return
+    async def get_role_by_name(self, name: str) -> Optional[Role]:
+        return await self.repository.get_by_name(name)
 
-    async def delete_role(self, role_id: int):
-        role: SRoleGetWithRels | None = await self.db.roles.get_one_or_none(id=role_id)
-        if not role:
-            raise RoleNotFoundError
-        await self.db.roles.delete(id=role_id)
-        await self.db.commit()
-        return
+    async def get_all_roles(self, skip: int = 0, limit: int = 100) -> List[Role]:
+        return await self.repository.get_all(skip=skip, limit=limit)
 
-    async def get_roles(self):
-        return await self.db.roles.get_all()
+    async def create_role(self, role: RoleCreate) -> Role:
+        # Проверяем уникальность имени
+        existing_role = await self.repository.get_by_name(role.name)
+        if existing_role:
+            raise ConflictException("Роль с таким именем уже существует")
+
+        created = await self.repository.create(role.dict())
+        return created
+
+    async def update_role(self, role_id: int, role: RoleUpdate) -> Role:
+        db_role = await self.repository.get(role_id)
+        if not db_role:
+            raise NotFoundException("Роль не найдена")
+
+        # Проверяем уникальность имени, если оно изменилось
+        update_data = role.dict(exclude_unset=True)
+        if "name" in update_data and update_data["name"] != getattr(db_role, "name", None):
+            existing_role = await self.repository.get_by_name(update_data["name"])
+            if existing_role:
+                raise ConflictException("Роль с таким именем уже существует")
+
+        updated_role = await self.repository.update(role_id, update_data)
+        if not updated_role:
+            raise NotFoundException("Роль не найдена")
+
+        return updated_role
+
+    async def delete_role(self, role_id: int) -> bool:
+        db_role = await self.repository.get(role_id)
+        if not db_role:
+            raise NotFoundException("Роль не найдена")
+
+        return await self.repository.delete(role_id)

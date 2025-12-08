@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
 
+from app.database.database import Base 
 from app.schemas.users import UserInDB, UserUpdate
 from app.services.users import UserService
 from app.api.dependencies import get_current_user, get_current_admin_user

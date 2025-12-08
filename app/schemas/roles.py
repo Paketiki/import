@@ -1,14 +1,25 @@
-from typing import TYPE_CHECKING
-
+# app/schemas/roles.py
 from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
 
-if TYPE_CHECKING:
-    from app.schemas.users import SUserGet
-
-
-class SRoleAdd(BaseModel):
+class RoleBase(BaseModel):
     name: str
+    description: Optional[str] = None
 
+class RoleCreate(RoleBase):
+    pass
 
-class SRoleGet(BaseModel):
+class RoleUpdate(RoleBase):
+    pass
+
+class Role(RoleBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+class RoleInDB(Role):
+    pass

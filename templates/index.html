@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>КиноВзор</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/styles/style.css" />
+</head>
+<body class="theme-dark">
+  <div id="app">
+    <header class="top-bar">
+      <div class="logo">
+        <span class="logo-mark">КВ</span>
+        <span class="logo-text">КиноВзор</span>
+      </div>
+
+      <div class="top-bar-center">
+        <button class="pill-button active" data-pick="all">Все фильмы</button>
+        <button class="pill-button" data-pick="hits">Хиты</button>
+        <button class="pill-button" data-pick="new">Новинки</button>
+        <button class="pill-button" data-pick="classic">Классика</button>
+      </div>
+
+      <div class="top-bar-right">
+        <button id="themeToggle" class="icon-button" title="Переключить тему">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+        <button id="authButton" class="primary-button small">
+          Войти
+        </button>
+        <div id="userBadge" class="user-badge hidden">
+          <div class="user-info">
+            <span id="userName" class="user-name"></span>
+            <span id="userRole" class="user-role"></span>
+          </div>
+          <button id="logoutButton" class="icon-button" title="Выйти">⏏</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <section class="filters-panel">
+        <div class="filter-block">
+          <input
+            type="text"
+            id="searchInput"
+            class="input"
+            placeholder="Поиск по названию..."
+          />
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label" for="genreSelect">Жанр</label>
+          <select id="genreSelect" class="input">
+            <option value="all">Все жанры</option>
+          </select>
+        </div>
+        
+        <section id="adminPanel" class="admin-panel hidden">
+          <h3 class="admin-title">Добавить фильм (только модератор)</h3>
+          <form id="adminAddForm" class="form admin-form">
+            <div class="form-row">
+              <label class="form-label" for="adminTitle">Название</label>
+              <input id="adminTitle" class="input" type="text" required />
+            </div>
+            <div class="admin-grid">
+              <div class="form-row">
+                <label class="form-label" for="adminYear">Год</label>
+                <input id="adminYear" class="input" type="number" min="1900" max="2100" required />
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="adminRating">Оценка</label>
+                <input id="adminRating" class="input" type="number" step="0.1" min="0" max="10" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="adminGenre">Жанр</label>
+              <input id="adminGenre" class="input" type="text" placeholder="Например: Драма" required />
+            </div>
+            <div class="form-row">
+              <label class="form-label">Подборки</label>
+              <div class="admin-picks">
+                <label class="admin-pick">
+                  <input type="checkbox" value="hits" /> Хиты
+                </label>
+                <label class="admin-pick">
+                  <input type="checkbox" value="new" /> Новинки
+                </label>
+                <label class="admin-pick">
+                  <input type="checkbox" value="classic" /> Классика
+                </label>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="adminPoster">URL постера</label>
+              <input
+                id="adminPoster"
+                class="input"
+                type="url"
+                placeholder="https://..."
+              />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="adminOverview">Краткое описание</label>
+              <textarea
+                id="adminOverview"
+                class="input admin-textarea"
+                rows="2"
+              ></textarea>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="adminReview1">Рецензия 1</label>
+              <textarea
+                id="adminReview1"
+                class="input admin-textarea"
+                rows="2"
+              ></textarea>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="adminReview2">Рецензия 2 (необязательно)</label>
+              <textarea
+                id="adminReview2"
+                class="input admin-textarea"
+                rows="2"
+              ></textarea>
+            </div>
+            <button type="submit" class="primary-button full-width">
+              Добавить фильм
+            </button>
+          </form>
+        </section>
+      </section>
+
+      <section class="movies-panel">
+        <ul id="moviesList" class="movies-list"></ul>
+      </section>
+
+      <section class="details-panel">
+        <div id="movieDetails" class="movie-details empty">
+          <p class="placeholder-text">
+            Выберите фильм, чтобы посмотреть рецензию.
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="authModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="closeAuthModal" class="icon-button modal-close">✕</button>
+      <h2 class="modal-title">Вход в КиноВзор</h2>
+
+      <div class="tabs">
+        <button class="tab-button active" data-tab="login">Логин и пароль</button>
+        <button class="tab-button" data-tab="quick">Быстрый вход</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="login">
+        <form id="loginForm" class="form">
+          <div class="form-row">
+            <label for="loginUsername" class="form-label">Логин</label>
+            <input
+              type="text"
+              id="loginUsername"
+              class="input"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <label for="loginPassword" class="form-label">Пароль</label>
+            <input
+              type="password"
+              id="loginPassword"
+              class="input"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+          <p class="hint">
+            Демо-доступ: <br />
+            • Зритель — логин <b>user</b>, пароль <b>1234</b><br />
+            • Модератор — логин <b>admin</b>, пароль <b>1234</b>
+          </p>
+          <div id="loginError" class="error-text hidden"></div>
+          <button type="submit" class="primary-button full-width">
+            Войти
+          </button>
+        </form>
+      </div>
+
+      <div class="tab-panel" data-panel="quick">
+        <p class="hint">
+          Выберите роль для быстрого входа без логина и пароля.
+        </p>
+        <div class="quick-roles">
+          <button class="primary-button full-width" data-quick-role="viewer">
+            Войти как зритель
+          </button>
+          <button class="secondary-button full-width" data-quick-role="admin">
+            Войти как модератор
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/script.js" defer></script>
+</body>
+</html>
+

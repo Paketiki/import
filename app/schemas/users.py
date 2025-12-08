@@ -14,7 +14,8 @@ class SUserGet(BaseModel):
 
 class UserBase(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, pattern="^[a-zA-Z0-9_]+$")
-    role: UserRole = UserRole.VIEWER
+    email: str = Field(..., min_length=5)
+    role: Optional[UserRole] = None
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=4)
@@ -24,8 +25,9 @@ class UserUpdate(BaseModel):
     role: Optional[UserRole] = None
 
 class UserInDB(UserBase):
+    id: int
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True

@@ -1,68 +1,78 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
 
-from app.api.dependencies import DBDep
-from app.exceptions.roles import (
-    RoleAlreadyExistsError,
-    RoleAlreadyExistsHTTPError,
-    RoleNotFoundError,
-    RoleNotFoundHTTPError,
-)
-from app.schemas.roles import SRoleAdd, SRoleGet
-from app.schemas.relations_users_roles import SRoleGetWithRels
+from app.database.database import get_db
+from app.schemas.roles import Role as RoleSchema, RoleCreate, RoleUpdate
 from app.services.roles import RoleService
+from app.exceptions.base import NotFoundException, ConflictException
 
-router = APIRouter(prefix="/auth", tags=["Управление ролями"])
+router = APIRouter(prefix="/roles", tags=["roles"])
 
 
-@router.post("/roles", summary="Создание новой роли")
-async def create_new_role(
-    role_data: SRoleAdd,
-    db: DBDep,
-) -> dict[str, str]:
+@router.get("/", response_model=List[RoleSchema])
+async def read_roles(
+    skip: int = 0,
+    limit: int = 100,
+    db: AsyncSession = Depends(get_db),
+):
+    """Получить список всех ролей"""
+    service = RoleService(db)
+    return await service.get_all_roles(skip=skip, limit=limit)
+
+
+@router.get("/{role_id}", response_model=RoleSchema)
+async def read_role(
+    role_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    """Получить роль по ID"""
+    service = RoleService(db)
     try:
-        await RoleService(db).create_role(role_data)
-    except RoleAlreadyExistsError:
-        raise RoleAlreadyExistsHTTPError
-    return {"status": "OK"}
+        return await service.get_role(role_id)
+    except NotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
-@router.get("/roles", summary="Получение списка ролей")
-async def get_all_roles(
-    db: DBDep,
-) -> list[SRoleGet]:
-    return await RoleService(db).get_roles()
-
-
-@router.get("/roles/{id}", summary="Получение конкретной роли")
-async def get_role(
-    db: DBDep,
-    id: int,
-) -> SRoleGetWithRels:
-    return await RoleService(db).get_role(role_id=id)
-
-
-@router.put("/roles/{id}", summary="Изменение конкретной роли")
-async def get_role(
-    db: DBDep,
-    role_data: SRoleAdd,
-    id: int,
-) -> dict[str, str]:
+@router.post("/", response_model=RoleSchema, status_code=status.HTTP_201_CREATED)
+async def create_role(
+    role: RoleCreate,
+    db: AsyncSession = Depends(get_db),
+):
+    """Создать новую роль"""
+    service = RoleService(db)
     try:
-        await RoleService(db).edit_role(role_id=id, role_data=role_data)
-    except RoleNotFoundError:
-        raise RoleNotFoundHTTPError
-
-    return {"status": "OK"}
+        return await service.create_role(role)
+    except ConflictException as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.delete("/roles/{id}", summary="Удаление конкретной роли")
+@router.put("/{role_id}", response_model=RoleSchema)
+async def update_role(
+    role_id: int,
+    role: RoleUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    """Обновить роль"""
+    service = RoleService(db)
+    try:
+        return await service.update_role(role_id, role)
+    except NotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ConflictException as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/{role_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_role(
-    db: DBDep,
-    id: int,
-) -> dict[str, str]:
+    role_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    """Удалить роль"""
+    service = RoleService(db)
     try:
-        await RoleService(db).delete_role(role_id=id)
-    except RoleNotFoundError:
-        raise RoleNotFoundHTTPError
-
-    return {"status": "OK"}
+        success = await service.delete_role(role_id)
+        if not success:
+            raise HTTPException(status_code=500, detail="Ошибка при удалении роли")
+    except NotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))

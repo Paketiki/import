@@ -40,10 +40,13 @@ class UserService:
         # Hash password
         hashed_password = pwd_context.hash(user_create.password)
         
-        # Create user
-        user_dict = user_create.dict()
-        user_dict["password"] = hashed_password
-        user_dict["role"] = user_create.role.value
+        # Create user dict with only the fields that User model expects
+        user_dict = {
+            "username": user_create.username,
+            "email": user_create.email,
+            "password_hash": hashed_password,
+            "is_native": False,
+        }
         
         user = await self.repository.create(user_dict)
         return UserInDB.from_orm(user)
@@ -85,7 +88,7 @@ class UserService:
         if not user:
             return None
         
-        if not self.verify_password(password, user.password):
+        if not self.verify_password(password, user.password_hash):
             return None
         
         return UserInDB.from_orm(user)

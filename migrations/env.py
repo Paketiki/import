@@ -1,4 +1,6 @@
 import asyncio
+import os
+import sys
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -7,17 +9,20 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from app.database.database import Base
-from app.config import settings
+from app.utils.config import settings
 
-# TODO Добавить сюда импорт созданных моделей
-# Пример:
-from app.models.users import UserModel
-from app.models.roles import RoleModel
+# Ensure project root is on sys.path so `app` imports work when alembic runs
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Import models package to ensure all models are registered with SQLAlchemy's metadata
+import app.models  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 
-sqlalchemy_url = settings.get_db_url
+sqlalchemy_url = settings.database_url
 config = context.config
 config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 
@@ -63,7 +68,31 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    def include_object(object, name, type_, reflected, compare_to):
+        """Include callback for autogenerate.
+
+        We intentionally skip foreign key constraints comparison because the
+        current database schema may have legacy FK definitions that don't
+        map cleanly to the current SQLAlchemy models. Skip FK constraints
+        to avoid `NoReferencedColumnError` during autogenerate; handle FKs
+        manually in the generated migration if needed.
+        """
+        try:
+            cls_name = object.__class__.__name__
+        except Exception:
+            cls_name = ""
+
+        if type_ in ("foreign_key", "foreign_key_constraint") or "ForeignKeyConstraint" in cls_name:
+            return False
+        return True
+
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        include_object=include_object,
+        compare_type=True,
+        compare_server_default=True,
+    )
 
     with context.begin_transaction():
         context.run_migrations()

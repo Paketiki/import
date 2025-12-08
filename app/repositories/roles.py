@@ -1,28 +1,12 @@
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-
-from app.models.roles import RoleModel
-from app.repositories.base import BaseRepository
-from app.schemas.roles import SRoleGet
-from app.schemas.relations_users_roles import SRoleGetWithRels
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional, List
+from app.models.roles import Role
+from .base import BaseRepository
 
 
-class RolesRepository(BaseRepository):
-    model = RoleModel
-    schema = SRoleGet
+class RoleRepository(BaseRepository[Role]):
+    def __init__(self, db: AsyncSession):
+        super().__init__(Role, db)
 
-    async def get_one_or_none_with_users(self, **filter_by):
-        query = (
-            select(self.model)
-            .filter_by(**filter_by)
-            .options(selectinload(self.model.users))
-        )
-
-        result = await self.session.execute(query)
-
-        model = result.scalars().one_or_none()
-        if model is None:
-            return None
-
-        result = SRoleGetWithRels.model_validate(model, from_attributes=True)
-        return result
+    async def get_by_name(self, name: str) -> Optional[Role]:
+        return await self.get_by_field("name", name)

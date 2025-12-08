@@ -15,7 +15,23 @@ async def init_db():
             
             # Создаем все таблицы
             await conn.run_sync(Base.metadata.create_all)
-            
+            # Для локальной разработки: если модель была изменена после создания БД,
+            # попытаться добавить отсутствующие колонки (только для SQLite).
+            if "sqlite" in str(engine.url):
+                # Проверяем и добавляем column `description` в таблицу roles
+                res = await conn.execute(text("PRAGMA table_info('roles')"))
+                existing = [row[1] for row in res.fetchall()]
+                if "description" not in existing:
+                    await conn.execute(text("ALTER TABLE roles ADD COLUMN description VARCHAR(500)"))
+                    print("✓ Added column roles.description")
+
+                # Проверяем и добавляем column `creator_id` в таблицу picks
+                res = await conn.execute(text("PRAGMA table_info('picks')"))
+                existing = [row[1] for row in res.fetchall()]
+                if "creator_id" not in existing:
+                    await conn.execute(text("ALTER TABLE picks ADD COLUMN creator_id INTEGER"))
+                    print("✓ Added column picks.creator_id")
+
         print("✓ Database tables created successfully")
         return True
     except Exception as e:

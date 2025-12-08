@@ -30,6 +30,25 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+
+# Environment
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Базы данных
+*.db
+*.sqlite3
+test.db
+
+# Логи
+*.log
+logs/
+
+# Загружаемые файлы
+uploads/
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
