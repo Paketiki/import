@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
@@ -9,9 +9,15 @@ class PickBase(BaseModel):
 class PickCreate(PickBase):
     pass
 
+class PickUpdate(PickBase):
+    pass
+
 class PickInDB(PickBase):
     id: int
     created_at: datetime
     
     class Config:
         from_attributes = True
+
+# Для обратной совместимости
+Pick = PickInDB

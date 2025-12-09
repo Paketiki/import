@@ -2,7 +2,7 @@ import uvicorn
 import sys
 import os
 from pathlib import Path
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 import logging
 
-from app.database.database import engine, Base, init_db as init_database
+from app.database.database import engine, Base, get_db, init_db as init_database
 from app.config import settings
 
 # Импорт роутеров
@@ -21,22 +21,10 @@ from app.api.roles import router as roles_router
 from app.api.movies import router as movies_router
 from app.api.reviews import router as reviews_router
 from app.api.users import router as users_router
-from app.api.picks import router as picks_router
 from app.api.movie_picks import router as movie_picks_router
 from app.api.movie_stats import router as movie_stats_router
 
-
-
-from fastapi import FastAPI
-
-from app.schemas.movies import MovieCreate
 from app.services.movies import MovieService
-
-app = FastAPI()
-
-@app.get("/items/")
-async def read_items():
-    return {"message": "No auth required"}
 
 current_dir = Path(__file__).parent
 sys.path.append(str(current_dir))
@@ -61,49 +49,58 @@ async def lifespan(app: FastAPI):
     # Startup логика
     logger.info(f"🚀 Запуск {settings.APP_NAME} v{settings.APP_VERSION}")
     
-    # Инициализация базы данных
+    # Асинхронная инициализация базы данных
     try:
-        Base.metadata.create_all(bind=engine)
+        await init_database()  # Используем асинхронную функцию
         logger.info("✅ Таблицы базы данных созданы")
     except Exception as e:
         logger.error(f"❌ Ошибка создания таблиц: {e}")
         raise
     
+    # Проверяем наличие папок для фронтенда
+    templates_dir = current_dir / "templates"
+    static_dir = current_dir / "app" / "static"  # <-- ИЗМЕНЕНО: правильный путь к static
+    
+    # Проверяем и создаем статические директории
+    if not static_dir.exists():
+        logger.warning(f"⚠️ Директория static не найдена: {static_dir}")
+        static_dir.mkdir(parents=True, exist_ok=True)
+        logger.info("✅ Создана директория static")
+        
+        # Создаем поддиректории
+        (static_dir / "js").mkdir(exist_ok=True)
+        (static_dir / "styles").mkdir(exist_ok=True)
+        
+        # Создаем базовый CSS файл если его нет
+        css_file = static_dir / "styles" / "style.css"
+        if not css_file.exists():
+            css_content = """
+/* Базовые стили для KinoVzor */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #0a0a0a;
+    color: #ffffff;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+"""
+            css_file.write_text(css_content, encoding='utf-8')
+            logger.info("✅ Создан базовый style.css")
+    
+    # Проверяем наличие шаблонов
+    if not templates_dir.exists():
+        logger.warning(f"⚠️ Директория templates не найдена: {templates_dir}")
+        templates_dir.mkdir(parents=True, exist_ok=True)
+        logger.info("✅ Создана директория templates")
+    
     logger.info("✅ Приложение успешно запущено")
     logger.info(f"API документация: http://localhost:8000{settings.api_prefix}/docs")
     logger.info(f"ReDoc документация: http://localhost:8000{settings.api_prefix}/redoc")
-    
-    # Проверяем наличие папок для фронтенда
-    templates_dir = current_dir / "templates"
-    static_dir = current_dir / "static"
-    
-    if not templates_dir.exists():
-        logger.warning(f"⚠️ Директория templates не найдена: {templates_dir}")
-        templates_dir.mkdir(exist_ok=True)
-        logger.info("✅ Создана директория templates")
-        
-        # Создаем простой index.html если его нет
-        index_file = templates_dir / "index.html"
-        if not index_file.exists():
-            simple_html = """<!DOCTYPE html>
-<html>
-<head>
-    <title>KinoVzor</title>
-    <link rel="stylesheet" href="/static/styles/style.css">
-</head>
-<body>
-    <h1>KinoVzor Backend is Running!</h1>
-    <p>API is available at <a href="/api">/api</a></p>
-    <p>API Docs: <a href="/docs">/docs</a></p>
-</body>
-</html>"""
-            index_file.write_text(simple_html, encoding='utf-8')
-            logger.info("✅ Создан базовый index.html")
-    
-    if not static_dir.exists():
-        logger.warning(f"⚠️ Директория static не найдена: {static_dir}")
-        static_dir.mkdir(exist_ok=True)
-        logger.info("✅ Создана директория static")
     
     yield
     
@@ -144,12 +141,16 @@ app.add_middleware(
 )
 
 # ---------- Настройка статических файлов и шаблонов ----------
-# Определяем пути к папкам со статикой и шаблонами
-STATIC_DIR = current_dir / "static"
+# Определяем пути к папкам со статикой
+STATIC_DIR = current_dir / "app" / "static"  # <-- ИЗМЕНЕНО: правильный путь
 TEMPLATES_DIR = current_dir / "templates"
 
+# Проверяем существование директорий и создаем их если нужно
+STATIC_DIR.mkdir(parents=True, exist_ok=True)
+TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+
 # Монтируем статические файлы (CSS, JS, изображения)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/app/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 # Настраиваем шаблоны Jinja2
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -158,46 +159,77 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend(request: Request):
     """
-    Главная страница фронтенда
+    Главная страница фронтенда - отдает index.html из корня проекта
     """
     try:
-        return templates.TemplateResponse(
-            "index.html",
-            {
-                "request": request,
-                "title": "KinoVzor - Кинопортал",
-                "api_prefix": settings.api_prefix or "/api/v1"
-            }
-        )
-    except Exception as e:
-        # Если шаблон не найден, возвращаем простую HTML страницу
-        from fastapi.responses import PlainTextResponse
+        # Пытаемся отдать index.html из корня проекта
+        index_path = current_dir / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        
+        # Если index.html нет в корне, пробуем из templates
+        index_path = TEMPLATES_DIR / "index.html"
+        if index_path.exists():
+            return templates.TemplateResponse(
+                "index.html",
+                {
+                    "request": request,
+                    "title": "KinoVzor - Кинопортал",
+                    "api_prefix": settings.api_prefix or "/api/v1"
+                }
+            )
+        
+        # Если нет нигде, создаем простую HTML страницу
         html_content = f"""
         <!DOCTYPE html>
         <html>
         <head>
             <title>KinoVzor</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; margin: 40px; }}
-                h1 {{ color: #333; }}
-                a {{ color: #007bff; text-decoration: none; }}
-                a:hover {{ text-decoration: underline; }}
-            </style>
+            <link rel="stylesheet" href="/static/styles/style.css">
         </head>
         <body>
-            <h1>KinoVzor Backend API</h1>
-            <p>Frontend template not found. The API is running correctly.</p>
+            <h1>KinoVzor Backend is Running!</h1>
+            <p>Frontend files not found.</p>
+            <p>Please place index.html in the project root or templates folder.</p>
             <ul>
                 <li><a href="/api">API Information</a></li>
                 <li><a href="/docs">Swagger Documentation</a></li>
                 <li><a href="/redoc">ReDoc Documentation</a></li>
-                <li><a href="/health">Health Check</a></li>
             </ul>
-            <p>To add frontend, create 'index.html' in templates folder.</p>
         </body>
         </html>
         """
         return HTMLResponse(content=html_content, status_code=200)
+        
+    except Exception as e:
+        logger.error(f"Error serving frontend: {e}")
+        return HTMLResponse(content=f"<h1>Error loading frontend: {str(e)}</h1>", status_code=500)
+
+# Резервный маршрут для SPA (Single Page Application)
+@app.get("/{full_path:path}", include_in_schema=False)
+async def catch_all(full_path: str, request: Request):
+    """
+    Обрабатывает все остальные маршруты для SPA
+    """
+    # Если запрос не начинается с api или static, отдаем index.html
+    if not full_path.startswith("api") and not full_path.startswith("static"):
+        index_path = current_dir / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        
+        index_path = TEMPLATES_DIR / "index.html"
+        if index_path.exists():
+            return templates.TemplateResponse(
+                "index.html",
+                {
+                    "request": request,
+                    "title": "KinoVzor - Кинопортал",
+                    "api_prefix": settings.api_prefix or "/api/v1"
+                }
+            )
+    
+    # Возвращаем 404 для несуществующих путей
+    return HTMLResponse(content="<h1>404 - Page Not Found</h1>", status_code=404)
 
 # Включение роутеров API
 app.include_router(sample_router, tags=["sample"])
@@ -206,9 +238,8 @@ app.include_router(roles_router, tags=["roles"], prefix=settings.api_prefix)
 app.include_router(movies_router, tags=["movies"], prefix=settings.api_prefix)
 app.include_router(reviews_router, tags=["reviews"], prefix=settings.api_prefix)
 app.include_router(users_router, tags=["users"], prefix=settings.api_prefix)
-app.include_router(picks_router, tags=["picks"], prefix=settings.api_prefix)
-app.include_router(movie_stats_router, prefix=settings.api_prefix)
-app.include_router(movie_picks_router, prefix=settings.api_prefix)
+app.include_router(movie_stats_router, prefix=settings.api_prefix, tags=["stats"])
+app.include_router(movie_picks_router, prefix=settings.api_prefix, tags=["picks"])
 
 # Глобальные обработчики ошибок
 @app.exception_handler(404)
@@ -247,7 +278,7 @@ async def redirect_openapi():
 async def favicon():
     """Favicon endpoint - возвращает простой PNG или ICO"""
     # Если файл есть в static папке, возвращаем его
-    favicon_path = current_dir / "static" / "favicon.ico"
+    favicon_path = STATIC_DIR / "favicon.ico"
     if favicon_path.exists():
         return FileResponse(favicon_path, media_type="image/x-icon")
     # Иначе просто возвращаем пустой ответ 204
@@ -334,12 +365,6 @@ async def health_check():
     
     return system_info
 
-# В вашем эндпоинте
-@app.post("/movies")
-async def create_movie(movie: MovieCreate):  # Проверьте MovieCreate схему
-    return await MovieService.create_movie(movie)
-
-
 @app.get("/info", tags=["monitoring"], include_in_schema=False)
 async def app_info():
     """
@@ -376,3 +401,11 @@ async def app_info():
         }
     }
 
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.DEBUG,
+        log_level="debug" if settings.DEBUG else "info"
+    )

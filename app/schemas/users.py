@@ -1,7 +1,9 @@
+# app/schemas/users.py
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from .enums import UserRole
+from .roles import Role  # Импортируем Role для отношений
 
 class SUserGet(BaseModel):
     id: int
@@ -26,8 +28,17 @@ class UserUpdate(BaseModel):
 
 class UserInDB(UserBase):
     id: int
+    is_active: bool = True
     created_at: datetime
     updated_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True
+
+# ДОБАВЛЯЕМ ЭТОТ КЛАСС
+class UserResponse(UserInDB):
+    """Схема для ответа API с информацией о пользователе"""
+    role_details: Optional[Role] = None  # Детали роли если нужны
+
+# Для обратной совместимости
+User = UserInDB

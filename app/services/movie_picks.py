@@ -1,103 +1,125 @@
 # app/services/movie_picks.py
 from typing import List, Optional
-from sqlalchemy.orm import Session
-from app.repositories.movie_picks import MoviePickRepository
-from app.schemas.movie_picks import MoviePickCreate, MoviePickUpdate, MoviePick, MoviePickWithDetails
-from app.exceptions.base import NotFoundException, ConflictException, BadRequestException
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+from app.models.movie_picks import MoviePick
+from app.models.movies import Movie
+from app.models.picks import Pick
+from app.models.users import User
+from app.schemas.movie_picks import MoviePickCreate, MoviePickUpdate
 
 class MoviePickService:
-    def __init__(self, db: Session):
-        self.repository = MoviePickRepository(db)
+    def __init__(self, db: AsyncSession):
+        self.db = db
     
-    def get_movie_pick(self, pick_id: int) -> Optional[MoviePick]:
-        pick = self.repository.get_by_id(pick_id)
-        if not pick:
-            raise NotFoundException("Связь фильма с подборкой не найдена")
-        return pick
+    async def get_movie_pick(self, pick_id: int) -> Optional[MoviePick]:
+        stmt = select(MoviePick).where(MoviePick.id == pick_id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
     
-    def get_movie_pick_with_details(self, pick_id: int) -> Optional[MoviePickWithDetails]:
-        pick = self.repository.get_by_id(pick_id)
-        if not pick:
-            raise NotFoundException("Связь фильма с подборкой не найдена")
+    async def get_movie_picks_by_movie(self, movie_id: int) -> List[MoviePick]:
+        stmt = select(MoviePick).where(MoviePick.movie_id == movie_id)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+    
+    async def get_movie_picks_by_pick(self, pick_id: int) -> List[MoviePick]:
+        stmt = select(MoviePick).where(MoviePick.pick_id == pick_id)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+    
+    async def get_all_movie_picks(self, skip: int = 0, limit: int = 100) -> List[MoviePick]:
+        stmt = select(MoviePick).offset(skip).limit(limit)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+    
+    async def create_movie_pick(self, movie_pick: MoviePickCreate) -> MoviePick:
+        # Проверяем существование фильма
+        movie_stmt = select(Movie).where(Movie.id == movie_pick.movie_id)
+        movie_result = await self.db.execute(movie_stmt)
+        movie = movie_result.scalar_one_or_none()
         
-        pick_dict = {**pick.__dict__}
-        if hasattr(pick, 'movie'):
-            pick_dict['movie_title'] = pick.movie.title
-        if hasattr(pick, 'pick'):
-            pick_dict['pick_name'] = pick.pick.name
-        if hasattr(pick, 'user'):
-            pick_dict['added_by_username'] = pick.user.username
+        if not movie:
+            raise ValueError(f"Фильм с ID {movie_pick.movie_id} не найден")
         
-        return MoviePickWithDetails(**pick_dict)
-    
-    def get_movie_picks_by_movie(self, movie_id: int) -> List[MoviePickWithDetails]:
-        picks = self.repository.get_by_movie_id(movie_id)
-        result = []
-        for pick in picks:
-            pick_dict = {**pick.__dict__}
-            if hasattr(pick, 'movie'):
-                pick_dict['movie_title'] = pick.movie.title
-            if hasattr(pick, 'pick'):
-                pick_dict['pick_name'] = pick.pick.name
-            if hasattr(pick, 'user'):
-                pick_dict['added_by_username'] = pick.user.username
-            result.append(MoviePickWithDetails(**pick_dict))
-        return result
-    
-    def get_movie_picks_by_pick(self, pick_id: int) -> List[MoviePickWithDetails]:
-        picks = self.repository.get_by_pick_id(pick_id)
-        result = []
-        for pick in picks:
-            pick_dict = {**pick.__dict__}
-            if hasattr(pick, 'movie'):
-                pick_dict['movie_title'] = pick.movie.title
-            if hasattr(pick, 'pick'):
-                pick_dict['pick_name'] = pick.pick.name
-            if hasattr(pick, 'user'):
-                pick_dict['added_by_username'] = pick.user.username
-            result.append(MoviePickWithDetails(**pick_dict))
-        return result
-    
-    def get_all_movie_picks(self, skip: int = 0, limit: int = 100) -> List[MoviePick]:
-        return self.repository.get_all(skip, limit)
-    
-    def get_all_movie_picks_with_details(self, skip: int = 0, limit: int = 100) -> List[MoviePickWithDetails]:
-        picks = self.repository.get_with_details(skip, limit)
-        result = []
-        for pick in picks:
-            pick_dict = {**pick.__dict__}
-            if hasattr(pick, 'movie'):
-                pick_dict['movie_title'] = pick.movie.title
-            if hasattr(pick, 'pick'):
-                pick_dict['pick_name'] = pick.pick.name
-            if hasattr(pick, 'user'):
-                pick_dict['added_by_username'] = pick.user.username
-            result.append(MoviePickWithDetails(**pick_dict))
-        return result
-    
-    def create_movie_pick(self, movie_pick: MoviePickCreate) -> MoviePick:
-        new_pick = self.repository.create(movie_pick)
-        if not new_pick:
-            raise BadRequestException(
-                "Не удалось добавить фильм в подборку. Проверьте существование фильма, подборки и пользователя, или возможно фильм уже добавлен в эту подборку"
-            )
+        # Проверяем существование подборки
+        pick_stmt = select(Pick).where(Pick.id == movie_pick.pick_id)
+        pick_result = await self.db.execute(pick_stmt)
+        pick = pick_result.scalar_one_or_none()
+        
+        if not pick:
+            raise ValueError(f"Подборка с ID {movie_pick.pick_id} не найден")
+        
+        # Проверяем существование пользователя
+        user_stmt = select(User).where(User.id == movie_pick.added_by)
+        user_result = await self.db.execute(user_stmt)
+        user = user_result.scalar_one_or_none()
+        
+        if not user:
+            raise ValueError(f"Пользователь с ID {movie_pick.added_by} не найден")
+        
+        # Проверяем, существует ли уже такая связь
+        existing_stmt = select(MoviePick).where(
+            MoviePick.movie_id == movie_pick.movie_id,
+            MoviePick.pick_id == movie_pick.pick_id
+        )
+        existing_result = await self.db.execute(existing_stmt)
+        existing = existing_result.scalar_one_or_none()
+        
+        if existing:
+            raise ValueError("Этот фильм уже добавлен в эту подборку")
+        
+        # Создаем связь
+        new_pick = MoviePick(
+            movie_id=movie_pick.movie_id,
+            pick_id=movie_pick.pick_id,
+            added_by=movie_pick.added_by
+        )
+        
+        self.db.add(new_pick)
+        await self.db.commit()
+        await self.db.refresh(new_pick)
         
         return new_pick
     
-    def update_movie_pick(self, pick_id: int, movie_pick: MoviePickUpdate) -> MoviePick:
-        db_pick = self.repository.get_by_id(pick_id)
+    async def update_movie_pick(self, pick_id: int, movie_pick: MoviePickUpdate) -> Optional[MoviePick]:
+        stmt = select(MoviePick).where(MoviePick.id == pick_id)
+        result = await self.db.execute(stmt)
+        db_pick = result.scalar_one_or_none()
+        
         if not db_pick:
-            raise NotFoundException("Связь фильма с подборкой не найдена")
+            return None
         
-        updated_pick = self.repository.update(pick_id, movie_pick)
-        if not updated_pick:
-            raise NotFoundException("Связь фильма с подборкой не найдена")
+        # Проверяем уникальность если изменены movie_id или pick_id
+        if movie_pick.movie_id != db_pick.movie_id or movie_pick.pick_id != db_pick.pick_id:
+            existing_stmt = select(MoviePick).where(
+                MoviePick.movie_id == movie_pick.movie_id,
+                MoviePick.pick_id == movie_pick.pick_id
+            )
+            existing_result = await self.db.execute(existing_stmt)
+            existing = existing_result.scalar_one_or_none()
+            
+            if existing:
+                raise ValueError("Этот фильм уже добавлен в эту подборку")
         
-        return updated_pick
+        db_pick.movie_id = movie_pick.movie_id
+        db_pick.pick_id = movie_pick.pick_id
+        db_pick.added_by = movie_pick.added_by
+        
+        await self.db.commit()
+        await self.db.refresh(db_pick)
+        
+        return db_pick
     
-    def delete_movie_pick(self, pick_id: int) -> bool:
-        db_pick = self.repository.get_by_id(pick_id)
-        if not db_pick:
-            raise NotFoundException("Связь фильма с подборкой не найдена")
+    async def delete_movie_pick(self, pick_id: int) -> bool:
+        stmt = select(MoviePick).where(MoviePick.id == pick_id)
+        result = await self.db.execute(stmt)
+        db_pick = result.scalar_one_or_none()
         
-        return self.repository.delete(pick_id)
+        if not db_pick:
+            return False
+        
+        await self.db.delete(db_pick)
+        await self.db.commit()
+        
+        return True

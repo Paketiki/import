@@ -1,1257 +1,952 @@
- // Simple in-memory "database" of users
-const USERS = [
-  { username: "user", password: "1234", role: "viewer" },
-  { username: "moderator", password: "1234", role: "moderator" },
-];
+// script.js - Полная реализация взаимодействия с API кинопортала
 
-// Movie data
-let MOVIES = [];
-
-// State
+// ===================== КОНФИГУРАЦИЯ =====================
+const API_BASE_URL = 'http://localhost:8000';
 let currentUser = null;
-let currentPick = "all";
-let currentGenre = "all";
-let currentRatingFilter = "all";
-let currentSearch = "";
-let selectedMovieId = null;
+let authToken = localStorage.getItem('token') || null;
+let allMovies = [];
+let favorites = [];
+let currentMovieDetails = null;
 
-// API base URL - получаем из настроек приложения
-const API_BASE_URL = "/api/v1";
-
-// load favorites from localStorage (array of ids)
-const FAVORITES = new Set(JSON.parse(localStorage.getItem("kinovzor-favs") || "[]"));
-
-// Elements
-const body = document.body;
-const moviesListEl = document.getElementById("moviesList");
-const movieDetailsEl = document.getElementById("movieDetails");
-const genreSelectEl = document.getElementById("genreSelect");
-const searchInputEl = document.getElementById("searchInput");
-const ratingButtons = document.querySelectorAll(".chip-button[data-rating]");
-const pickButtons = document.querySelectorAll(".pill-button[data-pick]");
-const themeToggleBtn = document.getElementById("themeToggle");
-const authButton = document.getElementById("authButton");
-const userBadge = document.getElementById("userBadge");
-const userNameEl = document.getElementById("userName");
-const userRoleEl = document.getElementById("userRole");
-const logoutButton = document.getElementById("logoutButton");
-const adminPanel = document.getElementById("adminPanel");
-// new profile modal elements
-const profileModal = document.getElementById("profileModal");
-const closeProfileModalBtn = document.getElementById("closeProfileModal");
-const favoritesListEl = document.getElementById("favoritesList");
-const profileContentEl = document.getElementById("profileContent");
-const adminAddForm = document.getElementById("adminAddForm");
-const adminTitleInput = document.getElementById("adminTitle");
-const adminYearInput = document.getElementById("adminYear");
-const adminRatingInput = document.getElementById("adminRating");
-const adminPosterInput = document.getElementById("adminPoster");
-const adminOverviewInput = document.getElementById("adminOverview");
-const adminReview1Input = document.getElementById("adminReview1");
-const adminReview2Input = document.getElementById("adminReview2");
-
-// Auth modal
-const authModal = document.getElementById("authModal");
-const closeAuthModalBtn = document.getElementById("closeAuthModal");
-const tabButtons = document.querySelectorAll(".tab-button");
-const tabPanels = document.querySelectorAll(".tab-panel");
-const loginForm = document.getElementById("loginForm");
-const loginUsernameInput = document.getElementById("loginUsername");
-const loginPasswordInput = document.getElementById("loginPassword");
-const loginErrorEl = document.getElementById("loginError");
-
-// registration elements
-const registerForm = document.getElementById("registerForm");
-const registerUsernameInput = document.getElementById("registerUsername");
-const registerPasswordInput = document.getElementById("registerPassword");
-const registerPasswordConfirmInput = document.getElementById("registerPasswordConfirm");
-const registerErrorEl = document.getElementById("registerError");
-
-const quickRoleButtons = document.querySelectorAll("[data-quick-role]");
-
-// Initialization
-initTheme();
-initGenres();
-loadMoviesFromAPI();
-attachEventListeners();
-selectDefaultMovie();
-// ensure each movie has container for user reviews
-// После загрузки фильмов инициализируем пользовательские рецензии
-// В новой версии они будут приходить с API, но мы оставляем эту логику для совместимости
-MOVIES.forEach((m) => {
-  if (!Array.isArray(m.userReviews)) {
-    m.userReviews = [];
-  } else {
-    // normalize existing user reviews ratings to integers
-    m.userReviews = m.userReviews.map((r) => ({
-      ...r,
-      rating: Math.round(Number(r.rating || 0)),
-    }));
-  }
-});
-
-// Функция для загрузки фильмов с API
-async function loadMoviesFromAPI() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/movies`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const moviesData = await response.json();
-    
-    // Преобразуем данные из API в формат, ожидаемый фронтендом
-    MOVIES = moviesData.map(movie => ({
-      id: movie.id,
-      title: movie.title,
-      year: movie.year,
-      genre: movie.genre,
-      rating: movie.rating,
-      poster: movie.poster,
-      overview: movie.overview,
-      review: movie.review,
-      // Преобразуем picks из объектов в массив имен
-      picks: movie.picks ? movie.picks.map(pick => pick.name) : [],
-      // Добавляем дополнительные поля, если их нет
-      extraReviews: [],
-      userReviews: []
-    }));
-    
-    // Обновляем UI после загрузки данных
-    initGenres();
-    renderMovies();
-  } catch (error) {
-    console.error("Ошибка при загрузке фильмов:", error);
-    // В случае ошибки показываем сообщение пользователю
-    moviesListEl.innerHTML = '<li class="placeholder-text">Не удалось загрузить фильмы. Попробуйте обновить страницу.</li>';
-  }
+// ===================== УТИЛИТЫ =====================
+function showError(message) {
+    console.error('Ошибка:', message);
+    // Можно добавить уведомление пользователю
+    alert(`Ошибка: ${message}`);
 }
 
-function initTheme() {
-  const saved = localStorage.getItem("kinovzor-theme");
-  if (saved === "light") {
-    body.classList.remove("theme-dark");
-    body.classList.add("theme-light");
-  } else {
-    body.classList.remove("theme-light");
-    body.classList.add("theme-dark");
-  }
-}
+async function apiRequest(endpoint, options = {}) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+    };
 
-function initGenres() {
-  const genres = Array.from(new Set(MOVIES.map((m) => m.genre))).sort();
-  genres.forEach((g) => {
-    const option = document.createElement("option");
-    option.value = g;
-    option.textContent = g;
-    genreSelectEl.appendChild(option);
-  });
-}
-
-function getFilteredMovies() {
-  return MOVIES.filter((movie) => {
-    if (currentPick !== "all" && !movie.picks.includes(currentPick)) {
-      return false;
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
     }
-    if (currentGenre !== "all" && movie.genre !== currentGenre) {
-      return false;
-    }
-    if (currentRatingFilter !== "all" && movie.rating < Number(currentRatingFilter)) {
-      return false;
-    }
-    if (currentSearch.trim()) {
-      const term = currentSearch.trim().toLowerCase();
-      if (!movie.title.toLowerCase().includes(term)) return false;
-    }
-    return true;
-  });
-}
 
-function renderMovies() {
-  moviesListEl.innerHTML = "";
-  const movies = getFilteredMovies();
-
-  if (movies.length === 0) {
-    const empty = document.createElement("li");
-    empty.className = "placeholder-text";
-    empty.textContent = "По заданным фильтрам фильмы не найдены.";
-    moviesListEl.appendChild(empty);
-    movieDetailsEl.classList.add("empty");
-    movieDetailsEl.innerHTML =
-      '<p class="placeholder-text">Измените фильтры или поиск, чтобы увидеть фильмы.</p>';
-    return;
-  }
-
-  movies.forEach((movie) => {
-    const li = document.createElement("li");
-    li.className = "movie-card";
-    li.dataset.id = movie.id;
-
-    const posterWrap = document.createElement("div");
-    posterWrap.className = "movie-poster-wrapper";
-    const posterImg = document.createElement("img");
-    posterImg.className = "movie-poster";
-    posterImg.src =
-      movie.poster || "https://picsum.photos/seed/defaultposter/200/300";
-    posterImg.alt = `${movie.title} постер`;
-    posterWrap.appendChild(posterImg);
-
-    const bodyWrap = document.createElement("div");
-    bodyWrap.className = "movie-card-body";
-
-    const header = document.createElement("div");
-    header.className = "movie-card-header";
-
-    const title = document.createElement("div");
-    title.className = "movie-title";
-    title.textContent = movie.title;
-
-    const ratingBadge = document.createElement("div");
-    ratingBadge.className = "badge-rating";
-    // render integer ratings
-    ratingBadge.textContent = Math.round(Number(movie.rating)).toFixed(0);
-
-    header.appendChild(title);
-    header.appendChild(ratingBadge);
-
-    const metaRow = document.createElement("div");
-    metaRow.className = "movie-meta";
-    metaRow.innerHTML = `
-      <span>${movie.year}</span>
-      <span>•</span>
-      <span>${movie.genre}</span>
-    `;
-
-    const footer = document.createElement("div");
-    footer.className = "movie-card-footer";
-
-    const picks = document.createElement("div");
-    picks.className = "movie-picks";
-    movie.picks.forEach((p) => {
-      const pickChip = document.createElement("span");
-      pickChip.className = "movie-pick-chip";
-      pickChip.textContent = getPickLabel(p);
-      picks.appendChild(pickChip);
-    });
-
-    const rightControls = document.createElement("div");
-    rightControls.style.display = "flex";
-    rightControls.style.gap = "6px";
-    rightControls.style.alignItems = "center";
-
-    const favBtn = document.createElement("button");
-    favBtn.className = "fav-button";
-    favBtn.title = "Добавить в избранное";
-    favBtn.textContent = FAVORITES.has(movie.id) ? "★" : "☆";
-    if (FAVORITES.has(movie.id)) favBtn.classList.add("active");
-
-    // prevent whole-card click when toggling favorite
-    favBtn.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      toggleFavorite(movie.id);
-      // update visual immediately for this card
-      favBtn.textContent = FAVORITES.has(movie.id) ? "★" : "☆";
-      favBtn.classList.toggle("active", FAVORITES.has(movie.id));
-    });
-
-    const more = document.createElement("span");
-    more.textContent = "Рецензии";
-    more.style.cursor = "pointer";
-
-    rightControls.appendChild(favBtn);
-    rightControls.appendChild(more);
-
-    footer.appendChild(picks);
-    footer.appendChild(rightControls);
-
-    bodyWrap.appendChild(header);
-    bodyWrap.appendChild(metaRow);
-    bodyWrap.appendChild(footer);
-
-    li.appendChild(posterWrap);
-    li.appendChild(bodyWrap);
-
-    // click behavior: on mobile (narrow) toggle in-card expansion, otherwise use details panel
-    li.addEventListener("click", () => {
-      const isMobile = window.innerWidth <= 540;
-      selectedMovieId = movie.id;
-      if (isMobile) {
-        const already = li.classList.contains("expanded");
-        // collapse any other expanded card and remove their expanded content
-        document.querySelectorAll(".movie-card.expanded").forEach((c) => {
-          if (c !== li) {
-            c.classList.remove("expanded");
-            const extra = c.querySelector(".mobile-expanded");
-            if (extra) extra.remove();
-          }
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers,
         });
-        if (already) {
-          li.classList.remove("expanded");
-          // remove expanded content
-          const extra = li.querySelector(".mobile-expanded");
-          if (extra) extra.remove();
-        } else {
-          li.classList.add("expanded");
-          // build mobile expansion content
-          const expanded = document.createElement("div");
-          expanded.className = "mobile-expanded";
-          expanded.style.marginTop = "8px";
 
-          const overviewTitle = document.createElement("div");
-          overviewTitle.className = "details-section-title";
-          overviewTitle.textContent = "Сюжет";
-          const overviewText = document.createElement("div");
-          overviewText.className = "details-overview";
-          overviewText.textContent = movie.overview || "";
-
-          const reviewTitle = document.createElement("div");
-          reviewTitle.className = "details-section-title";
-          reviewTitle.textContent = "Рецензии";
-
-          const reviewsContainer = document.createElement("div");
-
-          // combine system + extra + user reviews
-          const allReviews = [];
-          if (movie.review) {
-            allReviews.push({
-              author: "КиноВзор",
-              role: "system",
-              rating: Math.round(Number(movie.rating)),
-              text: movie.review,
-            });
-          }
-          if (Array.isArray(movie.extraReviews)) {
-            movie.extraReviews.forEach((text) => {
-              if (!text) return;
-              allReviews.push({
-                author: "КиноВзор",
-                role: "system",
-                rating: Math.round(Number(movie.rating)),
-                text,
-              });
-            });
-          }
-          if (Array.isArray(movie.userReviews)) {
-            movie.userReviews.forEach((r) =>
-              allReviews.push({
-                author: r.author,
-                role: r.role,
-                rating: Math.round(Number(r.rating)),
-                text: r.text,
-              })
-            );
-          }
-
-          if (allReviews.length === 0) {
-            const emptyReview = document.createElement("div");
-            emptyReview.className = "placeholder-text";
-            emptyReview.textContent =
-              "Пока нет рецензий. Станьте первым, кто оценит этот фильм.";
-            reviewsContainer.appendChild(emptyReview);
-          } else {
-            allReviews.forEach((r) => {
-            const item = document.createElement("div");
-            item.className = "review-item";
-
-            const headerRow = document.createElement("div");
-            headerRow.className = "review-header";
-
-            const authorEl = document.createElement("div");
-            authorEl.className = "review-author";
-            authorEl.textContent = r.author;
-
-            const roleEl = document.createElement("div");
-            roleEl.className = "review-role";
-            if (r.role === "moderator") {
-              roleEl.textContent = "Модератор";
-            } else if (r.role === "viewer") {
-              roleEl.textContent = "Зритель";
-            } else {
-              roleEl.textContent = "КиноВзор";
-            }
-
-            const ratingEl = document.createElement("div");
-            ratingEl.className = "review-rating-badge";
-            ratingEl.textContent = `${Math.round(Number(r.rating)).toFixed(0)} ★`;
-
-            headerRow.appendChild(authorEl);
-            headerRow.appendChild(roleEl);
-            headerRow.appendChild(ratingEl);
-
-            const textEl = document.createElement("div");
-            textEl.className = "review-text";
-            textEl.textContent = r.text;
-
-            item.appendChild(headerRow);
-            item.appendChild(textEl);
-
-            // allow moderators to delete user-submitted reviews (not system reviews)
-            if (currentUser && currentUser.role === "moderator" && r.role !== "system") {
-              const delBtn = document.createElement("button");
-              delBtn.className = "secondary-button";
-              delBtn.style.marginTop = "6px";
-              delBtn.textContent = "Удалить рецензию";
-              delBtn.addEventListener("click", (ev) => {
-                ev.stopPropagation();
-                // find movie and remove first matching user review by unique properties
-                const targetMovie = MOVIES.find((mm) => mm.id === movie.id);
-                if (!targetMovie || !Array.isArray(targetMovie.userReviews)) return;
-                const idx = targetMovie.userReviews.findIndex(
-                  (ur) =>
-                    ur.author === r.author &&
-                    String(Math.round(Number(ur.rating))) === String(Math.round(Number(r.rating))) &&
-                    (ur.text || "") === (r.text || "")
-                );
-                if (idx >= 0) {
-                  targetMovie.userReviews.splice(idx, 1);
-                  // refresh UI
-                  // if mobile expanded exists, rebuild it by collapsing and reopening
-                  document.querySelectorAll(".movie-card.expanded").forEach((c) => {
-                    const id = Number(c.dataset.id);
-                    if (id === movie.id) {
-                      c.classList.remove("expanded");
-                      const extra = c.querySelector(".mobile-expanded");
-                      if (extra) extra.remove();
-                    }
-                  });
-                  // if details panel currently showing this movie, re-render it
-                  if (selectedMovieId === movie.id) {
-                    renderMovieDetails(movie.id);
-                  }
-                  // re-open expanded if on mobile (simple rebuild)
-                  const li = document.querySelector(`.movie-card[data-id='${movie.id}']`);
-                  if (li && window.innerWidth <= 540) {
-                    li.classList.add("expanded");
-                    li.click();
-                  } else {
-                    renderMovies();
-                  }
-                }
-              });
-              item.appendChild(delBtn);
-            }
-
-            reviewsContainer.appendChild(item);
-          });
-          }
-
-          expanded.appendChild(overviewTitle);
-          expanded.appendChild(overviewText);
-          expanded.appendChild(reviewTitle);
-          expanded.appendChild(reviewsContainer);
-
-          // if logged in, add a compact review form inside expansion
-          if (currentUser) {
-            const form = document.createElement("form");
-            form.className = "review-form";
-            form.style.marginTop = "8px";
-
-            const textRow = document.createElement("div");
-            textRow.className = "review-form-row";
-            const textLabel = document.createElement("label");
-            textLabel.className = "form-label";
-            textLabel.textContent = "Ваш отзыв";
-            const textArea = document.createElement("textarea");
-            textArea.rows = 2;
-            textArea.placeholder = "Короткий отзыв...";
-            textArea.className = "input";
-            textRow.appendChild(textLabel);
-            textRow.appendChild(textArea);
-
-            const ratingRow = document.createElement("div");
-            ratingRow.className = "review-form-rating-row";
-            const ratingLabel = document.createElement("label");
-            ratingLabel.className = "form-label";
-            ratingLabel.textContent = "Оценка";
-            const ratingSelect = document.createElement("select");
-            ratingSelect.className = "input review-rating-select";
-            for (let v = 10; v >= 1; v--) {
-              const opt = document.createElement("option");
-              opt.value = v;
-              opt.textContent = v;
-              ratingSelect.appendChild(opt);
-            }
-            ratingRow.appendChild(ratingLabel);
-            ratingRow.appendChild(ratingSelect);
-
-            const submitBtn = document.createElement("button");
-            submitBtn.type = "submit";
-            submitBtn.className = "primary-button full-width";
-            submitBtn.textContent = "Оставить";
-
-            form.appendChild(textRow);
-            form.appendChild(ratingRow);
-            form.appendChild(submitBtn);
-
-            form.addEventListener("submit", (ev) => {
-              ev.preventDefault();
-              const text = textArea.value.trim();
-              const rating = Math.round(Number(ratingSelect.value));
-              if (!text || !rating) return;
-
-              movie.userReviews.push({
-                author: currentUser.username,
-                role: currentUser.role,
-                rating,
-                text,
-              });
-
-              // re-render expanded content to show new review
-              textArea.value = "";
-              ratingSelect.value = "10";
-              // collapse any expanded state and reopen this one to refresh
-              document.querySelectorAll(".movie-card.expanded").forEach((c) => {
-                if (c !== li) {
-                  c.classList.remove("expanded");
-                  const extra = c.querySelector(".mobile-expanded");
-                  if (extra) extra.remove();
-                }
-              });
-              li.classList.remove("expanded");
-              const existing = li.querySelector(".mobile-expanded");
-              if (existing) existing.remove();
-              li.classList.add("expanded");
-              // simple approach: call click to rebuild
-              li.click();
-            });
-
-            expanded.appendChild(form);
-          }
-
-          li.appendChild(expanded);
-          // ensure details panel also updates for larger viewports if user switches orientation
-          renderMovieDetails(movie.id);
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || `HTTP ${response.status}`);
         }
-      } else {
-        renderMovieDetails(movie.id);
-      }
-    });
 
-    moviesListEl.appendChild(li);
-  });
+        return await response.json();
+    } catch (error) {
+        showError(`API запрос не удался: ${error.message}`);
+        throw error;
+    }
 }
 
-function getPickLabel(code) {
-  switch (code) {
-    case "hits":
-      return "Хит";
-    case "new":
-      return "Новинка";
-    case "classic":
-      return "Классика";
-    default:
-      return "";
-  }
-}
-
-function renderMovieDetails(id) {
-  const movie = MOVIES.find((m) => m.id === id);
-  if (!movie) return;
-
-  // Убедимся, что у фильма есть массив пользовательских рецензий
-  if (!Array.isArray(movie.userReviews)) {
-    movie.userReviews = [];
-  }
-
-  movieDetailsEl.classList.remove("empty");
-  movieDetailsEl.innerHTML = "";
-
-  const wrapper = document.createElement("div");
-  wrapper.className = "details-scroll";
-
-  const header = document.createElement("div");
-  header.className = "details-header";
-
-  const headerTop = document.createElement("div");
-  headerTop.className = "details-header-top";
-
-  const posterWrap = document.createElement("div");
-  posterWrap.className = "details-poster-wrapper";
-  const posterImg = document.createElement("img");
-  posterImg.className = "details-poster";
-  posterImg.src =
-    movie.poster || "https://picsum.photos/seed/defaultposter/200/300";
-  posterImg.alt = `${movie.title} постер`;
-  posterWrap.appendChild(posterImg);
-
-  const titleBlockWrap = document.createElement("div");
-  titleBlockWrap.style.flex = "1";
-  const titleRow = document.createElement("div");
-  titleRow.className = "details-title-row";
-
-  const titleBlock = document.createElement("div");
-  const titleEl = document.createElement("div");
-  titleEl.className = "details-title";
-  titleEl.textContent = movie.title;
-  const yearEl = document.createElement("div");
-  yearEl.className = "details-year";
-  yearEl.textContent = movie.year;
-  titleBlock.appendChild(titleEl);
-  titleBlock.appendChild(yearEl);
-
-  const ratingBadge = document.createElement("div");
-  ratingBadge.className = "badge-rating";
-  // integer display
-  ratingBadge.textContent = Math.round(Number(movie.rating)).toFixed(0);
-
-  // favorite button in details header
-  const favDetailBtn = document.createElement("button");
-  favDetailBtn.className = "fav-button";
-  favDetailBtn.style.marginLeft = "8px";
-  favDetailBtn.textContent = FAVORITES.has(movie.id) ? "★" : "☆";
-  favDetailBtn.title = FAVORITES.has(movie.id) ? "В избранном" : "Добавить в избранное";
-  if (FAVORITES.has(movie.id)) favDetailBtn.classList.add("active");
-  favDetailBtn.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    toggleFavorite(movie.id);
-    favDetailBtn.textContent = FAVORITES.has(movie.id) ? "★" : "☆";
-    favDetailBtn.classList.toggle("active", FAVORITES.has(movie.id));
-    favDetailBtn.title = FAVORITES.has(movie.id) ? "В избранном" : "Добавить в избранное";
-    // keep movies list and details in sync
-    renderMovies();
-    if (selectedMovieId != null) renderMovieDetails(selectedMovieId);
-  });
-
-  const rightWrap = document.createElement("div");
-  rightWrap.style.display = "flex";
-  rightWrap.style.alignItems = "center";
-  rightWrap.style.gap = "8px";
-  rightWrap.appendChild(ratingBadge);
-  rightWrap.appendChild(favDetailBtn);
-
-  titleRow.appendChild(titleBlock);
-  titleRow.appendChild(rightWrap);
-
-  const metaRow = document.createElement("div");
-  metaRow.className = "details-meta-row";
-  metaRow.innerHTML = `
-    <span>${movie.genre}</span>
-    <span>•</span>
-    <span>${movie.year}</span>
-  `;
-
-  const tagsRow = document.createElement("div");
-  tagsRow.className = "details-tags";
-  movie.picks.forEach((p) => {
-    const chip = document.createElement("span");
-    chip.className = "movie-pick-chip";
-    chip.textContent = getPickLabel(p);
-    tagsRow.appendChild(chip);
-  });
-
-  titleBlockWrap.appendChild(titleRow);
-  titleBlockWrap.appendChild(metaRow);
-  titleBlockWrap.appendChild(tagsRow);
-
-  headerTop.appendChild(posterWrap);
-  headerTop.appendChild(titleBlockWrap);
-
-  header.appendChild(headerTop);
-
-  const overviewTitle = document.createElement("div");
-  overviewTitle.className = "details-section-title";
-  overviewTitle.textContent = "Сюжет";
-
-  const overviewText = document.createElement("div");
-  overviewText.className = "details-overview";
-  overviewText.textContent = movie.overview;
-
-  const reviewTitle = document.createElement("div");
-  reviewTitle.className = "details-section-title";
-  reviewTitle.textContent = "Рецензии";
-
-  const reviewsContainer = document.createElement("div");
-
-  // build full review list: базовые + пользовательские
-  const allReviews = [];
-
-  if (movie.review) {
-    allReviews.push({
-      author: "КиноВзор",
-      role: "system",
-      rating: Math.round(Number(movie.rating)),
-      text: movie.review,
-    });
-  }
-
-  if (Array.isArray(movie.extraReviews)) {
-    movie.extraReviews.forEach((text) => {
-      if (!text) return;
-      allReviews.push({
-        author: "КиноВзор",
-        role: "system",
-        rating: Math.round(Number(movie.rating)),
-        text,
-      });
-    });
-  }
-
-  movie.userReviews.forEach((r) =>
-    allReviews.push({
-      author: r.author,
-      role: r.role === "admin" ? "moderator" : r.role,
-      rating: Math.round(Number(r.rating)),
-      text: r.text,
-    })
-  );
-
-  if (allReviews.length === 0) {
-    const emptyReview = document.createElement("div");
-    emptyReview.className = "placeholder-text";
-    emptyReview.textContent =
-      "Пока нет рецензий. Станьте первым, кто оценит этот фильм.";
-    reviewsContainer.appendChild(emptyReview);
-  } else {
-    allReviews.forEach((r) => {
-      const item = document.createElement("div");
-      item.className = "review-item";
-
-      const headerRow = document.createElement("div");
-      headerRow.className = "review-header";
-
-      const authorEl = document.createElement("div");
-      authorEl.className = "review-author";
-      authorEl.textContent = r.author;
-
-      const roleEl = document.createElement("div");
-      roleEl.className = "review-role";
-      if (r.role === "moderator") {
-        roleEl.textContent = "Модератор";
-      } else if (r.role === "viewer") {
-        roleEl.textContent = "Зритель";
-      } else {
-        roleEl.textContent = "КиноВзор";
-      }
-
-      const ratingEl = document.createElement("div");
-      ratingEl.className = "review-rating-badge";
-      ratingEl.textContent = `${Math.round(Number(r.rating)).toFixed(0)} ★`;
-
-      headerRow.appendChild(authorEl);
-      headerRow.appendChild(roleEl);
-      headerRow.appendChild(ratingEl);
-
-      const textEl = document.createElement("div");
-      textEl.className = "review-text";
-      textEl.textContent = r.text;
-
-      item.appendChild(headerRow);
-      item.appendChild(textEl);
-
-      // moderator can delete non-system reviews
-      if (currentUser && currentUser.role === "moderator" && r.role !== "system") {
-        const delBtn = document.createElement("button");
-        delBtn.className = "secondary-button";
-        delBtn.style.marginTop = "6px";
-        delBtn.textContent = "Удалить рецензию";
-        delBtn.addEventListener("click", (ev) => {
-          ev.stopPropagation();
-          const targetMovie = MOVIES.find((mm) => mm.id === movie.id);
-          if (!targetMovie || !Array.isArray(targetMovie.userReviews)) return;
-          const idx = targetMovie.userReviews.findIndex(
-            (ur) =>
-              ur.author === r.author &&
-              String(Math.round(Number(ur.rating))) === String(Math.round(Number(r.rating))) &&
-              (ur.text || "") === (r.text || "")
-          );
-          if (idx >= 0) {
-            targetMovie.userReviews.splice(idx, 1);
-            renderMovieDetails(movie.id);
-            renderMovies();
-          }
+// ===================== АВТОРИЗАЦИЯ =====================
+async function login(username, password) {
+    try {
+        const data = await apiRequest('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ username, password }),
         });
-        item.appendChild(delBtn);
-      }
 
-      reviewsContainer.appendChild(item);
-    });
-  }
-
-  wrapper.appendChild(header);
-  wrapper.appendChild(overviewTitle);
-  wrapper.appendChild(overviewText);
-  wrapper.appendChild(reviewTitle);
-  wrapper.appendChild(reviewsContainer);
-
-  // форма для добавления рецензии для залогиненных
-  if (currentUser) {
-    const form = document.createElement("form");
-    form.className = "review-form";
-
-    const formTitle = document.createElement("div");
-    formTitle.className = "details-section-title";
-    formTitle.textContent = "Добавить рецензию";
-    form.appendChild(formTitle);
-
-    const textRow = document.createElement("div");
-    textRow.className = "review-form-row";
-    const textLabel = document.createElement("label");
-    textLabel.className = "form-label";
-    textLabel.textContent = "Ваш отзыв";
-    const textArea = document.createElement("textarea");
-    textArea.rows = 3;
-    textArea.placeholder = "Поделитесь впечатлениями о фильме...";
-    textArea.className = "input";
-    textRow.appendChild(textLabel);
-    textRow.appendChild(textArea);
-
-    const ratingRow = document.createElement("div");
-    ratingRow.className = "review-form-rating-row";
-    const ratingLabel = document.createElement("label");
-    ratingLabel.className = "form-label";
-    ratingLabel.textContent = "Оценка";
-    const ratingSelect = document.createElement("select");
-    ratingSelect.className = "input review-rating-select";
-    for (let v = 10; v >= 1; v--) {
-      const opt = document.createElement("option");
-      opt.value = v;
-      opt.textContent = v;
-      ratingSelect.appendChild(opt);
+        authToken = data.access_token;
+        localStorage.setItem('token', authToken);
+        
+        // Получаем информацию о пользователе
+        const userData = await apiRequest('/users/me');
+        currentUser = userData;
+        
+        updateUIAfterAuth();
+        closeModal('authModal');
+        
+        return userData;
+    } catch (error) {
+        const errorElement = document.getElementById('loginError');
+        errorElement.textContent = 'Неверный логин или пароль';
+        errorElement.classList.remove('hidden');
+        throw error;
     }
-    ratingRow.appendChild(ratingLabel);
-    ratingRow.appendChild(ratingSelect);
-
-    const submitBtn = document.createElement("button");
-    submitBtn.type = "submit";
-    submitBtn.className = "primary-button full-width";
-    submitBtn.textContent = "Оставить рецензию";
-
-    form.appendChild(textRow);
-    form.appendChild(ratingRow);
-    form.appendChild(submitBtn);
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const text = textArea.value.trim();
-      // store integer rating
-      const rating = Math.round(Number(ratingSelect.value));
-      if (!text || !rating) return;
-
-      movie.userReviews.push({
-        author: currentUser.username,
-        role: currentUser.role,
-        rating,
-        text,
-      });
-
-      textArea.value = "";
-      ratingSelect.value = "10";
-      renderMovieDetails(movie.id);
-    });
-
-    wrapper.appendChild(form);
-  }
-
-  movieDetailsEl.appendChild(wrapper);
 }
 
-function selectDefaultMovie() {
-  const list = getFilteredMovies();
-  if (list.length > 0) {
-    selectedMovieId = list[0].id;
-    renderMovieDetails(selectedMovieId);
-  }
-}
-
-function attachEventListeners() {
-  searchInputEl.addEventListener("input", (e) => {
-    currentSearch = e.target.value;
-    renderMovies();
-    selectDefaultMovie();
-  });
-
-  genreSelectEl.addEventListener("change", (e) => {
-    currentGenre = e.target.value;
-    renderMovies();
-    selectDefaultMovie();
-  });
-
-  ratingButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      ratingButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentRatingFilter = btn.dataset.rating;
-      renderMovies();
-      selectDefaultMovie();
-    });
-  });
-
-  pickButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      pickButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentPick = btn.dataset.pick;
-      renderMovies();
-      selectDefaultMovie();
-    });
-  });
-
-  themeToggleBtn.addEventListener("click", () => {
-    const isDark = body.classList.contains("theme-dark");
-    if (isDark) {
-      body.classList.remove("theme-dark");
-      body.classList.add("theme-light");
-      localStorage.setItem("kinovzor-theme", "light");
-    } else {
-      body.classList.remove("theme-light");
-      body.classList.add("theme-dark");
-      localStorage.setItem("kinovzor-theme", "dark");
+async function register(username, password, confirmPassword) {
+    if (password !== confirmPassword) {
+        const errorElement = document.getElementById('registerError');
+        errorElement.textContent = 'Пароли не совпадают';
+        errorElement.classList.remove('hidden');
+        return;
     }
-  });
 
-  authButton.addEventListener("click", openAuthModal);
-  closeAuthModalBtn.addEventListener("click", closeAuthModal);
-  authModal.addEventListener("click", (e) => {
-    if (e.target === authModal || e.target.classList.contains("modal-backdrop")) {
-      closeAuthModal();
+    try {
+        await apiRequest('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ 
+                username, 
+                password,
+                email: `${username}@example.com`
+            }),
+        });
+
+        // Автоматический вход после регистрации
+        await login(username, password);
+    } catch (error) {
+        const errorElement = document.getElementById('registerError');
+        errorElement.textContent = 'Ошибка регистрации. Возможно, пользователь уже существует.';
+        errorElement.classList.remove('hidden');
     }
-  });
+}
 
-  tabButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const tab = btn.dataset.tab;
-      tabButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      tabPanels.forEach((panel) => {
-        panel.classList.toggle("active", panel.dataset.panel === tab);
-      });
-    });
-  });
+function logout() {
+    authToken = null;
+    currentUser = null;
+    favorites = [];
+    localStorage.removeItem('token');
+    
+    updateUIAfterAuth();
+    loadMovies();
+}
 
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    handleLogin();
-  });
-
-  // registration submit
-  if (registerForm) {
-    registerForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      handleRegister();
-    });
-  }
-
-  quickRoleButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const role = btn.dataset.quickRole;
-      handleQuickLogin(role);
-    });
-  });
-
-  logoutButton.addEventListener("click", handleLogout);
-
-  closeProfileModalBtn.addEventListener("click", closeProfileModal);
-  profileModal.addEventListener("click", (e) => {
-    if (e.target === profileModal || e.target.classList.contains("modal-backdrop")) {
-      closeProfileModal();
+async function getCurrentUser() {
+    if (!authToken) return null;
+    
+    try {
+        const userData = await apiRequest('/users/me');
+        currentUser = userData;
+        return userData;
+    } catch (error) {
+        logout();
+        return null;
     }
-  });
-
-  // open profile by clicking userBadge (also allow authButton area for safety)
-  userBadge.addEventListener("click", (e) => {
-    // ensure clicks on logout icon still work (stopPropagation there)
-    openProfileModal();
-  });
-
-  adminAddForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    handleAdminAddMovie();
-  });
 }
 
-function openAuthModal() {
-  authModal.classList.remove("hidden");
-  loginErrorEl.classList.add("hidden");
-  loginErrorEl.textContent = "";
-  setTimeout(() => {
-    loginUsernameInput.focus();
-  }, 50);
-}
+// ===================== ФИЛЬМЫ =====================
+async function loadMovies(filters = {}) {
+    try {
+        const params = new URLSearchParams();
+        if (filters.search) params.append('search', filters.search);
+        if (filters.genre && filters.genre !== 'all') params.append('genre', filters.genre);
+        if (filters.rating && filters.rating !== 'all') params.append('min_rating', filters.rating);
+        if (filters.pick && filters.pick !== 'all') params.append('pick', filters.pick);
+        params.append('skip', '0');
+        params.append('limit', '100');
 
-function closeAuthModal() {
-  authModal.classList.add("hidden");
-}
-
-function handleLogin() {
-  const username = loginUsernameInput.value.trim();
-  const password = loginPasswordInput.value;
-
-  const user = USERS.find(
-    (u) => u.username === username && u.password === password
-  );
-
-  if (!user) {
-    loginErrorEl.textContent = "Неверный логин или пароль.";
-    loginErrorEl.classList.remove("hidden");
-    return;
-  }
-
-  currentUser = { username: user.username, role: user.role };
-  updateAuthUI();
-  closeAuthModal();
-}
-
-function handleQuickLogin(role) {
-  if (role !== "viewer" && role !== "moderator") return;
-  currentUser = {
-    username: role === "viewer" ? "Гость" : "Модер-гость",
-    role: role,
-  };
-  updateAuthUI();
-  closeAuthModal();
-}
-
-// simple registration handler: creates a new viewer user, prevents duplicate usernames
-function handleRegister() {
-  if (!registerUsernameInput || !registerPasswordInput || !registerPasswordConfirmInput) return;
-
-  const username = registerUsernameInput.value.trim();
-  const pass = registerPasswordInput.value;
-  const pass2 = registerPasswordConfirmInput.value;
-
-  registerErrorEl.classList.add("hidden");
-  registerErrorEl.textContent = "";
-
-  if (!username || !pass) {
-    registerErrorEl.textContent = "Введите логин и пароль.";
-    registerErrorEl.classList.remove("hidden");
-    return;
-  }
-
-  if (pass !== pass2) {
-    registerErrorEl.textContent = "Пароли не совпадают.";
-    registerErrorEl.classList.remove("hidden");
-    return;
-  }
-
-  // check duplicate (case-insensitive)
-  const exists = USERS.some((u) => u.username.toLowerCase() === username.toLowerCase());
-  if (exists) {
-    registerErrorEl.textContent = "Пользователь с таким логином уже существует.";
-    registerErrorEl.classList.remove("hidden");
-    return;
-  }
-
-  // add new user as viewer
-  USERS.push({ username, password: pass, role: "viewer" });
-
-  // auto-login the new user
-  currentUser = { username, role: "viewer" };
-  updateAuthUI();
-
-  // clear and close modal
-  registerForm.reset();
-  closeAuthModal();
-}
-
-function handleLogout() {
-  currentUser = null;
-  updateAuthUI();
-}
-
-function updateAuthUI() {
-  if (currentUser) {
-    authButton.classList.add("hidden");
-    userBadge.classList.remove("hidden");
-    userNameEl.textContent = currentUser.username;
-    userRoleEl.textContent =
-      currentUser.role === "moderator" ? "Роль: модератор" : "Роль: зритель";
-    if (currentUser.role === "moderator") {
-      adminPanel.classList.remove("hidden");
-    } else {
-      adminPanel.classList.add("hidden");
+        const queryString = params.toString();
+        const endpoint = `/movies${queryString ? `?${queryString}` : ''}`;
+        
+        const movies = await apiRequest(endpoint);
+        allMovies = movies;
+        
+        renderMovies(movies);
+        populateGenres(movies);
+    } catch (error) {
+        showError('Не удалось загрузить фильмы');
     }
-    // make userBadge interactive (hint)
-    userBadge.style.cursor = "pointer";
-  } else {
-    authButton.classList.remove("hidden");
-    userBadge.classList.add("hidden");
-    userNameEl.textContent = "";
-    userRoleEl.textContent = "";
-    adminPanel.classList.add("hidden");
-    userBadge.style.cursor = "";
-    // ensure profile modal closes when logged out
-    closeProfileModal();
-  }
-
-  // пересчитать форму рецензии при смене авторизации
-  if (selectedMovieId != null) {
-    renderMovieDetails(selectedMovieId);
-  }
 }
 
-function handleAdminAddMovie() {
-  // only moderators can add movies now
-  if (!currentUser || currentUser.role !== "moderator") return;
+async function loadMovieDetails(movieId) {
+    try {
+        const movie = await apiRequest(`/movies/${movieId}`);
+        currentMovieDetails = movie;
+        renderMovieDetails(movie);
+        
+        await loadReviews(movieId);
+        
+        if (currentUser) {
+            await checkIfFavorite(movieId);
+        }
+    } catch (error) {
+        showError('Не удалось загрузить детали фильма');
+    }
+}
 
-  const title = adminTitleInput.value.trim();
-  const year = Number(adminYearInput.value);
-  const rating = Number(adminRatingInput.value);
-  const genre = adminGenreInput.value.trim() || "Драма";
-  const poster = adminPosterInput.value.trim();
-  const overview =
-    adminOverviewInput.value.trim() || "Описание будет добавлено позже.";
-  const review1 =
-    adminReview1Input.value.trim() || "Рецензия будет добавлена позже.";
-  const review2 = adminReview2Input.value.trim();
+async function addMovie(movieData) {
+    try {
+        const formattedData = {
+            title: movieData.title,
+            year: parseInt(movieData.year),
+            genre: movieData.genre,
+            rating: parseFloat(movieData.rating),
+            overview: movieData.overview,
+            poster_url: movieData.poster_url || 'https://via.placeholder.com/300x450?text=No+Poster',
+            picks: movieData.picks || []
+        };
 
-  const picks = [];
-  adminPanel
-    .querySelectorAll(".admin-picks input[type='checkbox']")
-    .forEach((cb) => {
-      if (cb.checked) picks.push(cb.value);
+        if (movieData.review1) {
+            formattedData.reviews = [{
+                author: currentUser.username,
+                role: currentUser.roles[0]?.name || 'Зритель',
+                rating: parseFloat(movieData.rating),
+                text: movieData.review1
+            }];
+            
+            if (movieData.review2) {
+                formattedData.reviews.push({
+                    author: currentUser.username,
+                    role: currentUser.roles[0]?.name || 'Зритель',
+                    rating: parseFloat(movieData.rating),
+                    text: movieData.review2
+                });
+            }
+        }
+
+        const newMovie = await apiRequest('/movies/', {
+            method: 'POST',
+            body: JSON.stringify(formattedData),
+        });
+
+        loadMovies();
+        document.getElementById('adminAddForm').reset();
+        alert(`Фильм "${newMovie.title}" успешно добавлен!`);
+        
+        return newMovie;
+    } catch (error) {
+        showError('Не удалось добавить фильм. Проверьте правильность данных.');
+        throw error;
+    }
+}
+
+async function deleteMovie(movieId) {
+    try {
+        await apiRequest(`/movies/${movieId}`, {
+            method: 'DELETE',
+        });
+        
+        alert('Фильм успешно удален');
+        loadMovies();
+        
+        if (currentMovieDetails?.id === movieId) {
+            document.getElementById('movieDetails').innerHTML = `
+                <p class="placeholder-text">
+                    Выберите фильм, чтобы посмотреть рецензию.
+                </p>
+            `;
+            document.getElementById('movieDetails').className = 'movie-details empty';
+        }
+    } catch (error) {
+        showError('Не удалось удалить фильм');
+    }
+}
+
+// ===================== РЕЦЕНЗИИ =====================
+async function loadReviews(movieId) {
+    try {
+        const reviews = await apiRequest(`/movies/${movieId}/reviews`);
+        renderReviews(reviews);
+    } catch (error) {
+        console.error('Не удалось загрузить рецензии:', error);
+    }
+}
+
+async function submitReview(movieId, reviewData) {
+    try {
+        await apiRequest(`/movies/${movieId}/reviews`, {
+            method: 'POST',
+            body: JSON.stringify(reviewData),
+        });
+        
+        await loadReviews(movieId);
+        
+        const reviewForm = document.querySelector('.review-form');
+        if (reviewForm) reviewForm.reset();
+        
+    } catch (error) {
+        showError('Не удалось добавить рецензию');
+        throw error;
+    }
+}
+
+async function deleteReview(reviewId, movieId) {
+    try {
+        await apiRequest(`/movies/${movieId}/reviews/${reviewId}`, {
+            method: 'DELETE',
+        });
+        
+        await loadReviews(movieId);
+    } catch (error) {
+        showError('Не удалось удалить рецензию');
+    }
+}
+
+// ===================== ИЗБРАННОЕ =====================
+async function loadFavorites() {
+    if (!currentUser) return;
+    
+    try {
+        favorites = await apiRequest('/users/me/favorites');
+        renderFavorites();
+    } catch (error) {
+        console.error('Не удалось загрузить избранное:', error);
+    }
+}
+
+async function toggleFavorite(movieId) {
+    if (!currentUser) {
+        showError('Войдите в систему, чтобы добавлять фильмы в избранное');
+        return;
+    }
+
+    try {
+        const isCurrentlyFavorite = favorites.some(fav => fav.movie_id === movieId || fav.id === movieId);
+        
+        if (isCurrentlyFavorite) {
+            await apiRequest(`/users/me/favorites/${movieId}`, {
+                method: 'DELETE',
+            });
+        } else {
+            await apiRequest('/users/me/favorites', {
+                method: 'POST',
+                body: JSON.stringify({ movie_id: movieId }),
+            });
+        }
+        
+        await loadFavorites();
+        updateFavoriteButton(movieId, !isCurrentlyFavorite);
+        
+    } catch (error) {
+        showError('Не удалось обновить избранное');
+    }
+}
+
+async function checkIfFavorite(movieId) {
+    if (!currentUser) return false;
+    
+    try {
+        const favs = await apiRequest('/users/me/favorites');
+        const isFav = favs.some(fav => fav.movie_id === movieId || fav.id === movieId);
+        updateFavoriteButton(movieId, isFav);
+        return isFav;
+    } catch (error) {
+        return false;
+    }
+}
+
+// ===================== ПОДБОРКИ =====================
+async function loadPicks() {
+    try {
+        const picks = await apiRequest('/picks/');
+        renderPicks(picks);
+        return picks;
+    } catch (error) {
+        console.error('Не удалось загрузить подборки:', error);
+        return [];
+    }
+}
+
+function renderPicks(picks) {
+    // Можно использовать для динамического отображения подборок
+    console.log('Подборки загружены:', picks);
+}
+
+// ===================== РЕНДЕРИНГ =====================
+function renderMovies(movies) {
+    const moviesList = document.getElementById('moviesList');
+    if (!moviesList) return;
+    
+    moviesList.innerHTML = '';
+    
+    movies.forEach(movie => {
+        const movieCard = createMovieCard(movie);
+        moviesList.appendChild(movieCard);
     });
-
-  if (!title || !year || !rating) {
-    return;
-  }
-
-  const newId =
-    MOVIES.reduce((max, m) => (m.id > max ? m.id : max), 0) + 1;
-
-  const newMovie = {
-    id: newId,
-    title,
-    year,
-    genre,
-    rating,
-    picks: picks.length ? picks : ["new"],
-    poster: poster || `https://picsum.photos/seed/film${newId}/200/300`,
-    overview,
-    review: review1,
-    extraReviews: review2 ? [review2] : [],
-    userReviews: [],
-  };
-
-  MOVIES.push(newMovie);
-  initGenres();
-  renderMovies();
-  selectedMovieId = newMovie.id;
-  renderMovieDetails(newMovie.id);
-
-  adminAddForm.reset();
 }
 
-// toggle favorite helper
-function toggleFavorite(id) {
-  const iid = Number(id);
-  if (FAVORITES.has(iid)) {
-    FAVORITES.delete(iid);
-  } else {
-    FAVORITES.add(iid);
-  }
-  localStorage.setItem("kinovzor-favs", JSON.stringify(Array.from(FAVORITES)));
-  // keep movies list and details in sync
-  renderMovies();
-  if (selectedMovieId != null) renderMovieDetails(selectedMovieId);
-}
-
-// Profile modal functions
-function openProfileModal() {
-  if (!currentUser) {
-    // if not logged, open auth modal instead
-    openAuthModal();
-    return;
-  }
-  profileModal.classList.remove("hidden");
-  renderFavoritesList();
-}
-
-function closeProfileModal() {
-  profileModal.classList.add("hidden");
-}
-
-// render favorites inside profile
-function renderFavoritesList() {
-  favoritesListEl.innerHTML = "";
-  const favIds = Array.from(FAVORITES);
-  if (!favIds.length) {
-    profileContentEl.querySelector(".placeholder-text").textContent = "У вас пока нет избранных фильмов.";
-    return;
-  } else {
-    const ph = profileContentEl.querySelector(".placeholder-text");
-    if (ph) ph.remove();
-  }
-
-  // build compact cards similar to movie list but simplified
-  favIds.forEach((id) => {
-    const movie = MOVIES.find((m) => m.id === Number(id));
-    if (!movie) return;
-
-    const li = document.createElement("li");
-    li.className = "movie-card";
-    li.style.width = "100%";
-    li.style.display = "flex";
-    li.style.flexDirection = "row";
-    li.style.alignItems = "center";
-    li.style.gap = "10px";
+function createMovieCard(movie) {
+    const li = document.createElement('li');
+    li.className = 'movie-card';
     li.dataset.id = movie.id;
-
-    const poster = document.createElement("div");
-    poster.className = "movie-poster-wrapper";
-    poster.style.width = "72px";
-    poster.style.height = "100px";
-    poster.style.flex = "0 0 auto";
-    poster.style.borderRadius = "8px";
-    const img = document.createElement("img");
-    img.className = "movie-poster";
-    img.src = movie.poster;
-    img.alt = movie.title;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "cover";
-    poster.appendChild(img);
-
-    const info = document.createElement("div");
-    info.style.flex = "1";
-    info.style.display = "flex";
-    info.style.flexDirection = "column";
-    info.style.gap = "4px";
-    const title = document.createElement("div");
-    title.textContent = movie.title;
-    title.style.fontWeight = "600";
-    title.style.fontSize = "13px";
-    const meta = document.createElement("div");
-    meta.textContent = `${movie.year} • ${movie.genre}`;
-    meta.style.fontSize = "12px";
-    meta.style.color = "var(--color-muted)";
-
-    info.appendChild(title);
-    info.appendChild(meta);
-
-    const actions = document.createElement("div");
-    actions.style.display = "flex";
-    actions.style.flexDirection = "column";
-    actions.style.gap = "6px";
-    actions.style.alignItems = "flex-end";
-
-    const openBtn = document.createElement("button");
-    openBtn.className = "secondary-button";
-    openBtn.textContent = "Открыть";
-    openBtn.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      // show in details panel and close profile
-      selectedMovieId = movie.id;
-      renderMovieDetails(movie.id);
-      closeProfileModal();
+    
+    const rating = movie.rating ? movie.rating.toFixed(1) : '?';
+    const year = movie.year || '?';
+    
+    const picksHTML = movie.picks && movie.picks.length > 0 
+        ? movie.picks.map(pick => 
+            `<span class="movie-pick-chip">${pick.name}</span>`
+          ).join('')
+        : '';
+    
+    // Добавляем кнопку удаления для админа/модератора
+    const deleteBtnHTML = (currentUser && currentUser.roles && 
+        currentUser.roles.some(role => ['Администратор', 'Модератор'].includes(role.name))) 
+        ? `<button class="icon-button delete-movie-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(255,77,79,0.2); color: var(--color-error);" data-movie-id="${movie.id}" title="Удалить фильм">✕</button>`
+        : '';
+    
+    li.innerHTML = `
+        ${deleteBtnHTML}
+        <div class="movie-poster-wrapper">
+            <img src="${movie.poster_url || 'https://via.placeholder.com/300x450?text=No+Poster'}" 
+                 alt="${movie.title}" 
+                 class="movie-poster" 
+                 loading="lazy">
+        </div>
+        <div class="movie-card-body">
+            <div class="movie-card-header">
+                <h3 class="movie-title" title="${movie.title}">
+                    ${movie.title.length > 30 ? movie.title.substring(0, 30) + '...' : movie.title}
+                </h3>
+                <button class="fav-button" data-movie-id="${movie.id}" title="Добавить в избранное">
+                    ★
+                </button>
+            </div>
+            <div class="movie-meta">
+                <span class="badge-rating">${rating}</span>
+                <span class="badge-genre">${movie.genre || 'Не указан'}</span>
+            </div>
+            <div class="movie-card-footer">
+                <span>${year}</span>
+                <div class="movie-picks">
+                    ${picksHTML}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    li.addEventListener('click', (e) => {
+        if (!e.target.closest('.fav-button') && !e.target.closest('.delete-movie-btn')) {
+            loadMovieDetails(movie.id);
+        }
     });
-
-    const removeBtn = document.createElement("button");
-    removeBtn.className = "secondary-button";
-    removeBtn.textContent = "Убрать";
-    removeBtn.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      toggleFavorite(movie.id);
-      // re-render favorites list
-      renderFavoritesList();
+    
+    const favButton = li.querySelector('.fav-button');
+    favButton.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await toggleFavorite(movie.id);
     });
-
-    actions.appendChild(openBtn);
-    actions.appendChild(removeBtn);
-
-    li.appendChild(poster);
-    li.appendChild(info);
-    li.appendChild(actions);
-
-    favoritesListEl.appendChild(li);
-  });
+    
+    const deleteBtn = li.querySelector('.delete-movie-btn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm(`Вы уверены, что хотите удалить фильм "${movie.title}"?`)) {
+                await deleteMovie(movie.id);
+            }
+        });
+    }
+    
+    return li;
 }
+
+function renderMovieDetails(movie) {
+    const detailsPanel = document.getElementById('movieDetails');
+    if (!detailsPanel) return;
+    
+    detailsPanel.className = 'movie-details';
+    detailsPanel.innerHTML = '';
+    
+    const rating = movie.rating ? movie.rating.toFixed(1) : '?';
+    
+    const tagsHTML = `
+        <span class="badge-genre">${movie.genre || 'Не указан'}</span>
+        <span>•</span>
+        <span>${movie.year || '?'}</span>
+        <span>•</span>
+        <span class="badge-rating">${rating}</span>
+    `;
+    
+    const picksHTML = movie.picks && movie.picks.length > 0
+        ? `
+        <div class="details-tags">
+            ${movie.picks.map(pick => 
+                `<span class="badge-genre">${pick.name}</span>`
+            ).join('')}
+        </div>
+        `
+        : '';
+    
+    // Кнопки управления для админа/модератора
+    const adminControlsHTML = (currentUser && currentUser.roles && 
+        currentUser.roles.some(role => ['Администратор', 'Модератор'].includes(role.name))) 
+        ? `
+        <div class="details-section">
+            <h3 class="details-section-title">Управление</h3>
+            <div style="display: flex; gap: 8px;">
+                <button class="secondary-button" id="editMovieBtn" data-movie-id="${movie.id}">
+                    Редактировать
+                </button>
+                <button class="primary-button" style="background: var(--color-error);" 
+                        id="deleteMovieBtn" data-movie-id="${movie.id}">
+                    Удалить фильм
+                </button>
+            </div>
+        </div>
+        `
+        : '';
+    
+    const detailsHTML = `
+        <div class="details-header-top">
+            <div class="details-poster-wrapper">
+                <img src="${movie.poster_url || 'https://via.placeholder.com/300x450?text=No+Poster'}" 
+                     alt="${movie.title}" 
+                     class="details-poster">
+            </div>
+            <div class="details-header">
+                <div class="details-title-row">
+                    <h2 class="details-title">${movie.title}</h2>
+                    <button class="fav-button" data-movie-id="${movie.id}" title="Добавить в избранное">
+                        ★
+                    </button>
+                </div>
+                <div class="details-meta-row">
+                    ${tagsHTML}
+                </div>
+                ${picksHTML}
+            </div>
+        </div>
+        
+        <div class="details-scroll">
+            ${movie.overview ? `
+                <div class="details-section">
+                    <h3 class="details-section-title">Описание</h3>
+                    <p class="details-overview">${movie.overview}</p>
+                </div>
+            ` : ''}
+            
+            <div class="details-section">
+                <h3 class="details-section-title">Рецензии</h3>
+                <div id="reviewsContainer">
+                    <!-- Рецензии будут загружены отдельно -->
+                </div>
+            </div>
+            
+            ${currentUser ? `
+                <div class="details-section">
+                    <h3 class="details-section-title">Добавить рецензию</h3>
+                    <form class="review-form" id="reviewForm">
+                        <div class="review-form-row">
+                            <textarea class="input" 
+                                      placeholder="Ваша рецензия..." 
+                                      rows="3" 
+                                      required></textarea>
+                        </div>
+                        <div class="review-form-row review-form-rating-row">
+                            <label>Оценка:</label>
+                            <select class="input review-rating-select">
+                                ${Array.from({length: 10}, (_, i) => i + 1)
+                                    .map(num => `<option value="${num}" ${num === 8 ? 'selected' : ''}>${num}</option>`)
+                                    .join('')}
+                            </select>
+                            <button type="submit" class="primary-button small">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            ` : ''}
+            
+            ${adminControlsHTML}
+        </div>
+    `;
+    
+    detailsPanel.innerHTML = detailsHTML;
+    
+    const favButton = detailsPanel.querySelector('.fav-button');
+    if (favButton) {
+        favButton.addEventListener('click', async () => {
+            await toggleFavorite(movie.id);
+        });
+    }
+    
+    const reviewForm = detailsPanel.querySelector('#reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const textarea = reviewForm.querySelector('textarea');
+            const select = reviewForm.querySelector('select');
+            
+            await submitReview(movie.id, {
+                text: textarea.value,
+                rating: parseInt(select.value),
+                author: currentUser.username,
+                role: currentUser.roles[0]?.name || 'Зритель'
+            });
+        });
+    }
+    
+    const deleteBtn = detailsPanel.querySelector('#deleteMovieBtn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async () => {
+            if (confirm(`Вы уверены, что хотите удалить фильм "${movie.title}"?`)) {
+                await deleteMovie(movie.id);
+            }
+        });
+    }
+    
+    const editBtn = detailsPanel.querySelector('#editMovieBtn');
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            // Здесь можно реализовать редактирование фильма
+            alert('Редактирование фильма - в разработке');
+        });
+    }
+}
+
+function renderReviews(reviews) {
+    const reviewsContainer = document.getElementById('reviewsContainer');
+    if (!reviewsContainer) return;
+    
+    if (!reviews || reviews.length === 0) {
+        reviewsContainer.innerHTML = '<p class="placeholder-text">Пока нет рецензий. Будьте первым!</p>';
+        return;
+    }
+    
+    reviewsContainer.innerHTML = reviews.map(review => `
+        <div class="review-item" data-review-id="${review.id}">
+            <div class="review-header">
+                <span class="review-author">${review.author || 'Аноним'}</span>
+                <span class="review-role">${review.role || 'Зритель'}</span>
+                ${review.rating ? `
+                    <span class="review-rating-badge">${review.rating.toFixed(1)}</span>
+                ` : ''}
+                ${(currentUser && (currentUser.username === review.author || 
+                  currentUser.roles?.some(role => ['Администратор', 'Модератор'].includes(role.name)))) 
+                  ? `<button class="icon-button delete-review-btn" 
+                         style="margin-left: auto; background: rgba(255,77,79,0.1); color: var(--color-error); font-size: 10px;"
+                         data-review-id="${review.id}"
+                         title="Удалить рецензию">✕</button>`
+                  : ''}
+            </div>
+            <p class="review-text">${review.text}</p>
+        </div>
+    `).join('');
+    
+    // Добавляем обработчики для кнопок удаления рецензий
+    reviewsContainer.querySelectorAll('.delete-review-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const reviewId = btn.dataset.reviewId;
+            if (confirm('Удалить эту рецензию?')) {
+                await deleteReview(reviewId, currentMovieDetails.id);
+            }
+        });
+    });
+}
+
+function renderFavorites() {
+    const favoritesList = document.getElementById('favoritesList');
+    if (!favoritesList) return;
+    
+    if (!favorites || favorites.length === 0) {
+        favoritesList.innerHTML = '<p class="placeholder-text">Вы пока не добавили фильмы в избранное</p>';
+        return;
+    }
+    
+    favoritesList.innerHTML = favorites.map(fav => {
+        const movie = fav.movie || fav;
+        return `
+            <li class="movie-card" style="flex-direction:row; align-items:center; gap:12px; position:relative;">
+                <div style="width:60px; height:90px; border-radius:8px; overflow:hidden; cursor:pointer;" 
+                     class="favorite-poster" data-movie-id="${movie.id}">
+                    <img src="${movie.poster_url || 'https://via.placeholder.com/60x90?text=No+Poster'}" 
+                         alt="${movie.title}" 
+                         style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div style="flex:1; cursor:pointer;" class="favorite-info" data-movie-id="${movie.id}">
+                    <h4 style="margin:0 0 4px 0; font-size:14px;">${movie.title}</h4>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                        <span class="badge-rating" style="font-size:10px;">${movie.rating?.toFixed(1) || '?'}</span>
+                        <span style="font-size:11px; color:var(--color-muted);">${movie.year || '?'}</span>
+                        <span style="font-size:11px; color:var(--color-muted);">${movie.genre || ''}</span>
+                    </div>
+                </div>
+                <button class="icon-button remove-favorite-btn" 
+                        data-movie-id="${movie.id}"
+                        title="Удалить из избранного"
+                        style="background: rgba(255,77,79,0.1); color: var(--color-error);">
+                    ✕
+                </button>
+            </li>
+        `;
+    }).join('');
+    
+    // Добавляем обработчики
+    favoritesList.querySelectorAll('.favorite-poster, .favorite-info').forEach(el => {
+        el.addEventListener('click', (e) => {
+            const movieId = el.dataset.movieId;
+            loadMovieDetails(movieId);
+            closeModal('profileModal');
+        });
+    });
+    
+    favoritesList.querySelectorAll('.remove-favorite-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const movieId = btn.dataset.movieId;
+            await toggleFavorite(movieId);
+        });
+    });
+}
+
+function populateGenres(movies) {
+    const genreSelect = document.getElementById('genreSelect');
+    if (!genreSelect) return;
+    
+    const selectedValue = genreSelect.value;
+    
+    while (genreSelect.options.length > 1) {
+        genreSelect.remove(1);
+    }
+    
+    const genres = new Set();
+    movies.forEach(movie => {
+        if (movie.genre) {
+            genres.add(movie.genre);
+        }
+    });
+    
+    Array.from(genres).sort().forEach(genre => {
+        const option = document.createElement('option');
+        option.value = genre;
+        option.textContent = genre;
+        genreSelect.appendChild(option);
+    });
+    
+    if (selectedValue && Array.from(genres).includes(selectedValue)) {
+        genreSelect.value = selectedValue;
+    }
+}
+
+// ===================== ОБНОВЛЕНИЕ UI =====================
+function updateUIAfterAuth() {
+    const authButton = document.getElementById('authButton');
+    const userBadge = document.getElementById('userBadge');
+    const userName = document.getElementById('userName');
+    const userRole = document.getElementById('userRole');
+    const adminPanel = document.getElementById('adminPanel');
+    
+    if (currentUser) {
+        authButton.classList.add('hidden');
+        userBadge.classList.remove('hidden');
+        
+        userName.textContent = currentUser.username;
+        userRole.textContent = currentUser.roles && currentUser.roles.length > 0 
+            ? currentUser.roles[0].name 
+            : 'Зритель';
+        
+        if (currentUser.roles && currentUser.roles.some(role => 
+            role.name === 'Администратор' || role.name === 'Модератор')) {
+            adminPanel.classList.remove('hidden');
+        } else {
+            adminPanel.classList.add('hidden');
+        }
+        
+        loadFavorites();
+    } else {
+        authButton.classList.remove('hidden');
+        userBadge.classList.add('hidden');
+        adminPanel.classList.add('hidden');
+    }
+}
+
+function updateFavoriteButton(movieId, isFavorite) {
+    const favButtons = document.querySelectorAll(`.fav-button[data-movie-id="${movieId}"]`);
+    favButtons.forEach(button => {
+        button.classList.toggle('active', isFavorite);
+        button.title = isFavorite ? 'Удалить из избранного' : 'Добавить в избранное';
+    });
+}
+
+// ===================== МОДАЛЬНЫЕ ОКНА =====================
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+// ===================== ФИЛЬТРАЦИЯ И ПОИСК =====================
+function setupFilters() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                loadMovies({ search: e.target.value });
+            }, 300);
+        });
+    }
+    
+    const genreSelect = document.getElementById('genreSelect');
+    if (genreSelect) {
+        genreSelect.addEventListener('change', (e) => {
+            loadMovies({ genre: e.target.value });
+        });
+    }
+    
+    const ratingButtons = document.querySelectorAll('.rating-filter .chip-button');
+    ratingButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            ratingButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            loadMovies({ rating: e.target.dataset.rating });
+        });
+    });
+    
+    const pickButtons = document.querySelectorAll('.top-bar-center .pill-button');
+    pickButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            pickButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            loadMovies({ pick: e.target.dataset.pick });
+        });
+    });
+}
+
+// ===================== ИНИЦИАЛИЗАЦИЯ =====================
+function initEventListeners() {
+    const authButton = document.getElementById('authButton');
+    if (authButton) {
+        authButton.addEventListener('click', () => openModal('authModal'));
+    }
+    
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', logout);
+    }
+    
+    const closeAuthModal = document.getElementById('closeAuthModal');
+    if (closeAuthModal) {
+        closeAuthModal.addEventListener('click', () => closeModal('authModal'));
+    }
+    
+    const closeProfileModal = document.getElementById('closeProfileModal');
+    if (closeProfileModal) {
+        closeProfileModal.addEventListener('click', () => closeModal('profileModal'));
+    }
+    
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-backdrop')) {
+                closeModal(modal.id);
+            }
+        });
+    });
+    
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const tab = e.target.dataset.tab;
+            
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            const panels = document.querySelectorAll('.tab-panel');
+            panels.forEach(panel => {
+                panel.classList.toggle('active', panel.dataset.panel === tab);
+            });
+        });
+    });
+    
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            await login(username, password);
+        });
+    }
+    
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+            
+            await register(username, password, confirmPassword);
+        });
+    }
+    
+    const adminAddForm = document.getElementById('adminAddForm');
+    if (adminAddForm) {
+        adminAddForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('adminTitle').value,
+                year: document.getElementById('adminYear').value,
+                rating: document.getElementById('adminRating').value,
+                genre: document.getElementById('adminGenre').value,
+                poster_url: document.getElementById('adminPoster').value,
+                overview: document.getElementById('adminOverview').value,
+                review1: document.getElementById('adminReview1').value,
+                review2: document.getElementById('adminReview2').value,
+                picks: Array.from(document.querySelectorAll('.admin-pick input:checked'))
+                    .map(checkbox => checkbox.value)
+            };
+            
+            await addMovie(formData);
+        });
+    }
+    
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const body = document.body;
+            if (body.classList.contains('theme-dark')) {
+                body.classList.remove('theme-dark');
+                body.classList.add('theme-light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('theme-light');
+                body.classList.add('theme-dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
+    
+    const userBadge = document.getElementById('userBadge');
+    if (userBadge) {
+        userBadge.addEventListener('click', async (e) => {
+            if (!e.target.closest('#logoutButton')) {
+                await loadFavorites();
+                openModal('profileModal');
+            }
+        });
+    }
+}
+
+async function init() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.className = `theme-${savedTheme}`;
+    
+    initEventListeners();
+    setupFilters();
+    
+    if (authToken) {
+        await getCurrentUser();
+        updateUIAfterAuth();
+    }
+    
+    await loadMovies();
+    await loadPicks();
+}
+
+// ===================== ЗАПУСК =====================
+document.addEventListener('DOMContentLoaded', init);
+
+// Экспортируем функции для отладки
+window.app = {
+    login,
+    logout,
+    loadMovies,
+    loadMovieDetails,
+    toggleFavorite,
+    getCurrentUser,
+    currentUser: () => currentUser,
+    favorites: () => favorites,
+    allMovies: () => allMovies
+};

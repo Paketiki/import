@@ -1,9 +1,20 @@
+from .base import Base
 from .users import User
-from .movies import Movie, MoviePick
+from .movies import Movie
 from .reviews import Review
-from .picks import Pick
+from .movie_picks import MoviePick
 from .roles import Role
 from .movie_stats import MovieStat
-from .base import Base
+from .picks import Pick
 
-__all__ = ["User", "Movie", "MoviePick", "Review", "Pick", "Role", "MovieStat", "Base"]
+__all__ = [
+    "Base",
+    "User",
+    "Movie", 
+    "Review",
+    "MoviePick",
+    "Role",
+    "MovieStat",
+    "Pick"
+    "user_favorite_movies",
+]

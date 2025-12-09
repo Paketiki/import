@@ -1,12 +1,17 @@
-from typing import List, Dict, Optional
-from sqlalchemy.orm import Session
-from app.models.movies import Movie, MoviePick
+from typing import Dict, Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+from app.models.movies import Movie
+from app.models.movie_picks import MoviePick
 from app.models.picks import Pick
+from app.models.reviews import Review
+from app.models.users import User
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Movie data from the user's request
+# Movie data from the user's request (уменьшенный список для примера)
 MOVIES = [
     {
         "id": 1,
@@ -15,12 +20,9 @@ MOVIES = [
         "genre": "Драма",
         "rating": 9.3,
         "picks": ["hits", "classic"],
-        "poster": "https://picsum.photos/seed/film1/200/300",
+        "poster_url": "https://picsum.photos/seed/film1/200/300",
         "overview": "Банкир Энди Дюфрейн, обвинённый в убийстве жены и её любовника, попадает в тюрьму Шоушенк.",
         "review": "Фильм о силе надежды и достоинства, который мягко подводит к мощному катарсису и долго не отпускает после финала.",
-        "extraReviews": [
-            "Один из тех редких случаев, когда душевность и драматизм идеально уравновешены.",
-        ],
     },
     {
         "id": 2,
@@ -29,12 +31,9 @@ MOVIES = [
         "genre": "Боевик",
         "rating": 9.0,
         "picks": ["hits"],
-        "poster": "https://picsum.photos/seed/film2/200/300",
+        "poster_url": "https://picsum.photos/seed/film2/200/300",
         "overview": "Бэтмен вступает в смертельную игру с Джокером, чья цель — погрузить город в хаос.",
         "review": "Нолан превращает супергеройский фильм в мрачную криминальную драму с одним из лучших злодеев в истории кино.",
-        "extraReviews": [
-            "Напряжение не спадает ни на минуту, а моральные дилеммы героев остаются в голове надолго.",
-        ],
     },
     {
         "id": 3,
@@ -596,21 +595,13 @@ MOVIES = [
     },
 ]
 
-
 class MovieLoader:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def load_movies_from_list(self, created_by_user_id: Optional[int] = None, skip_existing: bool = True) -> Dict:
+    async def load_movies_from_list(self, created_by_user_id: Optional[int] = None, skip_existing: bool = True) -> Dict:
         """
         Загружает фильмы из встроенного списка в базу данных
-        
-        Args:
-            created_by_user_id: ID пользователя, который создал фильмы
-            skip_existing: Пропускать уже существующие фильмы
-            
-        Returns:
-            Dict: Результат операции с информацией о загрузке
         """
         try:
             loaded_count = 0
@@ -619,21 +610,36 @@ class MovieLoader:
             
             # Получаем или создаем необходимые picks
             pick_cache = {}
-            for movie_data in MOVIES:
-                for pick_name in movie_data.get("picks", []):
-                    if pick_name not in pick_cache:
-                        pick = self.db.query(Pick).filter(Pick.name == pick_name).first()
-                        if not pick:
-                            pick = Pick(name=pick_name)
-                            self.db.add(pick)
-                            self.db.flush()  # Получаем ID без коммита
-                        pick_cache[pick_name] = pick.id
+            for pick_name in ["hits", "new", "classic"]:
+                pick_stmt = select(Pick).where(Pick.name == pick_name)
+                pick_result = await self.db.execute(pick_stmt)
+                pick = pick_result.scalar_one_or_none()
+                
+                if not pick:
+                    pick = Pick(name=pick_name, created_by=created_by_user_id or 1)
+                    self.db.add(pick)
+                    await self.db.flush()
+                
+                pick_cache[pick_name] = pick.id
+            
+            # Находим пользователя для создания рецензий
+            admin_user_stmt = select(User).where(User.username == "admin").limit(1)
+            admin_user_result = await self.db.execute(admin_user_stmt)
+            admin_user = admin_user_result.scalar_one_or_none()
+            
+            if not admin_user and created_by_user_id:
+                admin_user_stmt = select(User).where(User.id == created_by_user_id)
+                admin_user_result = await self.db.execute(admin_user_stmt)
+                admin_user = admin_user_result.scalar_one_or_none()
             
             # Загружаем фильмы
             for movie_data in MOVIES:
                 try:
                     # Проверяем, существует ли фильм
-                    existing_movie = self.db.query(Movie).filter(Movie.title == movie_data["title"]).first()
+                    movie_stmt = select(Movie).where(Movie.title == movie_data["title"])
+                    movie_result = await self.db.execute(movie_stmt)
+                    existing_movie = movie_result.scalar_one_or_none()
+                    
                     if existing_movie and skip_existing:
                         skipped_count += 1
                         continue
@@ -641,41 +647,56 @@ class MovieLoader:
                     # Создаем новый фильм
                     new_movie = Movie(
                         title=movie_data["title"],
-                        description=movie_data.get("overview", ""),
-                        release_year=movie_data["year"],
+                        year=movie_data["year"],
                         genre=movie_data["genre"],
                         rating=movie_data["rating"],
-                        poster=movie_data.get("poster", ""),
+                        poster_url=movie_data.get("poster_url", ""),
+                        overview=movie_data.get("overview", ""),
                         created_by=created_by_user_id
                     )
                     
                     self.db.add(new_movie)
-                    self.db.flush()  # Получаем ID фильма
+                    await self.db.flush()
                     
                     # Добавляем связи с picks
                     for pick_name in movie_data.get("picks", []):
-                        pick_id = pick_cache[pick_name]
-                        # Проверяем, существует ли уже такая связь
-                        existing_pick = self.db.query(MoviePick).filter(
-                            MoviePick.movie_id == new_movie.id,
-                            MoviePick.pick_id == pick_id
-                        ).first()
-                        
-                        if not existing_pick:
-                            movie_pick = MoviePick(
-                                movie_id=new_movie.id,
-                                pick_id=pick_id,
-                                added_by=created_by_user_id or 1  # Если нет пользователя, используем 1
+                        pick_id = pick_cache.get(pick_name)
+                        if pick_id:
+                            # Проверяем, существует ли уже такая связь
+                            pick_stmt = select(MoviePick).where(
+                                MoviePick.movie_id == new_movie.id,
+                                MoviePick.pick_id == pick_id
                             )
-                            self.db.add(movie_pick)
+                            pick_result = await self.db.execute(pick_stmt)
+                            existing_pick = pick_result.scalar_one_or_none()
+                            
+                            if not existing_pick:
+                                movie_pick = MoviePick(
+                                    movie_id=new_movie.id,
+                                    pick_id=pick_id
+                                )
+                                self.db.add(movie_pick)
+                    
+                    # Добавляем рецензию если есть
+                    if movie_data.get("review") and admin_user:
+                        review = Review(
+                            movie_id=new_movie.id,
+                            user_id=admin_user.id,
+                            author=admin_user.username,
+                            role="Администратор" if hasattr(admin_user, 'role') and admin_user.role and admin_user.role.name == "Администратор" else "Зритель",
+                            rating=movie_data["rating"],
+                            text=movie_data["review"]
+                        )
+                        self.db.add(review)
                     
                     loaded_count += 1
                     
                 except Exception as e:
-                    errors.append(f"Error loading movie '{movie_data['title']}': {str(e)}")
+                    errors.append(f"Error loading movie '{movie_data.get('title', 'Unknown')}': {str(e)}")
+                    logger.error(f"Error loading movie: {e}")
                     continue
             
-            self.db.commit()
+            await self.db.commit()
             
             return {
                 "total_in_file": len(MOVIES),
@@ -685,7 +706,8 @@ class MovieLoader:
             }
             
         except Exception as e:
-            self.db.rollback()
+            await self.db.rollback()
+            logger.error(f"Failed to load movies: {e}")
             return {
                 "error": f"Failed to load movies: {str(e)}"
             }

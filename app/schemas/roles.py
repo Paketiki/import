@@ -1,4 +1,3 @@
-# app/schemas/roles.py
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -23,3 +22,6 @@ class Role(RoleBase):
 
 class RoleInDB(Role):
     pass
+
+# Добавить для совместимости
+SRoleGet = Role  # Псевдоним для relations_users_roles.py

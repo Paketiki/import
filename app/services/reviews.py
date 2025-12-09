@@ -1,97 +1,127 @@
+# app/services/reviews.py
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
-from app.repositories.reviews import ReviewRepository
-from app.repositories.movies import MovieRepository
-from app.repositories.users import UserRepository
-from app.schemas.reviews import ReviewCreate, ReviewUpdate, ReviewInDB
-from app.schemas.users import UserRole
-from app.exceptions import MovieNotFoundError, ReviewNotFoundError, UserNotFoundError, ValidationError
+from sqlalchemy import select, func, desc
+
+from app.models.reviews import Review
+from app.models.movies import Movie
+from app.models.users import User
+from app.schemas.reviews import ReviewCreate, ReviewUpdate
 
 class ReviewService:
     def __init__(self, db: AsyncSession):
-        self.review_repo = ReviewRepository(db)
-        self.movie_repo = MovieRepository(db)
-        self.user_repo = UserRepository(db)
+        self.db = db
     
-    async def get_review(self, review_id: int) -> ReviewInDB:
-        review = await self.review_repo.get(review_id)
-        if not review:
-            raise ReviewNotFoundError(review_id)
+    async def get_reviews(self, skip: int = 0, limit: int = 100, 
+                         movie_id: Optional[int] = None,
+                         user_id: Optional[int] = None) -> List[Review]:
+        stmt = select(Review).options(
+            select(Review.movie),
+            select(Review.user)
+        )
         
-        return ReviewInDB.from_orm(review)
+        if movie_id:
+            stmt = stmt.where(Review.movie_id == movie_id)
+        
+        if user_id:
+            stmt = stmt.where(Review.user_id == user_id)
+        
+        stmt = stmt.offset(skip).limit(limit).order_by(desc(Review.created_at))
+        
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
     
-    async def get_reviews_by_movie(
-        self,
-        movie_id: int,
-        skip: int = 0,
-        limit: int = 100
-    ) -> List[ReviewInDB]:
-        # Check if movie exists
-        movie = await self.movie_repo.get(movie_id)
+    async def get_reviews_by_movie(self, movie_id: int, skip: int = 0, limit: int = 100) -> List[Review]:
+        return await self.get_reviews(skip=skip, limit=limit, movie_id=movie_id)
+    
+    async def get_review(self, review_id: int) -> Optional[Review]:
+        stmt = select(Review).where(Review.id == review_id).options(
+            select(Review.movie),
+            select(Review.user)
+        )
+        
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+    
+    async def create_review(self, movie_id: int, user_id: int, review_data: ReviewCreate) -> Review:
+        # Проверяем, существует ли фильм
+        movie_stmt = select(Movie).where(Movie.id == movie_id)
+        movie_result = await self.db.execute(movie_stmt)
+        movie = movie_result.scalar_one_or_none()
+        
         if not movie:
-            raise MovieNotFoundError(movie_id)
+            raise ValueError("Фильм не найден")
         
-        reviews = await self.review_repo.get_reviews_by_movie(movie_id, skip, limit)
-        return [ReviewInDB.from_orm(review) for review in reviews]
-    
-    async def get_reviews_by_user(
-        self,
-        username: str,
-        skip: int = 0,
-        limit: int = 100
-    ) -> List[ReviewInDB]:
-        # Check if user exists
-        user = await self.user_repo.get_by_username(username)
+        # Проверяем, существует ли пользователь
+        user_stmt = select(User).where(User.id == user_id)
+        user_result = await self.db.execute(user_stmt)
+        user = user_result.scalar_one_or_none()
+        
         if not user:
-            raise UserNotFoundError(username)
+            raise ValueError("Пользователь не найден")
         
-        reviews = await self.review_repo.get_reviews_by_user(username, skip, limit)
-        return [ReviewInDB.from_orm(review) for review in reviews]
+        # Создаем рецензию
+        review = Review(
+            movie_id=movie_id,
+            user_id=user_id,
+            author=review_data.author if review_data.author else user.username,
+            role=review_data.role if review_data.role else "Зритель",
+            rating=review_data.rating,
+            text=review_data.text
+        )
+        
+        self.db.add(review)
+        await self.db.commit()
+        await self.db.refresh(review)
+        
+        # Обновляем средний рейтинг фильма
+        from .movies import MovieService
+        movie_service = MovieService(self.db)
+        await movie_service.update_movie_rating(movie_id)
+        
+        return review
     
-    async def create_review(self, review_create: ReviewCreate, username: str) -> ReviewInDB:
-        # Check if movie exists
-        movie = await self.movie_repo.get(review_create.movie_id)
-        if not movie:
-            raise MovieNotFoundError(review_create.movie_id)
+    async def update_review(self, review_id: int, review_update: ReviewUpdate) -> Optional[Review]:
+        stmt = select(Review).where(Review.id == review_id)
+        result = await self.db.execute(stmt)
+        review = result.scalar_one_or_none()
         
-        # Check if user exists and get role
-        user = await self.user_repo.get_by_username(username)
-        if not user:
-            raise UserNotFoundError(username)
-        
-        # Validate rating
-        if review_create.rating < 0 or review_create.rating > 10:
-            raise ValidationError("Rating must be between 0 and 10")
-        
-        # Create review
-        review_dict = review_create.dict()
-        review_dict["username"] = username
-        review_dict["role"] = user.role
-        
-        review = await self.review_repo.create(review_dict)
-        return ReviewInDB.from_orm(review)
-    
-    async def update_review(self, review_id: int, review_update: ReviewUpdate) -> ReviewInDB:
-        review = await self.review_repo.get(review_id)
         if not review:
-            raise ReviewNotFoundError(review_id)
+            return None
         
         update_data = review_update.dict(exclude_unset=True)
         
-        # Convert role to string if provided
-        if "role" in update_data:
-            update_data["role"] = update_data["role"].value
+        # Обновляем поля
+        for key, value in update_data.items():
+            if hasattr(review, key):
+                setattr(review, key, value)
         
-        updated_review = await self.review_repo.update(review_id, update_data)
+        await self.db.commit()
+        await self.db.refresh(review)
         
-        if not updated_review:
-            raise ReviewNotFoundError(review_id)
+        # Обновляем средний рейтинг фильма
+        from .movies import MovieService
+        movie_service = MovieService(self.db)
+        await movie_service.update_movie_rating(review.movie_id)
         
-        return ReviewInDB.from_orm(updated_review)
+        return review
     
     async def delete_review(self, review_id: int) -> bool:
-        review = await self.review_repo.get(review_id)
-        if not review:
-            raise ReviewNotFoundError(review_id)
+        stmt = select(Review).where(Review.id == review_id)
+        result = await self.db.execute(stmt)
+        review = result.scalar_one_or_none()
         
-        return await self.review_repo.delete(review_id)
+        if not review:
+            return False
+        
+        movie_id = review.movie_id
+        
+        await self.db.delete(review)
+        await self.db.commit()
+        
+        # Обновляем средний рейтинг фильма
+        from .movies import MovieService
+        movie_service = MovieService(self.db)
+        await movie_service.update_movie_rating(movie_id)
+        
+        return True

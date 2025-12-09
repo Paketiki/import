@@ -10,6 +10,31 @@ from app.exceptions.base import NotFoundException, BadRequestException
 
 router = APIRouter(prefix="/movie-picks", tags=["movie_picks"])
 
+
+
+
+from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+
+# Базовый класс для создания (CREATE)
+class MoviePickBase(BaseModel):
+    movie_id: int
+    pick_id: int
+
+# Класс для ответа (READ), включает поля из БД
+class MoviePickInDB(MoviePickBase):
+    id: int | None = None  # Пример, если у вас есть автоинкрементный ID
+    created_at: datetime
+
+    # Конфигурация для совместимости с ORM (SQLAlchemy)
+    model_config = ConfigDict(from_attributes=True)  # Pydantic V2
+
+# Основной класс для ответа (можно просто наследовать от MoviePickInDB)
+class MoviePick(MoviePickInDB):
+    pass
+
+
+
 @router.get("/", response_model=List[MoviePickWithDetails])
 def read_movie_picks(
     skip: int = 0,

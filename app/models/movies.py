@@ -1,38 +1,47 @@
-from sqlalchemy import Column, Integer, String, Float, Text, TIMESTAMP, ForeignKey, DateTime
-from sqlalchemy.sql import func
+from sqlalchemy import Column, Integer, String, Text, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from app.database.database import Base
+from sqlalchemy.sql import func
+from app.database.base import Base
 
 class Movie(Base):
-    __tablename__ = 'movies'
-    
+    __tablename__ = "movies"
+
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(200), index=True, nullable=False)
+    title = Column(String(255), nullable=False, index=True)
     description = Column(Text)
-    release_year = Column(Integer)
-    genre = Column(String(100))
-    duration = Column(Integer)
-    rating = Column(Float)
-    overview = Column(Text)
-    poster = Column(String(500))
-    created_by = Column(Integer, ForeignKey('users.id'), nullable=True)
-    creator = relationship("User", back_populates="movies")
-    stat = relationship("MovieStat", back_populates="movie", uselist=False)
-    movie_picks = relationship("MoviePick", back_populates="movie")
-    # direct many-to-many access to picks through association table
-    picks = relationship("Pick", secondary="movie_picks", back_populates="movies")
-    reviews = relationship("Review", back_populates="movie")
+    overview = Column(Text)  # Краткое описание
+    year = Column(Integer, index=True)
+    duration = Column(Integer)  # в минутах
+    director = Column(String(255))
+    rating = Column(Float, default=0.0, index=True)
+    age_rating = Column(String(10))
+    poster_url = Column(String(500))
+    genre = Column(String(100), index=True)
+    created_by = Column(Integer, ForeignKey('users.id'))  # Кто создал фильм
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
-
-class MoviePick(Base):
-    __tablename__ = 'movie_picks'
+    # Связи
+    reviews = relationship("Review", back_populates="movie", cascade="all, delete-orphan")
     
-    id = Column(Integer, primary_key=True, index=True)
-    movie_id = Column(Integer, ForeignKey('movies.id'), nullable=False)
-    pick_id = Column(Integer, ForeignKey('picks.id'), nullable=False)
-    added_by = Column(Integer, ForeignKey('users.id'), nullable=False)
-    added_at = Column(DateTime(timezone=True), server_default=func.now())
+    # Связь с подборками через промежуточную таблицу movie_picks
+    picks = relationship(
+        "Pick", 
+        secondary="movie_picks",
+        back_populates="movies",
+        lazy="selectin"
+    )
     
-    movie = relationship("Movie")
-    pick = relationship("Pick")
-    user = relationship("User")
+    # Связь с пользователями, добавившими фильм в избранное
+    favorited_by = relationship(
+        "User",
+        secondary="user_favorite_movies",
+        back_populates="favorite_movies",
+        lazy="selectin"
+    )
+    
+    # Связь с создателем фильма
+    creator = relationship("User", back_populates="created_movies", foreign_keys=[created_by])
+    
+    # Связь со статистикой
+    stat = relationship("MovieStat", back_populates="movie", uselist=False, cascade="all, delete-orphan")
