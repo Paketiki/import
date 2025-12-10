@@ -1,4 +1,3 @@
-
 :root {
   --color-bg: #0a0a0a;
   --color-bg-soft: #171717;
@@ -289,9 +288,11 @@ body.theme-light .input {
   margin-top: 10px;
   flex: 1;
   display: grid;
-  /* make movies panel (middle column) occupy 50% of viewport width on desktop */
-  grid-template-columns: minmax(0, 1fr) 50% minmax(0, 1fr);
-  gap: 8px;
+  /* desktop default uses three columns, but allows the center (movies) to flex.
+     mobile/tablet adapt via media queries below. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
 }
 
 .filters-panel,
@@ -384,7 +385,7 @@ body.theme-light .details-panel {
   cursor: pointer;
   transition: transform 0.12s ease-out, box-shadow var(--transition-fast),
     border-color var(--transition-fast), background var(--transition-fast);
-  min-height: 260px;
+  min-height: 187px; /* reduced base card height (~15% smaller) */
   position: relative; /* ensure normal flow and stacking context */
   z-index: 0;         /* baseline stacking to avoid unexpected overlaps */
   align-self: start;  /* keep items aligned to grid row start to prevent overlap */
@@ -409,7 +410,7 @@ body.theme-light .movie-card {
 
 .movie-poster-wrapper {
   width: 100%;
-  height: 220px; /* increased to make posters tall/rectangular */
+  height: 162px; /* ~15% shorter poster */
   border-radius: 10px;
   overflow: hidden;
   background: #111;
@@ -534,7 +535,7 @@ body.theme-light .badge-genre {
 .details-poster {
   width: 100%;
   height: 100%;
-  min-height: 135px;
+  min-height: 115px;
   object-fit: cover;
   display: block;
 }
@@ -1018,24 +1019,26 @@ body.theme-light .tabs {
     padding-inline: 8px;
   }
 
-  /* Make movie cards full width on small screens */
+  /* Make movie cards two columns on small screens */
   .movies-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     width: 100%;
     padding: 0;
     margin: 0;
+    align-items: start;
   }
 
   .movies-list > .movie-card {
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
   }
 
   /* Ensure posters on very small screens are taller portrait rectangles */
   .movie-poster-wrapper {
-    height: 380px; /* taller portrait rectangle */
+    height: 272px; /* ~15% reduced portrait rectangle */
   }
   .movie-poster {
     object-fit: cover;
@@ -1055,11 +1058,13 @@ body.theme-light .tabs {
     flex-direction: column;
   }
 
-  /* Give main layout a fixed area (viewport minus header) so internal panels handle scrolling */
+  /* Give main layout a fixed area (viewport minus header) so internal panels handle scrolling.
+     Make center column wider but flexible so side panels compress gracefully. */
   .main-layout {
     /* assume header + spacing ~72px, adjust if you change header size */
     height: calc(100vh - 72px);
-    grid-template-columns: minmax(0, 1fr) 50% minmax(0, 1fr);
+    grid-template-columns: 1fr minmax(480px, 760px) 1fr;
+    gap: 12px;
   }
 
   /* Make only movies panel scrollable */
@@ -1071,46 +1076,60 @@ body.theme-light .tabs {
   .movies-panel {
     overflow: auto;
     /* visually keep same padding while allowing internal scroll */
-    padding-right: 6px;
+    padding-right: 8px;
+    padding-left: 8px;
   }
 
   /* Make the movie list use full available height and be scrollable */
   .movies-list {
-    /* use a wrapping flex layout so fixed card sizes (vw/vh) arrange naturally */
+    /* use a wrapping flex layout so percentage card sizes arrange naturally */
     display: flex;
     flex-wrap: wrap;
-    gap: 40px 14px; /* vertical gap 40px, horizontal gap 14px */
+    gap: 32px 18px; /* vertical gap, horizontal gap */
     align-items: flex-start;
     height: 100%;
     overflow: auto;
-    padding-right: 6px;
+    padding-right: 8px;
     align-content: flex-start;
+    justify-content: center; /* center cards so edge spacing is consistent */
   }
-
+  
   /* fine tune scrollbar look inside movies list */
   .movies-list::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
   .movies-list::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.06);
     border-radius: 999px;
   }
-
-  /* ensure every card on desktop is exactly the same size and has 3% bottom spacing */
-  /* fixed card size relative to viewport as requested */
+  
+  /* flexible card sizing using clamp so cards adapt across desktop widths */
+  /* ensure exactly 4 cards per row on desktop by calculating width with horizontal gaps */
   .movie-card {
-    width: calc(9vw * 1.2); /* increased by 20% (previously 9vw) */
-    height: 27vh;         /* 27% of viewport height */
+    /* subtract total horizontal gaps (3 gaps between 4 cards) from 100% then divide by 4 */
+    width: calc((100% - (3 * 18px)) / 4);
+    max-width: none;
+    min-width: 0;
+    height: min(44vh, 408px);    /* slightly lower cap for desktop cards (~15% lower) */
+    min-height: 238px; /* reduced desktop minimum height (~15% smaller) */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    padding: 12px;
+    gap: 10px;
   }
 
-  /* make poster area adapt to new fixed card height while keeping composition */
+  /* постер — вытянутый вверх прямоугольник внутри карточки, responsive */
   .movie-poster-wrapper {
-    height: calc(27vh * 0.52); /* keep poster proportional to card height */
+    height: 53%;      /* ~15% reduced poster proportion */
     min-height: 0;
+  }
+
+  /* improve touch targets for actions on desktop-large screens */
+  .fav-button, .icon-button, .primary-button.small {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 
@@ -1125,8 +1144,8 @@ body.theme-light .tabs {
 .movie-card.expanded .movie-poster-wrapper {
   flex: 0 0 auto;
   width: 100%;
-  max-height: 360px;
-  height: 280px; /* keep expanded poster tall */
+  max-height: 306px; /* ~15% lower max */
+  height: 204px; /* ~15% reduced expanded poster height */
   border-radius: 12px;
   overflow: hidden;
   /* center content to avoid forced stretching */
@@ -1180,4 +1199,3 @@ body.theme-light #profileModal .movie-card {
   padding: 0;
   margin: 0;
 }
-

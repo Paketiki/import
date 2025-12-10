@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 from datetime import datetime
 import os
@@ -47,7 +47,7 @@ class UserLogin(BaseModel):
 class UserCreate(BaseModel):
     username: str
     password: str
-    email: Optional[str] = None
+    email: Optional[str] = ""
 
 class Token(BaseModel):
     access_token: str
@@ -62,8 +62,7 @@ class MovieResponse(BaseModel):
     poster_url: Optional[str] = None
     overview: Optional[str] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # API endpoints
 
@@ -183,10 +182,13 @@ async def register(user_data: UserCreate):
         conn.close()
         raise HTTPException(status_code=400, detail="Пользователь с таким именем уже существует")
     
+    # Используем пустую строку вместо None для email
+    email_value = user_data.email or ""
+    
     # Создаем пользователя
     conn.execute(
         "INSERT INTO users (username, email, password_hash, is_active, is_superuser, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (user_data.username, user_data.email, user_data.password, True, False, datetime.now())
+        (user_data.username, email_value, user_data.password, True, False, datetime.now())
     )
     conn.commit()
     

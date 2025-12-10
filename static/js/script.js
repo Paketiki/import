@@ -499,14 +499,14 @@ async function login(username, password) {
 }
 
 // Регистрация
+// script.js (частичное исправление в функции register)
 async function register(username, password) {
     try {
         if (!username || !password) {
             showError('registerError', 'Пароль не должен быть именем пользователя')
             return
         }
-        // Продолжение script.js
-
+        
         if (password.length < 4) {
             showError('registerError', 'Пароль должен содержать минимум 4 символа');
             return;
@@ -520,10 +520,14 @@ async function register(username, password) {
         
         showLoading(true);
         
+        // Исправляем: передаем email как пустую строку
         const response = await apiRequest(API_ENDPOINTS.auth.register, 'POST', {
             username: username.trim(),
-            password: password
+            password: password,
+            email: ""  // Явно передаем пустую строку
         });
+        
+        // ... остальной код ...
         
         if (response) {
             showNotification('Регистрация успешна! Входим...', 'success');
