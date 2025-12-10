@@ -2,22 +2,23 @@ import sys
 import os
 from pathlib import Path
 
-# Добавляем путь к проекту
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.append(str(Path(__file__).parent))
 
-from app.database.database import SessionLocal, init_db
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+from app.database.base import Base
 from app.models.movies import Movie
 from app.models.picks import Pick
 from app.models.movie_picks import MoviePick
-from app.models.reviews import Review
 from app.models.users import User
 from app.models.roles import Role
+import hashlib
 
+DATABASE_URL = "sqlite:///movies.db"
+engine = create_engine(DATABASE_URL)
 
-
-
-# Данные фильмов из вашего списка
-MOVIES_DATA = [
+# Полный список фильмов (первые 5 для примера)
+ALL_MOVIES = [
     {
         "id": 1,
         "title": "Побег из Шоушенка",
@@ -27,8 +28,6 @@ MOVIES_DATA = [
         "picks": ["hits", "classic"],
         "poster": "https://picsum.photos/seed/film1/200/300",
         "overview": "Банкир Энди Дюфрейн, обвинённый в убийстве жены и её любовника, попадает в тюрьму Шоушенк.",
-        "review": "Фильм о силе надежды и достоинства, который мягко подводит к мощному катарсису и долго не отпускает после финала.",
-        "extraReviews": ["Один из тех редких случаев, когда душевность и драматизм идеально уравновешены."],
     },
     {
         "id": 2,
@@ -39,8 +38,6 @@ MOVIES_DATA = [
         "picks": ["hits"],
         "poster": "https://picsum.photos/seed/film2/200/300",
         "overview": "Бэтмен вступает в смертельную игру с Джокером, чья цель — погрузить город в хаос.",
-        "review": "Нолан превращает супергеройский фильм в мрачную криминальную драму с одним из лучших злодеев в истории кино.",
-        "extraReviews": ["Напряжение не спадает ни на минуту, а моральные дилеммы героев остаются в голове надолго."],
     },
     {
         "id": 3,
@@ -51,8 +48,6 @@ MOVIES_DATA = [
         "picks": ["hits", "new"],
         "poster": "https://picsum.photos/seed/film3/200/300",
         "overview": "Профессиональный вор, специализирующийся на проникновении в сны, получает шанс на искупление.",
-        "review": "Интеллектуальный блокбастер, который предлагает зрителю собрать головоломку из снов и воспоминаний.",
-        "extraReviews": ["Фильм, к которому хочется возвращаться, чтобы заметить новые детали в каждом уровне сна."],
     },
     {
         "id": 4,
@@ -63,8 +58,6 @@ MOVIES_DATA = [
         "picks": ["hits", "new"],
         "poster": "https://picsum.photos/seed/film4/200/300",
         "overview": "Команда исследователей отправляется через червоточину в поисках нового дома для человечества.",
-        "review": "Космическая драма о родительской любви и цене прогресса, совмещающая научные идеи и искренние эмоции.",
-        "extraReviews": ["Редкий пример фильма, где масштаб вселенной не перекрывает человеческую историю."],
     },
     {
         "id": 5,
@@ -75,10 +68,8 @@ MOVIES_DATA = [
         "picks": ["classic"],
         "poster": "https://picsum.photos/seed/film5/200/300",
         "overview": "История простодушного Форреста, который становится свидетелем важнейших событий в истории США.",
-        "review": "Трогательная притча о доброте и принятии, в которой хочется улыбаться и плакать одновременно.",
-        "extraReviews": ["Фильм, к которому возвращаются как к старому другу — он всегда дарит немного тепла."],
     },
-    {
+{
                     "id": 6,
                     "title": "Матрица",
                     "year": 1999,
@@ -528,125 +519,159 @@ MOVIES_DATA = [
                     "poster_url": "https://picsum.photos/seed/film50/200/300",
                     "overview": "Амбициозный нефтяник строит империю и теряет остатки человечности.",
                 },
+   
+    # Добавьте остальные фильмы здесь...
+]
+
+def create_tables_if_not_exist():
+    """Создает таблицы если их не существует"""
+    print("Создание таблиц...")
+    Base.metadata.create_all(bind=engine)
+
+def load_all_movies():
+    """Загружает все фильмы в БД"""
+    with Session(engine) as session:
+        try:
+            print("Начало загрузки всех фильмов...")
             
-    
-    # Добавьте остальные фильмы по аналогии...
-]
-
-# Полный список подборок
-PICKS_DATA = [
-    {"id": 1, "name": "Все фильмы", "slug": "all"},
-    {"id": 2, "name": "Хиты", "slug": "hits"},
-    {"id": 3, "name": "Новинки", "slug": "new"},
-    {"id": 4, "name": "Классика", "slug": "classic"},
-]
-
-def load_data():
-    """Загружает фильмы и подборки в базу данных"""
-    db = SessionLocal()
-    
-    try:
-        print("Начало загрузки данных...")
-        
-        # Создаем тестового пользователя (если нет)
-        user = db.query(User).filter(User.username == "admin").first()
-        if not user:
-            role = db.query(Role).filter(Role.name == "Администратор").first()
+            # 1. Создаем тестовую роль если нет
+            role = session.query(Role).filter(Role.name == "Администратор").first()
             if not role:
                 role = Role(name="Администратор", description="Администратор системы")
-                db.add(role)
-                db.commit()
+                session.add(role)
+                session.commit()
+                session.refresh(role)
+                print(f"Создана роль: {role.name}")
             
-            user = User(
-                username="admin",
-                email="admin@example.com",
-                password_hash="temp_hash",  # В реальном приложении нужно хэшировать
-                role_id=role.id
-            )
-            db.add(user)
-            db.commit()
-        
-        # Создаем подборки
-        picks_map = {}
-        for pick_data in PICKS_DATA:
-            pick = db.query(Pick).filter(Pick.slug == pick_data["slug"]).first()
-            if not pick:
-                pick = Pick(
-                    name=pick_data["name"],
-                    slug=pick_data["slug"],
-                    description=f"Подборка {pick_data['name']}"
+            # 2. Создаем тестового пользователя если нет
+            user = session.query(User).filter(User.username == "admin").first()
+            if not user:
+                user = User(
+                    username="admin",
+                    email="admin@example.com",
+                    password_hash=hashlib.md5("admin123".encode()).hexdigest(),
+                    role_id=role.id
                 )
-                db.add(pick)
-                db.commit()
-                db.refresh(pick)
-            picks_map[pick_data["slug"]] = pick
-            print(f"Создана подборка: {pick.name}")
-        
-        # Загружаем фильмы
-        for movie_data in MOVIES_DATA[:10]:  # Для начала загрузим 10 фильмов
-            # Проверяем, существует ли фильм
-            existing_movie = db.query(Movie).filter(Movie.id == movie_data["id"]).first()
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+                print(f"Создан пользователь: {user.username} (ID: {user.id})")
             
-            if existing_movie:
-                print(f"Фильм '{movie_data['title']}' уже существует, пропускаем...")
-                continue
+            # 3. Создаем подборки
+            picks_data = [
+                {"id": 1, "name": "Хиты", "slug": "hits"},
+                {"id": 2, "name": "Новинки", "slug": "new"},
+                {"id": 3, "name": "Классика", "slug": "classic"},
+            ]
             
-            # Создаем фильм
-            movie = Movie(
-                id=movie_data["id"],
-                title=movie_data["title"],
-                year=movie_data["year"],
-                genre=movie_data["genre"],
-                rating=movie_data["rating"],
-                overview=movie_data["overview"],
-                poster_url=movie_data["poster"],
-                created_by=user.id
-            )
-            
-            db.add(movie)
-            db.commit()
-            db.refresh(movie)
-            
-            # Добавляем фильм в подборки
-            for pick_slug in movie_data.get("picks", []):
-                if pick_slug in picks_map:
-                    movie_pick = MoviePick(
-                        movie_id=movie.id,
-                        pick_id=picks_map[pick_slug].id
+            picks_map = {}
+            for pick_data in picks_data:
+                pick = session.query(Pick).filter(Pick.slug == pick_data["slug"]).first()
+                if not pick:
+                    pick = Pick(
+                        id=pick_data["id"],
+                        name=pick_data["name"],
+                        slug=pick_data["slug"],
+                        description=f"Подборка фильмов: {pick_data['name']}"
+                        # creator_id можно не указывать, оно nullable
                     )
-                    db.add(movie_pick)
+                    session.add(pick)
+                    session.commit()
+                    session.refresh(pick)
+                picks_map[pick_data["slug"]] = pick.id
+                print(f"Создана подборка: {pick.name} (ID: {pick.id})")
             
-            # Создаем основную рецензию
-            if "review" in movie_data:
-                review = Review(
-                    movie_id=movie.id,
-                    user_id=user.id,
-                    text=movie_data["review"],
-                    rating=movie_data["rating"]
-                )
-                db.add(review)
+            # 4. Загружаем фильмы
+            for movie_data in ALL_MOVIES:
+                # Проверяем, существует ли фильм
+                existing_movie = session.query(Movie).filter(Movie.id == movie_data["id"]).first()
                 
-                # Добавляем дополнительные рецензии
-                for extra_review in movie_data.get("extraReviews", []):
-                    extra = Review(
-                        movie_id=movie.id,
-                        user_id=user.id,
-                        text=extra_review,
-                        rating=movie_data["rating"] - 0.5  # Примерный рейтинг
-                    )
-                    db.add(extra)
+                if existing_movie:
+                    print(f"Фильм '{movie_data['title']}' уже существует, пропускаем...")
+                    continue
+                
+                # Создаем фильм
+                movie = Movie(
+                    id=movie_data["id"],
+                    title=movie_data["title"],
+                    year=movie_data["year"],
+                    genre=movie_data["genre"],
+                    rating=movie_data["rating"],
+                    overview=movie_data["overview"],
+                    poster_url=movie_data["poster"],
+                    created_by=user.id
+                )
+                session.add(movie)
+                session.commit()
+                session.refresh(movie)
+                
+                # Добавляем связи с подборками
+                for pick_slug in movie_data.get("picks", []):
+                    if pick_slug in picks_map:
+                        # Проверяем, существует ли связь
+                        existing_link = session.query(MoviePick).filter(
+                            MoviePick.movie_id == movie.id,
+                            MoviePick.pick_id == picks_map[pick_slug]
+                        ).first()
+                        
+                        if not existing_link:
+                            movie_pick = MoviePick(
+                                movie_id=movie.id,
+                                pick_id=picks_map[pick_slug]
+                            )
+                            session.add(movie_pick)
+                
+                session.commit()
+                print(f"Загружен фильм: {movie_data['title']} (ID: {movie.id})")
             
-            db.commit()
-            print(f"Добавлен фильм: {movie.title}")
-        
-        print("Загрузка данных завершена успешно!")
-        
-    except Exception as e:
-        print(f"Ошибка при загрузке данных: {e}")
-        db.rollback()
-        raise
-    finally:
-        db.close()
+            print(f"✅ Загружено {len(ALL_MOVIES)} фильмов!")
+            
+            # Выводим статистику
+            movie_count = session.query(Movie).count()
+            pick_count = session.query(Pick).count()
+            print(f"Всего в базе: {movie_count} фильмов, {pick_count} подборок")
+            
+        except Exception as e:
+            session.rollback()
+            print(f"❌ Ошибка: {e}")
+            import traceback
+            traceback.print_exc()
+
+def check_existing_data():
+    """Проверяет существующие данные в БД"""
+    with Session(engine) as session:
+        try:
+            movie_count = session.query(Movie).count()
+            pick_count = session.query(Pick).count()
+            user_count = session.query(User).count()
+            
+            print(f"Текущая статистика БД:")
+            print(f"- Фильмы: {movie_count}")
+            print(f"- Подборки: {pick_count}")
+            print(f"- Пользователи: {user_count}")
+            
+            if movie_count > 0:
+                print("\nСписок фильмов:")
+                movies = session.query(Movie).limit(5).all()
+                for movie in movies:
+                    print(f"  - {movie.title} ({movie.year})")
+            
+            if pick_count > 0:
+                print("\nСписок подборок:")
+                picks = session.query(Pick).all()
+                for pick in picks:
+                    print(f"  - {pick.name} ({pick.slug})")
+                    
+        except Exception as e:
+            print(f"Ошибка при проверке данных: {e}")
 
 if __name__ == "__main__":
-    load_data()
+    # Сначала создаем таблицы
+    create_tables_if_not_exist()
+    
+    # Проверяем текущие данные
+    check_existing_data()
+    
+    # Загружаем фильмы
+    load_all_movies()
+    

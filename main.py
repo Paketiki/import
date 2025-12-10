@@ -3,13 +3,15 @@ import uvicorn
 import sys
 import os
 from pathlib import Path
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from datetime import datetime
 import logging
+import asyncio
+from app.utils.data_loader import load_initial_data
 
 # Настройка логирования
 logging.basicConfig(
@@ -23,10 +25,19 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
+@asynccontextmanager
 async def lifespan(app: FastAPI):
     """Контекстный менеджер для управления жизненным циклом приложения"""
     # Startup логика
     logger.info("🚀 Запуск KinoVzor API")
+    
+    try:
+        # Настройка отношений БД
+        from app.models.configure_relationships import configure_all_relationships
+        configure_all_relationships()
+        logger.info("✅ Отношения моделей настроены")
+    except Exception as e:
+        logger.warning(f"⚠️ Ошибка настройки отношений: {e}")
     
     try:
         # Инициализация базы данных
@@ -34,8 +45,18 @@ async def lifespan(app: FastAPI):
         await init_db()
         logger.info("✅ База данных инициализирована")
     except Exception as e:
-        logger.warning(f"⚠️ Ошибка инициализации базы данных: {e}")
-        logger.info("⚠️ Продолжаем без базы данных (демо-режим)")
+        logger.warning(f"⚠️ Ошибка инициализации БД: {e}")
+    
+    # ВРЕМЕННО ЗАКОММЕНТИРУЙТЕ загрузку данных
+    # try:
+    #     # Загрузка начальных данных
+    #     await load_initial_data()
+    #     logger.info("✅ Начальные данные загружены")
+    # except Exception as e:
+    #     logger.warning(f"⚠️ Ошибка загрузки начальных данных: {e}")
+    #     logger.info("⚠️ Продолжаем без загруженных данных")
+    
+    logger.info("⏭️  Пропускаем загрузку начальных данных")
     
     logger.info("✅ Приложение успешно запущено")
     logger.info(f"Frontend: http://localhost:8000")
@@ -169,7 +190,7 @@ DEMO_MOVIES = [
         "rating": 8.6,
         "genre": "Фантастика, Драма",
         "poster_url": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-        "overview": "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
+        "overview": "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планеты с подходящими для человечества условиями.",
         "picks": ["hits", "classic"]
     },
     {
@@ -252,16 +273,28 @@ except ImportError as e:
     logger.info("⚠️ Используются тестовые эндпоинты")
 
 try:
-    from app.api.movies import router as movies_router
-    app.include_router(movies_router, prefix="/api/v1")
-    logger.info("✅ Основной роутер movies подключен")
+    from app.api.movies_real import router as movies_real_router
+    app.include_router(movies_real_router, prefix="/api/v1")
+    logger.info("✅ Основной роутер movies_real подключен")
 except ImportError as e:
-    logger.warning(f"⚠️ Не удалось подключить основной роутер movies: {e}")
-    logger.info("⚠️ Используются тестовые эндпоинты")
+    logger.warning(f"⚠️ Не удалось подключить роутер movies_real: {e}")
+    
+try:
+    from app.api.picks import router as picks_router
+    app.include_router(picks_router, prefix="/api/v1")
+    logger.info("✅ Роутер picks подключен")
+except ImportError as e:
+    logger.warning(f"⚠️ Не удалось подключить роутер picks: {e}")
+
+# Если старый movies API нужен для тестирования, оставьте его с другим префиксом
+try:
+    from app.api.movies import router as movies_router
+    app.include_router(movies_router, prefix="/api/v1/demo")
+    logger.info("✅ Демо-роутер movies подключен (для тестирования)")
+except ImportError as e:
+    logger.warning(f"⚠️ Не удалось подключить демо-роутер movies: {e}")
 
 # Глобальные обработчики ошибок
-from fastapi.exceptions import HTTPException
-
 @app.exception_handler(404)
 async def not_found_exception_handler(request, exc):
     return JSONResponse(

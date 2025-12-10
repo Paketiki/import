@@ -20,5 +20,5 @@ __all__ = [
     "MovieLoader",
     "MoviePickService",
     "MovieStatService",
-    "BaseService"
+    "BaseService",
 ]

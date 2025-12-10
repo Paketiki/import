@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, ForeignKey, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database.base import Base
@@ -6,15 +6,18 @@ from app.database.base import Base
 class MoviePick(Base):
     __tablename__ = "movie_picks"
     
-    movie_id = Column(Integer, ForeignKey('movies.id', ondelete='CASCADE'), primary_key=True)
-    pick_id = Column(Integer, ForeignKey('picks.id', ondelete='CASCADE'), primary_key=True)
-    created_at = Column(DateTime, default=func.now())
+    id = Column(Integer, primary_key=True, index=True)
+    movie_id = Column(Integer, ForeignKey("movies.id"))
+    pick_id = Column(Integer, ForeignKey("picks.id"))
     
-    # Опционально: связи для быстрого доступа
-    movie = relationship("Movie", lazy="selectin")
-    pick = relationship("Pick", lazy="selectin")
+    movie = relationship(
+        "Movie", 
+        back_populates="movie_picks",
+        overlaps="picks"
+    )
     
-    # Определяем составной первичный ключ
-    __table_args__ = (
-        PrimaryKeyConstraint('movie_id', 'pick_id'),
+    pick = relationship(
+        "Pick", 
+        back_populates="movie_picks",
+        overlaps="movies"
     )

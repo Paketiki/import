@@ -9,7 +9,7 @@ from app.services.users import UserService
 from app.services.movies import MovieService
 from app.database.database import get_db
 from app.api.dependencies import get_current_user, get_current_active_user
-from app.models.users import User as UserModel
+from app.models.users import User, UserModel
 
 router = APIRouter()
 

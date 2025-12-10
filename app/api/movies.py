@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
+from app.models.users import User
 from app.services.movies import MovieService
 from app.schemas.movies import MovieCreate, MovieUpdate, MovieInDB, MovieResponse
 from app.database.database import get_db
@@ -55,7 +56,6 @@ DEMO_MOVIES = [
 async def test_movies():
     return {"message": "Movies endpoint works"}
 
-# 2. Потом общий путь для списка фильмов
 @router.get("/", response_model=List[MovieResponse])
 async def get_movies(
     skip: int = Query(0, ge=0),
@@ -73,27 +73,44 @@ async def get_movies(
     """
     movie_service = MovieService(db)
     
-    filters = {}
-    if genre and genre != 'all':
-        filters['genre'] = genre
-    if year:
-        filters['year'] = year
-    if search:
-        filters['search'] = search
-    if rating_min:
-        filters['rating_min'] = rating_min
-    if rating_max:
-        filters['rating_max'] = rating_max
-    if pick and pick != 'all':
-        filters['pick'] = pick
+    # Пробуем загрузить из БД
+    try:
+        movies = await movie_service.get_movies(
+            skip=skip,
+            limit=limit,
+            genre=genre,
+            year=year,
+            search=search,
+            rating_min=rating_min,
+            rating_max=rating_max,
+            pick=pick
+        )
+        
+        if movies:
+            # Преобразуем в нужный формат
+            response_movies = []
+            for movie in movies:
+                # Получаем подборки для фильма
+                picks = [pick.slug for pick in movie.picks] if hasattr(movie, 'picks') else []
+                
+                response_movies.append({
+                    "id": movie.id,
+                    "title": movie.title,
+                    "year": movie.year,
+                    "rating": movie.rating,
+                    "genre": movie.genre,
+                    "poster_url": movie.poster_url,
+                    "overview": movie.overview,
+                    "picks": picks
+                })
+            
+            return response_movies
     
-    movies = await movie_service.get_movies(
-        skip=skip,
-        limit=limit,
-        **filters
-    )
+    except Exception as e:
+        print(f"Ошибка загрузки из БД: {e}")
     
-    return movies
+    # Если БД не работает, возвращаем демо-данные
+    return DEMO_MOVIES
 
 # 3. Только потом путь с параметром
 @router.get("/{movie_id}", response_model=MovieResponse)
