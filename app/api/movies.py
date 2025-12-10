@@ -1,5 +1,6 @@
 # app/api/movies.py
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
@@ -8,6 +9,46 @@ from app.schemas.movies import MovieCreate, MovieUpdate, MovieInDB, MovieRespons
 from app.database.database import get_db
 
 router = APIRouter()
+
+
+
+router = APIRouter(tags=["movies"])
+
+class Movie(BaseModel):
+    id: int
+    title: str
+    year: int
+    rating: float
+    genre: str
+    poster_url: Optional[str] = None
+    overview: Optional[str] = None
+    picks: List[str] = []
+
+# Демо-фильмы
+DEMO_MOVIES = [
+    {
+        "id": 1,
+        "title": "Интерстеллар",
+        "year": 2014,
+        "rating": 8.6,
+        "genre": "Фантастика, Драма",
+        "poster_url": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
+        "overview": "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
+        "picks": ["hits", "classic"]
+    },
+    {
+        "id": 2,
+        "title": "Начало",
+        "year": 2010,
+        "rating": 8.8,
+        "genre": "Фантастика, Боевик",
+        "poster_url": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
+        "overview": "Кобб — талантливый вор, лучший из лучших в опасном искусстве извлечения: он крадет ценные секреты из глубин подсознания во время сна, когда человеческий разум наиболее уязвим.",
+        "picks": ["hits"]
+    }
+]
+
+
 
 # 1. Сначала конкретные пути
 @router.get("/test", include_in_schema=False)  # include_in_schema=False чтобы не показывать в docs

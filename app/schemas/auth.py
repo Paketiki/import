@@ -1,23 +1,28 @@
-from pydantic import BaseModel
+# app/schemas/auth.py
+from pydantic import BaseModel, EmailStr
 from typing import Optional
-from .users import UserRole
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = "bearer"
 
 class TokenData(BaseModel):
     username: Optional[str] = None
-    role: Optional[UserRole] = None
 
 class LoginRequest(BaseModel):
     username: str
     password: str
 
-# Response Schemas
-class PaginatedResponse(BaseModel):
-    items: list
-    total: int
-    page: int
-    size: int
-    pages: int
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    email: Optional[EmailStr] = None
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class UserRegister(BaseModel):
+    username: str
+    password: str
+    email: Optional[str] = None
