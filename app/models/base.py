@@ -1,3 +1,5 @@
-from sqlalchemy.ext.declarative import declarative_base
+# app/models/base.py
+from app.database.database import Base
 
-Base = declarative_base()
+# Этот файл теперь просто реэкспортирует Base
+# или можно удалить его совсем и импортировать Base напрямую из database

@@ -43,7 +43,7 @@ async function apiRequest(url, method = 'GET', data = null) {
         'Accept': 'application/json'
     };
     
-    if (currentToken && currentToken !== 'temp_token_for_testing') {
+    if (currentToken) {
         headers['Authorization'] = `Bearer ${currentToken}`;
     }
     
@@ -61,33 +61,11 @@ async function apiRequest(url, method = 'GET', data = null) {
         console.log(`API Request: ${method} ${url}`);
         const response = await fetch(url, options);
         
-        // Для тестовых эндпоинтов, которые не требуют реального сервера
-        if (url.includes('/auth/login') && method === 'POST') {
-            // Имитируем успешный ответ для тестирования
-            return {
-                access_token: "temp_token_for_testing",
-                token_type: "bearer"
-            };
-        }
-        
-        if (url.includes('/auth/register') && method === 'POST') {
-            // Имитируем успешный ответ для тестирования
-            return {
-                access_token: "temp_token_for_testing",
-                token_type: "bearer"
-            };
-        }
-        
-        if (url.includes('/movies') && method === 'GET') {
-            // Возвращаем демо-данные если сервер недоступен
-            return getDemoMovies();
-        }
-        
         if (response.status === 204) {
             return null;
         }
         
-        const responseData = await response.json().catch(() => null);
+        const responseData = await response.json();
         
         if (!response.ok) {
             throw new Error(responseData?.detail || `HTTP ${response.status}`);
@@ -96,108 +74,12 @@ async function apiRequest(url, method = 'GET', data = null) {
         return responseData;
     } catch (error) {
         console.error(`API Error (${method} ${url}):`, error);
-        
-        // Для тестирования возвращаем демо-данные
-        if (url.includes('/movies') && method === 'GET') {
-            console.log('Возвращаем демо-фильмы для тестирования');
-            return getDemoMovies();
-        }
-        
-        if (url.includes('/auth/')) {
-            // Для авторизации показываем ошибку
-            throw error;
-        }
-        
-        // Для остальных запросов возвращаем пустой результат
-        return [];
+        throw error;
     }
 }
 
-// Демо-фильмы для тестирования
-function getDemoMovies() {
-    return [
-        {
-            id: 1,
-            title: "Интерстеллар",
-            year: 2014,
-            rating: 8.6,
-            genre: "Фантастика, Драма",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-            overview: "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
-            picks: ["hits", "classic"]
-        },
-        {
-            id: 2,
-            title: "Начало",
-            year: 2010,
-            rating: 8.8,
-            genre: "Фантастика, Боевик",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-            overview: "Кобб — талантливый вор, лучший из лучших в опасном искусстве извлечения: он крадет ценные секреты из глубин подсознания во время сна, когда человеческий разум наиболее уязвим.",
-            picks: ["hits"]
-        },
-        {
-            id: 3,
-            title: "Побег из Шоушенка",
-            year: 1994,
-            rating: 9.3,
-            genre: "Драма",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg",
-            overview: "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки.",
-            picks: ["classic"]
-        },
-        {
-            id: 4,
-            title: "Крестный отец",
-            year: 1972,
-            rating: 9.2,
-            genre: "Драма, Криминал",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
-            overview: "Криминальная сага, повествующая о нью-йоркской сицилийской мафиозной семье Корлеоне.",
-            picks: ["classic"]
-        },
-        {
-            id: 5,
-            title: "Темный рыцарь",
-            year: 2008,
-            rating: 9.0,
-            genre: "Боевик, Драма",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
-            overview: "Когда в Готэме появляется Джокер, Бэтмен должен противостоять самому грозному противнику, с которым он когда-либо сталкивался.",
-            picks: ["hits"]
-        },
-        {
-            id: 6,
-            title: "Форрест Гамп",
-            year: 1994,
-            rating: 8.8,
-            genre: "Драма, Комедия",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg",
-            overview: "История Форреста Гампа, человека с низким IQ, который стал свидетелем и невольным участником важнейших событий американской истории.",
-            picks: ["classic"]
-        },
-        {
-            id: 7,
-            title: "Матрица",
-            year: 1999,
-            rating: 8.7,
-            genre: "Фантастика, Боевик",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
-            overview: "Хакер по кличке Нео узнаёт, что его мир — виртуальная реальность, созданная поработившими человечество машинами.",
-            picks: ["hits", "classic"]
-        },
-        {
-            id: 8,
-            title: "Властелин колец: Возвращение короля",
-            year: 2003,
-            rating: 9.0,
-            genre: "Фэнтези, Приключения",
-            poster_url: "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
-            overview: "Гэндальф и Арагорн возглавляют силы Запада против Саурона, чтобы отвлечь его внимание, в то время как Фродо приближается к Роковой Горе с Кольцом Всевластья.",
-            picks: ["hits"]
-        }
-    ];
-}
+
+
 
 // Проверка состояния авторизации
 async function checkAuthState() {
@@ -260,7 +142,8 @@ async function loadMovies() {
         }
     } catch (error) {
         console.error('Ошибка загрузки фильмов:', error);
-        // Все равно показываем демо-фильмы
+        showNotification('Не удалось загрузить фильмы', 'error');
+        // Показываем демо-фильмы только если API недоступно
         allMovies = getDemoMovies();
         renderMovies(allMovies);
         updateGenresList();

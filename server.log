@@ -8561,3 +8561,4 @@ FROM movies ORDER BY movies.rating DESC
 2025-12-09 01:03:40,451 - main - INFO - ReDoc РґРѕРєСѓРјРµРЅС‚Р°С†РёСЏ: http://localhost:8000/api/v1/redoc
 2025-12-09 01:03:47,514 - app.database.database - ERROR - Database session error: 'ChunkedIteratorResult' object can't be awaited
 2025-12-09 01:04:04,484 - main - INFO - рџ›‘ РћСЃС‚Р°РЅРѕРІРєР° KinoVzor API...
+2025-12-10 23:46:31,202 - __main__ - INFO - Запуск сервера на localhost:8000

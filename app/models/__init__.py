@@ -4,6 +4,15 @@ from .users import User
 from .movies import Movie
 from .reviews import Review
 from .picks import Pick
-# Временно удалите остальные импорты если есть проблемы
+from .movie_picks import MoviePick
+from .roles import Role
 
-__all__ = ["Base", "User", "Movie", "Review", "Pick"]
+__all__ = [
+    "Base",
+    "User",
+    "Movie", 
+    "Review",
+    "Pick",
+    "MoviePick",
+    "Role",
+]

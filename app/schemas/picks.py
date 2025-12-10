@@ -1,23 +1,20 @@
-from pydantic import BaseModel, Field
+# app/schemas/picks.py
+from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
 class PickBase(BaseModel):
-    name: str = Field(..., max_length=50)
-    description: Optional[str] = Field(None, max_length=255)
+    name: str
+    slug: str
+    description: Optional[str] = None
 
 class PickCreate(PickBase):
-    pass
+    created_by: Optional[int] = None
 
-class PickUpdate(PickBase):
-    pass
-
-class PickInDB(PickBase):
+class PickResponse(PickBase):
     id: int
+    created_by: Optional[int] = None
     created_at: datetime
     
     class Config:
         from_attributes = True
-
-# Для обратной совместимости
-Pick = PickInDB

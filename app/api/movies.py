@@ -1,188 +1,121 @@
 # app/api/movies.py
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from app.models.users import User
-from app.services.movies import MovieService
-from app.schemas.movies import MovieCreate, MovieUpdate, MovieInDB, MovieResponse
 from app.database.database import get_db
+from app.models import Movie, Pick, MoviePick
+from app.models.users import User
+from app.schemas import MovieResponse, MovieDetailResponse, MovieCreate
+from app.services.auth import get_current_user
 
 router = APIRouter()
 
-
-
-router = APIRouter(tags=["movies"])
-
-class Movie(BaseModel):
-    id: int
-    title: str
-    year: int
-    rating: float
-    genre: str
-    poster_url: Optional[str] = None
-    overview: Optional[str] = None
-    picks: List[str] = []
-
-# Демо-фильмы
-DEMO_MOVIES = [
-    {
-        "id": 1,
-        "title": "Интерстеллар",
-        "year": 2014,
-        "rating": 8.6,
-        "genre": "Фантастика, Драма",
-        "poster_url": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-        "overview": "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
-        "picks": ["hits", "classic"]
-    },
-    {
-        "id": 2,
-        "title": "Начало",
-        "year": 2010,
-        "rating": 8.8,
-        "genre": "Фантастика, Боевик",
-        "poster_url": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-        "overview": "Кобб — талантливый вор, лучший из лучших в опасном искусстве извлечения: он крадет ценные секреты из глубин подсознания во время сна, когда человеческий разум наиболее уязвим.",
-        "picks": ["hits"]
-    }
-]
-
-
-
-# 1. Сначала конкретные пути
-@router.get("/test", include_in_schema=False)  # include_in_schema=False чтобы не показывать в docs
-async def test_movies():
-    return {"message": "Movies endpoint works"}
-
 @router.get("/", response_model=List[MovieResponse])
 async def get_movies(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=500),
-    genre: Optional[str] = None,
-    year: Optional[int] = None,
-    search: Optional[str] = None,
-    rating_min: Optional[float] = None,
-    rating_max: Optional[float] = None,
-    pick: Optional[str] = None,
-    db: AsyncSession = Depends(get_db),
+    genre: Optional[str] = Query(None, description="Фильтр по жанру"),
+    rating_min: Optional[float] = Query(None, description="Минимальный рейтинг"),
+    pick: Optional[str] = Query(None, description="Фильтр по подборке"),
+    search: Optional[str] = Query(None, description="Поиск по названию"),
+    db: Session = Depends(get_db)
 ):
-    """
-    Получить список фильмов с пагинацией и фильтрацией.
-    """
-    movie_service = MovieService(db)
+    """Получить список фильмов с фильтрами"""
+    query = db.query(Movie)
     
-    # Пробуем загрузить из БД
-    try:
-        movies = await movie_service.get_movies(
-            skip=skip,
-            limit=limit,
-            genre=genre,
-            year=year,
-            search=search,
-            rating_min=rating_min,
-            rating_max=rating_max,
-            pick=pick
-        )
-        
-        if movies:
-            # Преобразуем в нужный формат
-            response_movies = []
-            for movie in movies:
-                # Получаем подборки для фильма
-                picks = [pick.slug for pick in movie.picks] if hasattr(movie, 'picks') else []
-                
-                response_movies.append({
-                    "id": movie.id,
-                    "title": movie.title,
-                    "year": movie.year,
-                    "rating": movie.rating,
-                    "genre": movie.genre,
-                    "poster_url": movie.poster_url,
-                    "overview": movie.overview,
-                    "picks": picks
-                })
-            
-            return response_movies
+    if genre and genre != "all":
+        query = query.filter(Movie.genre.contains(genre))
     
-    except Exception as e:
-        print(f"Ошибка загрузки из БД: {e}")
+    if rating_min:
+        query = query.filter(Movie.rating >= rating_min)
     
-    # Если БД не работает, возвращаем демо-данные
-    return DEMO_MOVIES
+    if pick and pick != "all":
+        # Фильтруем по подборкам
+        pick_obj = db.query(Pick).filter(Pick.slug == pick).first()
+        if pick_obj:
+            query = query.join(MoviePick).filter(MoviePick.pick_id == pick_obj.id)
+    
+    if search:
+        query = query.filter(Movie.title.ilike(f"%{search}%"))
+    
+    movies = query.all()
+    return movies
 
-# 3. Только потом путь с параметром
-@router.get("/{movie_id}", response_model=MovieResponse)
+@router.get("/{movie_id}", response_model=MovieDetailResponse)
 async def get_movie(
     movie_id: int,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db)
 ):
-    """
-    Получить фильм по ID.
-    """
-    movie_service = MovieService(db)
-    
-    try:
-        movie = await movie_service.get_movie(movie_id)
-    except AttributeError:
-        movies = await movie_service.get_movies(skip=0, limit=1)
-        movie = next((m for m in movies if m.id == movie_id), None)
-    
+    """Получить детальную информацию о фильме"""
+    movie = db.query(Movie).filter(Movie.id == movie_id).first()
     if not movie:
         raise HTTPException(status_code=404, detail="Фильм не найден")
-    return movie
+    
+    # Получаем подборки фильма
+    picks_query = db.query(Pick).join(MoviePick).filter(MoviePick.movie_id == movie_id)
+    picks = picks_query.all()
+    
+    # Создаем словарь с данными фильма и подборками
+    movie_data = {
+        **movie.__dict__,
+        "picks": [pick.slug for pick in picks],
+        "reviews_count": 0  # Можно добавить логику подсчета рецензий
+    }
+    
+    return MovieDetailResponse(**movie_data)
 
-# ... остальные эндпоинты (POST, PUT, DELETE)
-
-@router.put("/{movie_id}", response_model=MovieInDB)
-async def update_movie(
-    movie_id: int,
-    movie: MovieUpdate,
-    db: AsyncSession = Depends(get_db),
-    # Убираем аутентификацию для обновления
-    # current_user: User = Depends(get_current_active_user)
+@router.post("/", response_model=MovieResponse)
+async def create_movie(
+    movie: MovieCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    """
-    Обновить фильм.
-    """
-    movie_service = MovieService(db)
+    """Создать новый фильм (только для администраторов)"""
+    if not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Недостаточно прав")
     
-    existing_movies = await movie_service.get_movies(skip=0, limit=100)
-    existing_movie = next((m for m in existing_movies if m.id == movie_id), None)
+    # Проверяем существование фильма с таким названием
+    existing_movie = db.query(Movie).filter(Movie.title == movie.title).first()
+    if existing_movie:
+        raise HTTPException(status_code=400, detail="Фильм с таким названием уже существует")
     
-    if not existing_movie:
-        raise HTTPException(status_code=404, detail="Фильм не найден")
+    db_movie = Movie(
+        title=movie.title,
+        overview=movie.overview,
+        year=movie.year,
+        genre=movie.genre,
+        rating=movie.rating,
+        poster_url=movie.poster_url,
+        created_by=current_user.id
+    )
     
-    try:
-        updated_movie = await movie_service.update_movie(movie_id, movie)
-        return updated_movie
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Ошибка обновления фильма: {str(e)}"
-        )
+    db.add(db_movie)
+    db.commit()
+    db.refresh(db_movie)
+    
+    # Добавляем подборки
+    if movie.picks:
+        for pick_slug in movie.picks:
+            pick = db.query(Pick).filter(Pick.slug == pick_slug).first()
+            if pick:
+                movie_pick = MoviePick(movie_id=db_movie.id, pick_id=pick.id)
+                db.add(movie_pick)
+        
+        db.commit()
+    
+    return db_movie
 
-@router.delete("/{movie_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_movie(
-    movie_id: int,
-    db: AsyncSession = Depends(get_db),
-    # Убираем аутентификацию для удаления
-    # current_user: User = Depends(get_current_active_user)
-):
-    """
-    Удалить фильм.
-    """
-    movie_service = MovieService(db)
+@router.get("/genres/list")
+async def get_genres_list(db: Session = Depends(get_db)):
+    """Получить список всех жанров"""
+    movies = db.query(Movie).all()
+    genres = set()
     
-    existing_movies = await movie_service.get_movies(skip=0, limit=100)
-    existing_movie = next((m for m in existing_movies if m.id == movie_id), None)
+    for movie in movies:
+        if movie.genre:
+            # Разделяем жанры по запятым
+            movie_genres = [g.strip() for g in movie.genre.split(",")]
+            for genre in movie_genres:
+                if genre:
+                    genres.add(genre)
     
-    if not existing_movie:
-        raise HTTPException(status_code=404, detail="Фильм не найден")
-    
-    success = await movie_service.delete_movie(movie_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Фильм не найден")
-    
-    return None
+    return {"genres": sorted(list(genres))}

@@ -3010,3 +3010,294 @@
 2025-12-10 17:20:57,168 - main - INFO - API документация: http://localhost:8000/docs
 2025-12-10 17:20:57,168 - main - INFO - ReDoc документация: http://localhost:8000/redoc
 2025-12-10 17:21:16,963 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-11 00:07:41,289 - main - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:07:41,292 - main - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:07:41,295 - main - INFO - [INFO] Роутер test подключен
+2025-12-11 00:07:41,295 - main - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:07:41,296 - main - INFO - [INFO] Приложение настроено
+2025-12-11 00:07:41,296 - main - INFO - [INFO] Запуск приложения...
+2025-12-11 00:07:41,555 - main - ERROR - [ERROR] Ошибка инициализации БД: No module named 'app.models.user_favorite_movies_base'
+2025-12-11 00:08:14,863 - main - INFO - [INFO] Остановка приложения...
+2025-12-11 00:10:19,712 - __main__ - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:10:19,716 - __main__ - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:10:19,719 - __main__ - INFO - [INFO] Роутер test подключен
+2025-12-11 00:10:19,719 - __main__ - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:10:19,720 - __main__ - INFO - [INFO] Приложение настроено
+2025-12-11 00:10:19,867 - __main__ - INFO - [INFO] Запуск сервера на localhost:8000
+2025-12-11 00:10:19,868 - uvicorn.error - INFO - Will watch for changes in these directories: ['C:\\Users\\User\\Downloads\\import']
+2025-12-11 00:10:19,868 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-12-11 00:10:19,868 - uvicorn.error - INFO - Started reloader process [24036] using WatchFiles
+2025-12-11 00:10:20,277 - __mp_main__ - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:10:20,279 - __mp_main__ - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:10:20,280 - __mp_main__ - INFO - [INFO] Роутер test подключен
+2025-12-11 00:10:20,280 - __mp_main__ - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:10:20,280 - __mp_main__ - INFO - [INFO] Приложение настроено
+2025-12-11 00:10:20,459 - main - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:10:20,459 - main - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:10:20,459 - main - INFO - [INFO] Роутер test подключен
+2025-12-11 00:10:20,460 - main - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:10:20,460 - main - INFO - [INFO] Приложение настроено
+2025-12-11 00:10:20,460 - uvicorn.error - INFO - Started server process [21004]
+2025-12-11 00:10:20,460 - uvicorn.error - INFO - Waiting for application startup.
+2025-12-11 00:10:20,461 - main - INFO - [INFO] Запуск приложения...
+2025-12-11 00:10:20,530 - watchfiles.main - INFO - 13 changes detected
+2025-12-11 00:10:20,711 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-11 00:10:20,712 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-12-11 00:10:20,712 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:10:20,713 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("users")
+2025-12-11 00:10:20,713 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:10:20,713 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("movies")
+2025-12-11 00:10:20,713 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:10:20,714 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("movies")
+2025-12-11 00:10:20,714 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:10:20,715 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE users (
+	id INTEGER NOT NULL, 
+	email VARCHAR NOT NULL, 
+	username VARCHAR NOT NULL, 
+	hashed_password VARCHAR NOT NULL, 
+	is_active BOOLEAN, 
+	is_superuser BOOLEAN, 
+	created_at DATETIME, 
+	PRIMARY KEY (id)
+)
+
+
+2025-12-11 00:10:20,715 - sqlalchemy.engine.Engine - INFO - [no key 0.00033s] ()
+2025-12-11 00:10:20,720 - sqlalchemy.engine.Engine - INFO - CREATE UNIQUE INDEX ix_users_email ON users (email)
+2025-12-11 00:10:20,721 - sqlalchemy.engine.Engine - INFO - [no key 0.00021s] ()
+2025-12-11 00:10:20,725 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_users_id ON users (id)
+2025-12-11 00:10:20,725 - sqlalchemy.engine.Engine - INFO - [no key 0.00029s] ()
+2025-12-11 00:10:20,730 - sqlalchemy.engine.Engine - INFO - CREATE UNIQUE INDEX ix_users_username ON users (username)
+2025-12-11 00:10:20,730 - sqlalchemy.engine.Engine - INFO - [no key 0.00029s] ()
+2025-12-11 00:10:20,734 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE movies (
+	id INTEGER NOT NULL, 
+	title VARCHAR NOT NULL, 
+	original_title VARCHAR, 
+	description TEXT, 
+	release_year INTEGER, 
+	duration INTEGER, 
+	country VARCHAR, 
+	director VARCHAR, 
+	average_rating FLOAT, 
+	poster_url VARCHAR, 
+	backdrop_url VARCHAR, 
+	is_active BOOLEAN, 
+	created_at DATETIME, 
+	updated_at DATETIME, 
+	PRIMARY KEY (id)
+)
+
+
+2025-12-11 00:10:20,735 - sqlalchemy.engine.Engine - INFO - [no key 0.00052s] ()
+2025-12-11 00:10:20,739 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_movies_title ON movies (title)
+2025-12-11 00:10:20,739 - sqlalchemy.engine.Engine - INFO - [no key 0.00023s] ()
+2025-12-11 00:10:20,743 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_movies_id ON movies (id)
+2025-12-11 00:10:20,744 - sqlalchemy.engine.Engine - INFO - [no key 0.00022s] ()
+2025-12-11 00:10:20,748 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_movies_original_title ON movies (original_title)
+2025-12-11 00:10:20,748 - sqlalchemy.engine.Engine - INFO - [no key 0.00028s] ()
+2025-12-11 00:10:20,752 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-11 00:10:20,752 - main - INFO - [INFO] База данных инициализирована
+2025-12-11 00:10:20,752 - uvicorn.error - INFO - Application startup complete.
+2025-12-11 00:10:20,889 - watchfiles.main - INFO - 37 changes detected
+2025-12-11 00:10:21,297 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:21,655 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:22,067 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:22,476 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:22,882 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:23,237 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:23,647 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:23,835 - uvicorn.access - INFO - 127.0.0.1:64137 - "GET / HTTP/1.1" 200
+2025-12-11 00:10:24,051 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:24,457 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:24,864 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:24,978 - uvicorn.access - INFO - 127.0.0.1:64137 - "GET / HTTP/1.1" 200
+2025-12-11 00:10:25,270 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:25,678 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:25,917 - uvicorn.access - INFO - 127.0.0.1:64137 - "GET / HTTP/1.1" 200
+2025-12-11 00:10:26,084 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:26,488 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:26,893 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:27,251 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:27,657 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:28,064 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:28,471 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:28,877 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:29,235 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:29,645 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:30,053 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:30,460 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:30,867 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:31,274 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:31,631 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:32,038 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:32,443 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:32,848 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:33,250 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:33,659 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:34,066 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:34,318 - uvicorn.error - INFO - Shutting down
+2025-12-11 00:10:34,427 - uvicorn.error - INFO - Waiting for application shutdown.
+2025-12-11 00:10:34,427 - main - INFO - [INFO] Остановка приложения...
+2025-12-11 00:10:34,428 - uvicorn.error - INFO - Application shutdown complete.
+2025-12-11 00:10:34,428 - uvicorn.error - INFO - Finished server process [21004]
+2025-12-11 00:10:34,513 - uvicorn.error - INFO - Stopping reloader process [24036]
+2025-12-11 00:10:47,061 - __main__ - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:10:47,063 - __main__ - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:10:47,063 - __main__ - INFO - [INFO] Роутер test подключен
+2025-12-11 00:10:47,064 - __main__ - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:10:47,064 - __main__ - INFO - [INFO] Приложение настроено
+2025-12-11 00:10:47,216 - __main__ - INFO - [INFO] Запуск сервера на localhost:8000
+2025-12-11 00:10:47,217 - uvicorn.error - INFO - Will watch for changes in these directories: ['C:\\Users\\User\\Downloads\\import']
+2025-12-11 00:10:47,217 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-12-11 00:10:47,217 - uvicorn.error - INFO - Started reloader process [8604] using WatchFiles
+2025-12-11 00:10:47,648 - __mp_main__ - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:10:47,651 - __mp_main__ - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:10:47,652 - __mp_main__ - INFO - [INFO] Роутер test подключен
+2025-12-11 00:10:47,652 - __mp_main__ - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:10:47,652 - __mp_main__ - INFO - [INFO] Приложение настроено
+2025-12-11 00:10:47,852 - main - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:10:47,852 - main - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:10:47,853 - main - INFO - [INFO] Роутер test подключен
+2025-12-11 00:10:47,853 - main - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:10:47,853 - main - INFO - [INFO] Приложение настроено
+2025-12-11 00:10:47,853 - uvicorn.error - INFO - Started server process [20048]
+2025-12-11 00:10:47,854 - uvicorn.error - INFO - Waiting for application startup.
+2025-12-11 00:10:47,854 - main - INFO - [INFO] Запуск приложения...
+2025-12-11 00:10:47,926 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:48,078 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-11 00:10:48,078 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-12-11 00:10:48,078 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:10:48,079 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("movies")
+2025-12-11 00:10:48,079 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:10:48,080 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-11 00:10:48,080 - main - INFO - [INFO] База данных инициализирована
+2025-12-11 00:10:48,080 - uvicorn.error - INFO - Application startup complete.
+2025-12-11 00:10:48,278 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:48,640 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:49,052 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:49,458 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:49,865 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:50,221 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:50,632 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:50,814 - uvicorn.access - INFO - 127.0.0.1:50447 - "GET / HTTP/1.1" 200
+2025-12-11 00:10:51,037 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:51,442 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:51,848 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:52,255 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:52,344 - uvicorn.access - INFO - 127.0.0.1:50447 - "GET / HTTP/1.1" 200
+2025-12-11 00:10:52,661 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:53,016 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:53,424 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:53,830 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:54,235 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:54,637 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:55,042 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:55,451 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:10:55,722 - uvicorn.error - INFO - Shutting down
+2025-12-11 00:10:55,832 - uvicorn.error - INFO - Waiting for application shutdown.
+2025-12-11 00:10:55,832 - main - INFO - [INFO] Остановка приложения...
+2025-12-11 00:10:55,832 - uvicorn.error - INFO - Application shutdown complete.
+2025-12-11 00:10:55,832 - uvicorn.error - INFO - Finished server process [20048]
+2025-12-11 00:10:55,933 - uvicorn.error - INFO - Stopping reloader process [8604]
+2025-12-11 00:12:14,207 - __main__ - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:12:14,209 - __main__ - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:12:14,210 - __main__ - INFO - [INFO] Роутер test подключен
+2025-12-11 00:12:14,210 - __main__ - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:12:14,211 - __main__ - INFO - [INFO] Приложение настроено
+2025-12-11 00:12:14,361 - __main__ - INFO - [INFO] Запуск сервера на localhost:8000
+2025-12-11 00:12:14,361 - uvicorn.error - INFO - Will watch for changes in these directories: ['C:\\Users\\User\\Downloads\\import']
+2025-12-11 00:12:14,361 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-12-11 00:12:14,361 - uvicorn.error - INFO - Started reloader process [21676] using WatchFiles
+2025-12-11 00:12:14,779 - __mp_main__ - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:12:14,781 - __mp_main__ - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:12:14,782 - __mp_main__ - INFO - [INFO] Роутер test подключен
+2025-12-11 00:12:14,783 - __mp_main__ - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:12:14,783 - __mp_main__ - INFO - [INFO] Приложение настроено
+2025-12-11 00:12:14,952 - main - INFO - [INFO] Обработчики исключений настроены
+2025-12-11 00:12:14,952 - main - INFO - [INFO] Роутер sample подключен
+2025-12-11 00:12:14,952 - main - INFO - [INFO] Роутер test подключен
+2025-12-11 00:12:14,953 - main - INFO - [INFO] Статические файлы подключены
+2025-12-11 00:12:14,953 - main - INFO - [INFO] Приложение настроено
+2025-12-11 00:12:14,953 - uvicorn.error - INFO - Started server process [20832]
+2025-12-11 00:12:14,953 - uvicorn.error - INFO - Waiting for application startup.
+2025-12-11 00:12:14,954 - main - INFO - [INFO] Запуск приложения...
+2025-12-11 00:12:15,009 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:15,168 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-11 00:12:15,168 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-12-11 00:12:15,168 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:12:15,169 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("movies")
+2025-12-11 00:12:15,169 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-11 00:12:15,170 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-11 00:12:15,170 - main - INFO - [INFO] База данных инициализирована
+2025-12-11 00:12:15,170 - uvicorn.error - INFO - Application startup complete.
+2025-12-11 00:12:15,367 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:15,728 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:16,139 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:16,547 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:16,953 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:17,358 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:17,764 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:18,169 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:18,608 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:18,972 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:19,385 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:19,796 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:20,203 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:20,609 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:21,013 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:21,419 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:21,827 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:22,187 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:22,599 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:23,009 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:23,413 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:23,771 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:24,180 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:24,586 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:24,992 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:25,397 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:25,804 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:26,210 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:26,616 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:27,023 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:27,428 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:27,788 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:28,199 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:28,611 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:28,968 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:29,377 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:29,786 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:30,146 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:30,557 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:30,965 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:31,374 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:31,732 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:32,145 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:32,556 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:32,962 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:33,319 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:33,730 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:34,140 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:34,499 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:34,910 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:35,318 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:35,723 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:36,134 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:36,493 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:36,906 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:37,314 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:37,671 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:38,082 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:38,489 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:38,895 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:39,299 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:39,706 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:40,115 - watchfiles.main - INFO - 1 change detected
+2025-12-11 00:12:40,419 - uvicorn.error - INFO - Shutting down
+2025-12-11 00:12:40,528 - uvicorn.error - INFO - Waiting for application shutdown.
+2025-12-11 00:12:40,529 - main - INFO - [INFO] Остановка приложения...
+2025-12-11 00:12:40,529 - uvicorn.error - INFO - Application shutdown complete.
+2025-12-11 00:12:40,529 - uvicorn.error - INFO - Finished server process [20832]
+2025-12-11 00:12:40,617 - uvicorn.error - INFO - Stopping reloader process [21676]

@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 
 from app.models.movies import Movie
 from app.models.reviews import Review
-from app.models.users import User, user_favorite_movies
+from app.models.users import User
 from app.models.picks import Pick
 from app.schemas.movies import MovieCreate, MovieInDB, MovieUpdate, MovieFilters
 from app.schemas.reviews import ReviewCreate

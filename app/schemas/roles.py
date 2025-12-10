@@ -1,6 +1,7 @@
+# app/schemas/roles.py
 from pydantic import BaseModel
-from datetime import datetime
 from typing import Optional
+from datetime import datetime
 
 class RoleBase(BaseModel):
     name: str
@@ -9,19 +10,9 @@ class RoleBase(BaseModel):
 class RoleCreate(RoleBase):
     pass
 
-class RoleUpdate(RoleBase):
-    pass
-
-class Role(RoleBase):
+class RoleResponse(RoleBase):
     id: int
     created_at: datetime
-    updated_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True
-
-class RoleInDB(Role):
-    pass
-
-# Добавить для совместимости
-SRoleGet = Role  # Псевдоним для relations_users_roles.py

@@ -1,44 +1,29 @@
 # app/schemas/users.py
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 from datetime import datetime
-from .enums import UserRole
-from .roles import Role  # Импортируем Role для отношений
-
-class SUserGet(BaseModel):
-    id: int
-    email: str
-    is_active: bool
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 class UserBase(BaseModel):
-    username: str = Field(..., min_length=3, max_length=50, pattern="^[a-zA-Z0-9_]+$")
-    email: str = Field(..., min_length=5)
-    role: Optional[UserRole] = None
+    username: str
+    email: Optional[EmailStr] = None
 
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=4)
+    password: str
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 class UserUpdate(BaseModel):
-    password: Optional[str] = Field(None, min_length=4)
-    role: Optional[UserRole] = None
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
 
-class UserInDB(UserBase):
+class UserResponse(UserBase):
     id: int
-    is_active: bool = True
+    is_active: bool
+    is_superuser: bool
     created_at: datetime
-    updated_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True
-
-# ДОБАВЛЯЕМ ЭТОТ КЛАСС
-class UserResponse(UserInDB):
-    """Схема для ответа API с информацией о пользователе"""
-    role_details: Optional[Role] = None  # Детали роли если нужны
-
-# Для обратной совместимости
-User = UserInDB

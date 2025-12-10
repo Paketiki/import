@@ -1,73 +1,72 @@
-# app/api/auth.py - ИСПРАВЛЕННАЯ ВЕРСИЯ
+# app/api/auth.py
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from typing import Any, Dict
-from app.models.users import User
-
 from app.database.database import get_db
-from app.schemas.auth import Token, LoginRequest, RegisterRequest
-from app.schemas.users import UserCreate
-from app.services.auth import AuthService
-from app.services.users import UserService
+from app.schemas import Token, UserCreate, UserResponse
+from app.models import User
+from app.utils.security import (
+    create_access_token, 
+    verify_password, 
+    get_password_hash
+)
 
-router = APIRouter(tags=["auth"])
+router = APIRouter()
 
-# Для тестирования - простые временные эндпоинты
-@router.post("/auth/login", response_model=Token)
+@router.post("/login", response_model=Token)
 async def login(
-    login_data: LoginRequest,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
-) -> Any:
-    """
-    Вход пользователя (упрощенная версия для тестирования)
-    """
-    try:
-        # Пробуем использовать AuthService если он существует
-        auth_service = AuthService(db)
-        return auth_service.login(login_data.username, login_data.password)
-    except:
-        # Если сервис не работает, возвращаем тестовый токен
-        return {
-            "access_token": "test_token_123",
-            "token_type": "bearer"
-        }
-
-@router.post("/auth/register", response_model=Token)
-async def register(
-    register_data: RegisterRequest,
-    db: Session = Depends(get_db)
-) -> Any:
-    """
-    Регистрация нового пользователя (упрощенная версия для тестирования)
-    """
-    try:
-        # Пробуем использовать UserService и AuthService если они существуют
-        user_service = UserService(db)
-        auth_service = AuthService(db)
-        
-        # Создаем пользователя
-        user_create = UserCreate(
-            username=register_data.username,
-            password=register_data.password,
-            email=register_data.email or f"{register_data.username}@example.com"
+):
+    """Вход в систему"""
+    user = db.query(User).filter(User.username == form_data.username).first()
+    
+    if not user or not verify_password(form_data.password, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Неверное имя пользователя или пароль",
+            headers={"WWW-Authenticate": "Bearer"},
         )
-        
-        user = user_service.create_user(user_create)
-        
-        # Автоматически входим
-        return auth_service.login(register_data.username, register_data.password)
-    except Exception as e:
-        # Если сервисы не работают, возвращаем тестовый токен
-        print(f"Register error (fallback to test token): {e}")
-        return {
-            "access_token": "test_token_123",
-            "token_type": "bearer"
-        }
+    
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/auth/logout")
-async def logout() -> Dict[str, str]:
-    """
-    Выход пользователя
-    """
-    return {"message": "Successfully logged out"}
+@router.post("/register", response_model=Token)
+async def register(
+    user_data: UserCreate,
+    db: Session = Depends(get_db)
+):
+    """Регистрация нового пользователя"""
+    # Проверяем существование пользователя
+    existing_user = db.query(User).filter(User.username == user_data.username).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Пользователь с таким именем уже существует")
+    
+    # Проверяем email
+    if user_data.email:
+        existing_email = db.query(User).filter(User.email == user_data.email).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="Пользователь с таким email уже существует")
+    
+    # Создаем нового пользователя
+    hashed_password = get_password_hash(user_data.password)
+    db_user = User(
+        username=user_data.username,
+        email=user_data.email,
+        password_hash=hashed_password,
+        is_active=True,
+        is_superuser=False
+    )
+    
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
+    # Создаем токен
+    access_token = create_access_token(data={"sub": db_user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/logout")
+async def logout():
+    """Выход из системы"""
+    return {"message": "Успешный выход из системы"}

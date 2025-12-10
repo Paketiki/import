@@ -14,12 +14,10 @@ from app.models.users import User, UserModel
 router = APIRouter()
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_info(
-    current_user: UserModel = Depends(get_current_active_user)
+async def read_users_me(
+    current_user: User = Depends(get_current_user)
 ):
-    """
-    Получить информацию о текущем пользователе
-    """
+    """Получить информацию о текущем пользователе"""
     if not current_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -1,81 +1,22 @@
-# main.py - УПРОЩЕННЫЙ РАБОЧИЙ ВАРИАНТ
-import uvicorn
-import sys
-import os
-from pathlib import Path
-from fastapi import FastAPI, Request, Depends, HTTPException
+# main.py
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, RedirectResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from contextlib import asynccontextmanager
+from fastapi.responses import HTMLResponse, FileResponse
+from pydantic import BaseModel
+from typing import List, Optional
 from datetime import datetime
-import logging
-import asyncio
-from app.utils.data_loader import load_initial_data
+import os
+import sqlite3
+from pathlib import Path
 
-# Настройка логирования
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-
-logger = logging.getLogger(__name__)
-
-@asynccontextmanager
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Контекстный менеджер для управления жизненным циклом приложения"""
-    # Startup логика
-    logger.info("🚀 Запуск KinoVzor API")
-    
-    try:
-        # Настройка отношений БД
-        from app.models.configure_relationships import configure_all_relationships
-        configure_all_relationships()
-        logger.info("✅ Отношения моделей настроены")
-    except Exception as e:
-        logger.warning(f"⚠️ Ошибка настройки отношений: {e}")
-    
-    try:
-        # Инициализация базы данных
-        from app.database.database import init_db
-        await init_db()
-        logger.info("✅ База данных инициализирована")
-    except Exception as e:
-        logger.warning(f"⚠️ Ошибка инициализации БД: {e}")
-    
-    # ВРЕМЕННО ЗАКОММЕНТИРУЙТЕ загрузку данных
-    # try:
-    #     # Загрузка начальных данных
-    #     await load_initial_data()
-    #     logger.info("✅ Начальные данные загружены")
-    # except Exception as e:
-    #     logger.warning(f"⚠️ Ошибка загрузки начальных данных: {e}")
-    #     logger.info("⚠️ Продолжаем без загруженных данных")
-    
-    logger.info("⏭️  Пропускаем загрузку начальных данных")
-    
-    logger.info("✅ Приложение успешно запущено")
-    logger.info(f"Frontend: http://localhost:8000")
-    logger.info(f"API документация: http://localhost:8000/docs")
-    
-    yield
-    
-    # Shutdown логика
-    logger.info("🛑 Остановка KinoVzor...")
-
-# Создание приложения FastAPI
 app = FastAPI(
-    title="KinoVzor API",
-    version="1.0.0",
-    description="Movie database application with frontend",
-    lifespan=lifespan,
+    title="КиноВзор API",
+    description="API для сайта КиноВзор",
+    version="1.0.0"
 )
 
-# Настройка CORS middleware
+# Настройка CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -84,81 +25,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------- Настройка статических файлов ----------
-current_dir = Path(__file__).parent
-static_dir = current_dir / "static"
+# Получаем абсолютный путь к директории проекта
+BASE_DIR = Path(__file__).parent
 
-if not static_dir.exists():
-    static_dir.mkdir(parents=True, exist_ok=True)
+# Монтирование статических файлов
+static_dir = BASE_DIR / "static"
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+# Подключение к базе данных
+def get_db_connection():
+    conn = sqlite3.connect('movies.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
-# ---------- Основные роуты ----------
-@app.get("/", response_class=HTMLResponse, include_in_schema=False)
-async def serve_frontend():
-    """Главная страница фронтенда"""
-    index_path = current_dir / "index.html"
-    
-    if index_path.exists():
-        with open(index_path, 'r', encoding='utf-8') as f:
-            return HTMLResponse(content=f.read())
-    
-    # Простой HTML если файл не найден
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>KinoVzor</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #0a0a0a; color: white; }
-            .container { max-width: 800px; margin: 0 auto; }
-            h1 { color: #ff7a1a; }
-            .btn { background: #ff7a1a; color: black; padding: 10px 20px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; margin: 10px 5px; text-decoration: none; display: inline-block; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>KinoVzor Backend is Running!</h1>
-            <p>Frontend is loaded from index.html</p>
-            <div>
-                <a href="/docs" class="btn">API Documentation</a>
-                <a href="/health" class="btn">Health Check</a>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    return HTMLResponse(content=html_content)
+# Модели Pydantic
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
-@app.get("/health", tags=["monitoring"])
-async def health_check():
-    return {
-        "status": "ok", 
-        "message": "Server is running", 
-        "timestamp": datetime.utcnow().isoformat(),
-        "app": "KinoVzor API"
-    }
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    email: Optional[str] = None
 
-@app.get("/api", tags=["monitoring"])
-async def api_root():
-    return {
-        "app": "KinoVzor API",
-        "version": "1.0.0",
-        "status": "running",
-        "endpoints": {
-            "auth_login": "/api/v1/auth/login",
-            "auth_register": "/api/v1/auth/register",
-            "movies": "/api/v1/movies",
-        }
-    }
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
-# ---------- Временные тестовые эндпоинты ----------
-# Эти эндпоинты будут работать даже если основные API модули не загружаются
-
-from pydantic import BaseModel
-from typing import List, Optional
-
-class Movie(BaseModel):
+class MovieResponse(BaseModel):
     id: int
     title: str
     year: int
@@ -166,162 +61,173 @@ class Movie(BaseModel):
     genre: str
     poster_url: Optional[str] = None
     overview: Optional[str] = None
-    picks: List[str] = []
-
-class LoginData(BaseModel):
-    username: str
-    password: str
-
-class RegisterData(BaseModel):
-    username: str
-    password: str
-    email: Optional[str] = None
-
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-# Демо-фильмы
-DEMO_MOVIES = [
-    {
-        "id": 1,
-        "title": "Интерстеллар",
-        "year": 2014,
-        "rating": 8.6,
-        "genre": "Фантастика, Драма",
-        "poster_url": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-        "overview": "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планеты с подходящими для человечества условиями.",
-        "picks": ["hits", "classic"]
-    },
-    {
-        "id": 2,
-        "title": "Начало",
-        "year": 2010,
-        "rating": 8.8,
-        "genre": "Фантастика, Боевик",
-        "poster_url": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-        "overview": "Кобб — талантливый вор, лучший из лучших в опасном искусстве извлечения: он крадет ценные секреты из глубин подсознания во время сна, когда человеческий разум наиболее уязвим.",
-        "picks": ["hits"]
-    },
-    {
-        "id": 3,
-        "title": "Побег из Шоушенка",
-        "year": 1994,
-        "rating": 9.3,
-        "genre": "Драма",
-        "poster_url": "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg",
-        "overview": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки.",
-        "picks": ["classic"]
-    }
-]
-
-# Эндпоинт для входа
-@app.post("/api/v1/auth/login", response_model=TokenResponse, tags=["auth"])
-async def temp_login(login_data: LoginData):
-    """Вход пользователя (тестовый эндпоинт)"""
-    logger.info(f"Login attempt: {login_data.username}")
-    return {
-        "access_token": f"test_token_{login_data.username}",
-        "token_type": "bearer"
-    }
-
-# Эндпоинт для регистрации
-@app.post("/api/v1/auth/register", response_model=TokenResponse, tags=["auth"])
-async def temp_register(register_data: RegisterData):
-    """Регистрация пользователя (тестовый эндпоинт)"""
-    logger.info(f"Register attempt: {register_data.username}")
-    return {
-        "access_token": f"test_token_{register_data.username}",
-        "token_type": "bearer"
-    }
-
-# Эндпоинт для выхода
-@app.post("/api/v1/auth/logout", tags=["auth"])
-async def temp_logout():
-    """Выход пользователя"""
-    return {"message": "Successfully logged out"}
-
-# Эндпоинт для получения фильмов
-@app.get("/api/v1/movies", response_model=List[Movie], tags=["movies"])
-async def get_movies():
-    """Получить список фильмов (тестовый эндпоинт)"""
-    return DEMO_MOVIES
-
-# Эндпоинт для получения конкретного фильма
-@app.get("/api/v1/movies/{movie_id}", response_model=Movie, tags=["movies"])
-async def get_movie(movie_id: int):
-    """Получить информацию о фильме (тестовый эндпоинт)"""
-    movie = next((m for m in DEMO_MOVIES if m["id"] == movie_id), None)
-    if not movie:
-        raise HTTPException(status_code=404, detail="Movie not found")
-    return movie
-
-# Эндпоинт для создания фильма
-@app.post("/api/v1/movies", response_model=Movie, tags=["movies"])
-async def create_movie(movie: Movie):
-    """Создать новый фильм (тестовый эндпоинт)"""
-    logger.info(f"Creating movie: {movie.title}")
-    return movie
-
-# ---------- Пробуем подключить основные роутеры если они существуют ----------
-try:
-    from app.api.auth import router as auth_router
-    app.include_router(auth_router, prefix="/api/v1")
-    logger.info("✅ Основной роутер auth подключен")
-except ImportError as e:
-    logger.warning(f"⚠️ Не удалось подключить основной роутер auth: {e}")
-    logger.info("⚠️ Используются тестовые эндпоинты")
-
-try:
-    from app.api.movies_real import router as movies_real_router
-    app.include_router(movies_real_router, prefix="/api/v1")
-    logger.info("✅ Основной роутер movies_real подключен")
-except ImportError as e:
-    logger.warning(f"⚠️ Не удалось подключить роутер movies_real: {e}")
     
-try:
-    from app.api.picks import router as picks_router
-    app.include_router(picks_router, prefix="/api/v1")
-    logger.info("✅ Роутер picks подключен")
-except ImportError as e:
-    logger.warning(f"⚠️ Не удалось подключить роутер picks: {e}")
+    class Config:
+        from_attributes = True
 
-# Если старый movies API нужен для тестирования, оставьте его с другим префиксом
-try:
-    from app.api.movies import router as movies_router
-    app.include_router(movies_router, prefix="/api/v1/demo")
-    logger.info("✅ Демо-роутер movies подключен (для тестирования)")
-except ImportError as e:
-    logger.warning(f"⚠️ Не удалось подключить демо-роутер movies: {e}")
+# API endpoints
 
-# Глобальные обработчики ошибок
-@app.exception_handler(404)
-async def not_found_exception_handler(request, exc):
-    return JSONResponse(
-        status_code=404,
-        content={"detail": "Ресурс не найден"},
+@app.get("/", response_class=HTMLResponse)
+async def read_root():
+    index_path = BASE_DIR / "templates" / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
+    return HTMLResponse(content="<h1>КиноВзор API работает</h1>")
+
+@app.get("/api/v1/movies", response_model=List[MovieResponse])
+async def get_movies(
+    genre: Optional[str] = None,
+    rating_min: Optional[float] = None,
+    pick: Optional[str] = None,
+    search: Optional[str] = None
+):
+    """Получить список фильмов"""
+    conn = get_db_connection()
+    
+    query = "SELECT * FROM movies WHERE 1=1"
+    params = []
+    
+    if genre and genre != "all":
+        query += " AND genre LIKE ?"
+        params.append(f"%{genre}%")
+    
+    if rating_min:
+        query += " AND rating >= ?"
+        params.append(rating_min)
+    
+    if search:
+        query += " AND title LIKE ?"
+        params.append(f"%{search}%")
+    
+    cursor = conn.execute(query, params)
+    movies = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    
+    return movies
+
+@app.get("/api/v1/movies/{movie_id}")
+async def get_movie(movie_id: int):
+    """Получить информацию о фильме"""
+    conn = get_db_connection()
+    cursor = conn.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))
+    movie = cursor.fetchone()
+    conn.close()
+    
+    if not movie:
+        raise HTTPException(status_code=404, detail="Фильм не найден")
+    
+    # Получаем подборки
+    conn = get_db_connection()
+    cursor = conn.execute("""
+        SELECT p.slug FROM picks p
+        JOIN movie_picks mp ON p.id = mp.pick_id
+        WHERE mp.movie_id = ?
+    """, (movie_id,))
+    picks = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    
+    movie_dict = dict(movie)
+    movie_dict["picks"] = picks
+    return movie_dict
+
+@app.get("/api/v1/movies/genres/list")
+async def get_genres_list():
+    """Получить список всех жанров"""
+    conn = get_db_connection()
+    cursor = conn.execute("SELECT DISTINCT genre FROM movies")
+    genres_set = set()
+    
+    for row in cursor.fetchall():
+        if row[0]:
+            for genre in row[0].split(','):
+                genres_set.add(genre.strip())
+    
+    conn.close()
+    return {"genres": sorted(list(genres_set))}
+
+@app.post("/api/v1/auth/login")
+async def login(user_data: UserLogin):
+    """Вход в систему"""
+    conn = get_db_connection()
+    cursor = conn.execute(
+        "SELECT * FROM users WHERE username = ?", 
+        (user_data.username,)
     )
+    user = cursor.fetchone()
+    conn.close()
+    
+    if not user:
+        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
+    
+    # В реальном приложении проверяем хэш пароля
+    if user["password_hash"] != user_data.password:
+        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
+    
+    # В реальном приложении генерируем JWT токен
+    return {
+        "access_token": f"token_{user['id']}",
+        "token_type": "bearer"
+    }
 
-@app.exception_handler(422)
-async def validation_exception_handler(request, exc):
-    return JSONResponse(
-        status_code=422,
-        content={"detail": "Ошибка валидации данных"},
+@app.post("/api/v1/auth/register")
+async def register(user_data: UserCreate):
+    """Регистрация нового пользователя"""
+    conn = get_db_connection()
+    
+    # Проверяем существование пользователя
+    cursor = conn.execute(
+        "SELECT * FROM users WHERE username = ?", 
+        (user_data.username,)
     )
+    if cursor.fetchone():
+        conn.close()
+        raise HTTPException(status_code=400, detail="Пользователь с таким именем уже существует")
+    
+    # Создаем пользователя
+    conn.execute(
+        "INSERT INTO users (username, email, password_hash, is_active, is_superuser, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+        (user_data.username, user_data.email, user_data.password, True, False, datetime.now())
+    )
+    conn.commit()
+    
+    # Получаем ID нового пользователя
+    cursor = conn.execute("SELECT last_insert_rowid()")
+    user_id = cursor.fetchone()[0]
+    conn.close()
+    
+    return {
+        "access_token": f"token_{user_id}",
+        "token_type": "bearer"
+    }
 
-@app.exception_handler(500)
-async def internal_exception_handler(request, exc):
-    logger.error(f"Internal server error: {exc}")
-    return JSONResponse(
-        status_code=500,
-        content={"detail": "Внутренняя ошибка сервера"},
+@app.get("/api/v1/users/me")
+async def get_current_user():
+    """Получить информацию о текущем пользователе (заглушка)"""
+    return {
+        "id": 1,
+        "username": "demo",
+        "email": "demo@example.com",
+        "is_active": True,
+        "is_superuser": False
+    }
+
+# Простые рецензии
+@app.get("/api/v1/reviews")
+async def get_reviews(movie_id: int):
+    """Получить рецензии для фильма"""
+    conn = get_db_connection()
+    cursor = conn.execute(
+        "SELECT * FROM reviews WHERE movie_id = ? ORDER BY created_at DESC",
+        (movie_id,)
     )
+    reviews = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return reviews
+
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok", "message": "API работает нормально"}
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host="127.0.0.1",
-        port=8000,
-        reload=True,
-        log_level="info"
-    )
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
