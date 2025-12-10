@@ -511,3 +511,2502 @@
 2025-12-09 23:38:31,564 - main - INFO - API документация: http://localhost:8000/api/v1/docs
 2025-12-09 23:38:31,564 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
 2025-12-09 23:47:43,042 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:42:07,399 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:08,261 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:08,314 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:42:08,328 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:42:08,328 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:42:08,329 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:42:08,329 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:42:08,329 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:42:08,330 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:42:08,330 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:42:08,617 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:42:08,977 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:09,337 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:09,698 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:10,060 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:10,418 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:10,777 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:11,186 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:11,595 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:12,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:12,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:12,771 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:13,181 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:13,589 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:13,995 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:14,353 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:14,766 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:15,169 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:15,574 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:15,978 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:16,383 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:16,787 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:17,195 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:17,599 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:18,004 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:18,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:18,816 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:19,222 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:19,576 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:19,989 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:20,393 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:20,798 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:21,205 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:21,610 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:22,022 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:22,438 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:22,845 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:23,249 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:23,655 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:24,013 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:24,424 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:24,833 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:25,238 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:25,645 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:26,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:26,415 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:26,823 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:27,230 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:27,635 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:28,043 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:28,401 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:28,815 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:29,224 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:29,629 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:30,034 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:30,394 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:30,806 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:42:31,221 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:43:52,090 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:43:52,102 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:43:52,102 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:43:52,103 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:43:52,103 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:43:52,103 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:43:52,104 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:43:52,104 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:43:52,177 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 01:44:41,973 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:44:55,633 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:04,599 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:12,496 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:18,288 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:39,945 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:40,118 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:45:40,625 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:40,982 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:41,338 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:41,474 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:45:41,485 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:45:41,486 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:45:41,486 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:45:41,486 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:45:41,487 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:45:41,487 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:45:41,487 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:45:41,698 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:45:42,058 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:42,420 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:42,778 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:43,138 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:43,546 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:43,951 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:44,358 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:44,767 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:45,172 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:45,528 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:45,938 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:46,343 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:46,705 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:47,118 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:47,525 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:47,933 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:48,336 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:48,740 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:49,145 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:49,553 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:49,963 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:50,321 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:50,735 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:51,143 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:51,502 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:51,910 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:52,316 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:52,720 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:53,129 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:53,638 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:54,049 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:54,452 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:54,857 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:55,262 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:55,666 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:56,071 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:56,478 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:56,836 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:57,248 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:57,656 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:58,062 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:58,416 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:58,776 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:59,134 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:59,490 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:45:59,850 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:00,209 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:00,620 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:01,026 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:01,430 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:01,837 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:02,243 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:02,597 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:03,007 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:03,413 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:46:04,137 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:46:10,630 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:46:10,645 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:46:10,646 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:46:10,646 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:46:10,647 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:46:10,647 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:46:10,647 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:46:10,647 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:46:10,701 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:47:00,493 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:47:41,222 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:48:01,356 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:48:58,890 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:48:59,056 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:48:59,549 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:48:59,906 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:00,265 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:00,626 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:00,987 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:01,349 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:01,712 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:02,073 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:02,434 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:02,846 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:03,254 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:03,612 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:04,025 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:04,431 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:04,838 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:05,247 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:05,607 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:06,018 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:06,429 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:06,839 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:07,248 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:07,606 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:08,018 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:08,423 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:08,784 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:09,196 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:09,601 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:10,011 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:10,418 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:10,778 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:11,191 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:11,600 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:11,961 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:12,370 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:12,778 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:13,184 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:13,539 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:13,904 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:14,263 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:14,623 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:14,657 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:49:14,669 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:49:14,669 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:49:14,670 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:49:14,670 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:49:14,670 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:49:14,670 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:49:14,670 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:49:14,982 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:49:15,341 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:15,701 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:16,064 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:16,426 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:16,787 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:17,148 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:17,557 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:17,917 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:18,330 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:18,740 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:19,146 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:19,552 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:19,911 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:20,321 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:20,732 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:21,093 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:21,500 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:21,910 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:22,319 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:22,721 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:23,077 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:23,490 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:23,899 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:24,260 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:24,671 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:25,083 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:25,440 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:25,853 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:26,261 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:26,671 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:27,075 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:27,433 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:27,844 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:28,252 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:28,609 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:29,019 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:29,422 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:29,829 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:30,189 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:30,598 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:31,007 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:31,366 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:31,779 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:32,187 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:32,545 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:32,957 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:33,368 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:33,724 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:34,137 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:34,544 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:34,954 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:35,312 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:35,726 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:36,137 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:36,546 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:36,906 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:37,320 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:37,727 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:38,084 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:38,497 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:38,906 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:39,310 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:39,669 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:40,079 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:40,488 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:40,845 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:41,255 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:41,665 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:42,072 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:42,482 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:42,888 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:43,247 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:43,659 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:44,068 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:44,478 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:44,834 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:45,248 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:45,657 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:46,066 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:46,423 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:46,836 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:47,245 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:47,604 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:48,014 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:48,424 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:48,784 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:49,191 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:49,599 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:49,958 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:50,371 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:50,779 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:51,139 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:51,551 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:51,959 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:52,320 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:52,729 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:53,136 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:53,495 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:53,909 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:54,319 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:54,675 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:55,089 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:55,496 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:55,854 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:56,265 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:56,671 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:57,030 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:57,441 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:57,850 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:58,209 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:58,622 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:59,030 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:59,437 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:49:59,794 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:00,208 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:00,617 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:00,979 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:01,391 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:01,794 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:02,204 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:02,608 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:03,020 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:03,380 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:03,793 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:04,200 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:04,562 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:04,974 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:05,380 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:05,785 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:06,194 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:06,600 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:07,007 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:07,367 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:07,783 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:08,191 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:08,550 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:08,962 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:09,373 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:09,733 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:10,143 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:10,555 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:10,964 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:11,323 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:11,735 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:12,144 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:12,550 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:12,954 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:13,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:13,716 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:14,127 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:14,539 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:14,898 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:15,310 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:15,719 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:16,130 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:16,487 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:16,899 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:17,310 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:17,668 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:18,083 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:18,493 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:18,852 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:19,264 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:19,671 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:20,032 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:20,440 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:20,847 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:21,255 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 01:50:21,468 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:50:21,960 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:22,323 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:22,684 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:22,740 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:50:22,751 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:50:22,751 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:50:22,752 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:50:22,752 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:50:22,752 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:50:22,753 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:50:22,753 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:50:23,044 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:50:23,406 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:23,768 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:24,129 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:24,490 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:24,854 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:25,216 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:25,627 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:25,988 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:26,400 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:26,808 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:27,168 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:27,577 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:27,985 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:28,344 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:28,755 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:29,164 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:29,524 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:29,935 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:30,347 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:30,706 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:31,120 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:31,529 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:31,939 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:32,347 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:32,703 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:32,835 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:50:33,326 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:33,686 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:34,074 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:50:34,085 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:50:34,086 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:50:34,086 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:50:34,087 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:50:34,087 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:50:34,087 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:50:34,087 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:50:34,147 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:50:34,503 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:34,864 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:35,224 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:35,586 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:35,945 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:36,308 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:36,670 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:37,031 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:37,394 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:37,806 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:38,212 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:38,623 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:38,979 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:39,159 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:50:39,668 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:40,027 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:40,386 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:40,430 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:50:40,442 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:50:40,442 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:50:40,443 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:50:40,444 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:50:40,444 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:50:40,444 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:50:40,444 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:50:40,747 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:50:41,111 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:41,474 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:41,835 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:42,194 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:42,553 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:42,914 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:43,327 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:43,732 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:44,141 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:44,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:44,913 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:45,321 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:45,729 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:46,088 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:46,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:46,910 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:47,321 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:47,680 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:48,090 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:48,494 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:48,902 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:49,308 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:49,714 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 01:50:49,907 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:50:50,397 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:50,758 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:51,119 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:51,162 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:50:51,174 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:50:51,174 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:50:51,175 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:50:51,175 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:50:51,175 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:50:51,175 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:50:51,175 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:50:51,480 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:50:51,843 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:52,204 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:52,562 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:52,922 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:53,282 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:53,645 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:54,059 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:54,465 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:54,870 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:55,277 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:55,637 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:56,048 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:56,458 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:56,821 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:57,233 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:57,642 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:58,004 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:58,417 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:58,822 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:59,182 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:50:59,318 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:50:59,780 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:00,139 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:00,523 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:51:00,534 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:51:00,534 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:51:00,535 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:51:00,535 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:51:00,535 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:51:00,535 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:51:00,535 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:51:00,599 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:51:00,953 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:30,831 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:30,961 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:51:31,452 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:31,812 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:32,170 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:32,227 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:51:32,239 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:51:32,239 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:51:32,240 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:51:32,240 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:51:32,241 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:51:32,241 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:51:32,241 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:51:32,532 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:51:32,892 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:33,251 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:33,608 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:33,967 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:34,327 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:34,741 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:35,152 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:35,509 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:35,916 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:36,320 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:36,730 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:37,139 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:37,499 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:37,909 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:38,320 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:38,729 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:39,135 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:39,541 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:39,899 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:40,313 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:40,720 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:41,130 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:41,491 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:41,902 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:42,312 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:42,670 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:43,081 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:43,491 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:43,851 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:44,265 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:44,675 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:45,035 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:45,451 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:45,860 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:46,269 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:46,627 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:47,041 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:47,448 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:47,857 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:48,215 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:48,627 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:49,036 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:49,396 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:49,808 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:50,220 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:50,578 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:50,991 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:51,400 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:51,759 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:52,173 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:52,583 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:52,942 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:53,353 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:53,764 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:54,122 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:54,532 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:54,940 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:55,297 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:55,707 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:56,117 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:56,473 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:56,885 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:57,293 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:57,651 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:58,063 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:58,472 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:58,879 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:59,240 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:51:59,653 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:00,064 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:00,422 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:00,833 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:01,243 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:01,651 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:02,009 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:02,423 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:02,833 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:03,189 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:03,602 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:04,011 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:04,370 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:04,783 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:05,190 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:05,596 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:06,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:06,412 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:06,768 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:07,180 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:07,590 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:07,950 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:08,363 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:08,772 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:09,129 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:09,541 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:09,949 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:10,356 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:10,764 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:11,174 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:11,581 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:11,987 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:12,350 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:12,759 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:13,169 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:13,576 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:13,935 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:14,399 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:14,754 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:15,165 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:15,572 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:15,980 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:16,338 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:16,747 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:17,156 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 01:52:17,355 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:52:17,816 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:18,176 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:18,536 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:52:18,548 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:52:18,548 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:52:18,549 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:52:18,549 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:52:18,549 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:52:18,550 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:52:18,550 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:52:18,636 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 01:52:18,991 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:19,351 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:19,711 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:20,071 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:20,431 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:20,794 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:21,153 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:21,515 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:21,876 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:22,288 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:22,693 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:23,097 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:23,505 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:23,862 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:24,275 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:24,684 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:25,042 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:25,453 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:25,863 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:26,221 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:26,633 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:27,044 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:27,405 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:27,815 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:28,224 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:28,583 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:28,995 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:29,405 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:29,761 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:30,172 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:30,581 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:30,941 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:31,354 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:31,761 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:32,173 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:32,575 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:32,986 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:33,394 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:33,804 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:34,166 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:34,578 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:34,983 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:35,391 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:35,796 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:36,153 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:36,563 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:36,970 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:37,329 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:37,744 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:38,152 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:38,513 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:38,921 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:39,328 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:39,734 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:40,092 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:40,502 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:40,911 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:41,268 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:41,680 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:42,089 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:42,445 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:42,855 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:43,263 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:43,621 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:44,032 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:44,444 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:44,804 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:45,215 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:45,620 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:45,981 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:46,392 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:46,800 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:47,210 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:47,618 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:47,974 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:48,382 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:48,788 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:49,193 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:49,602 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:50,010 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:50,418 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:50,824 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:51,179 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:51,587 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:51,994 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:52,404 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:52,812 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:53,218 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:53,576 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:53,987 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:54,397 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:54,755 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:55,116 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:55,475 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:55,833 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:56,191 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:56,551 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:56,963 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:57,322 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:57,732 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:58,137 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:58,541 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:58,951 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:59,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:52:59,718 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:53:00,128 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:53:00,537 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:53:00,948 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:53:01,267 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:54:57,781 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:54:57,792 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:54:57,793 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:54:57,793 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:54:57,793 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:54:57,794 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:54:57,794 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:54:57,794 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:55:17,275 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:56:09,748 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:56:09,758 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:56:09,759 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:56:09,760 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:56:09,760 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:56:09,760 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:56:09,760 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:56:09,760 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:57:14,683 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:57:14,694 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:57:14,695 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:57:14,695 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:57:14,696 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:57:14,696 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:57:14,696 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:57:14,696 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:57:42,622 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:24,225 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:24,435 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 01:58:24,926 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:25,284 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:25,643 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:26,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:26,359 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:26,719 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:27,079 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:27,439 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:27,797 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:28,204 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:28,613 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:29,018 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:29,422 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:29,781 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:30,193 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:30,598 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:31,007 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:31,364 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:31,773 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:32,179 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:32,584 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:32,990 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:58:33,395 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:09,396 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:59:09,400 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:59:09,401 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:59:09,401 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:59:09,401 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:59:09,448 - watchfiles.main - INFO - 5 changes detected
+2025-12-10 01:59:09,813 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:10,175 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:10,538 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:10,899 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:11,262 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:11,625 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:11,985 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:12,345 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:12,756 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:13,165 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:13,573 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:13,934 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:14,343 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:14,751 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:15,159 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:15,567 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:15,926 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:16,337 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:16,745 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:17,155 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:17,516 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:17,928 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:18,337 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:18,695 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:19,108 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:19,512 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:19,920 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:20,328 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:20,689 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:21,104 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:21,514 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:21,873 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:22,284 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:22,691 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:23,098 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:23,505 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:23,862 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:24,221 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:24,581 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:24,943 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:24,991 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 01:59:24,994 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 01:59:24,995 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 01:59:24,995 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 01:59:24,995 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 01:59:24,996 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 01:59:24,996 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 01:59:24,996 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 01:59:25,304 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 01:59:25,667 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:26,026 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:26,388 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:26,749 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:27,111 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:27,471 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:27,834 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:28,194 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:28,607 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:29,016 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:29,374 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:29,787 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:30,193 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:30,602 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:31,009 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:31,418 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:31,826 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:32,188 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:32,600 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:33,010 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:33,370 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:33,782 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:34,191 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:34,552 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:34,963 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:35,373 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:35,732 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:36,143 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:36,551 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:36,961 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:37,367 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:37,727 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:38,141 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:38,550 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:38,955 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:39,365 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:39,724 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:40,136 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:40,545 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:40,955 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:41,312 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:41,723 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:42,135 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:42,494 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:42,905 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:43,313 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:43,724 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:44,084 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:44,498 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:44,907 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:45,313 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:45,720 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:46,126 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:46,484 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:46,897 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:47,307 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:47,665 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:48,078 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:48,487 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:48,894 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:49,253 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:49,666 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:50,074 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:50,435 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:50,846 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:51,256 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:51,665 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:52,073 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:52,427 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:52,837 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:53,245 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:53,655 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:54,062 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:54,468 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:54,876 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:55,232 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:55,644 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:56,004 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:56,416 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:56,826 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:57,235 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:57,589 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:58,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:58,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:58,770 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:59,176 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:59,582 - watchfiles.main - INFO - 1 change detected
+2025-12-10 01:59:59,990 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:00,396 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:00,800 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:01,158 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:01,569 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:01,973 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:02,381 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:02,740 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:03,152 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:03,563 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:03,968 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:04,324 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:04,737 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:05,143 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:05,550 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:05,908 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:06,316 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:06,724 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:07,131 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:07,487 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:07,897 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:08,301 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:08,709 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:09,116 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:09,524 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:09,883 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:10,293 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:10,650 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:10,832 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:00:11,340 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:00:11,730 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:12,091 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:12,451 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:00:12,455 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:00:12,455 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:00:12,456 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:00:12,456 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:00:12,456 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:00:12,456 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 02:00:12,456 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:00:12,500 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:00:12,858 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:13,217 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:13,577 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:13,936 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:14,293 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:14,655 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:15,014 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:15,427 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:15,835 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:16,196 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:16,609 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:16,965 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:00:20,753 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:00:20,757 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:00:20,758 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:00:20,758 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:00:20,758 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:00:20,758 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:00:20,759 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 02:00:20,759 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:00:44,643 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:44,790 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:00:45,252 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:45,614 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:45,966 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:00:45,970 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:00:45,970 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:00:45,971 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:00:45,971 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:00:45,971 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:00:45,972 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 02:00:45,972 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:00:46,023 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:00:46,430 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:46,788 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:47,198 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:47,607 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:47,966 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:48,376 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:48,784 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:49,189 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:49,597 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:50,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:50,357 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:50,768 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:51,177 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:51,537 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:51,950 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:52,359 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:52,719 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:53,132 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:53,541 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:53,902 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:54,312 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:54,722 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:55,082 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:55,494 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:55,900 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:00:56,190 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:01:04,275 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:01:04,279 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:01:04,280 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:01:04,280 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:01:04,280 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:01:04,281 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:01:04,281 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 02:01:04,281 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:01:09,097 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:01:16,103 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:01:16,106 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:01:16,107 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:01:16,107 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:01:16,107 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:01:16,107 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:01:16,108 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 02:01:16,108 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:01:16,109 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:02:41,580 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:02:41,584 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:02:41,584 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:02:41,585 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:02:41,585 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:02:41,585 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:02:41,586 - main - INFO - API документация: http://localhost:8000/api/v1/docs
+2025-12-10 02:02:41,586 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:03:37,773 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:03:47,581 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:03:47,592 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:03:47,592 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:03:47,592 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:03:47,593 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:03:47,593 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:03:47,593 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:03:47,593 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:05:39,978 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:05:39,996 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:05:39,996 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:05:39,997 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:05:39,997 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:05:39,997 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:05:39,997 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:05:39,997 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:08:09,668 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:08:22,149 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:08:22,159 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:08:22,159 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:08:22,160 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:08:22,160 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:08:22,160 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:08:22,160 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:08:22,160 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:12:24,964 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:15:43,459 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:15:43,474 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:15:43,474 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:15:43,475 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:15:43,475 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:15:43,475 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:15:43,475 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:15:43,475 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:15:43,567 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:16:23,074 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:23,434 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:29,891 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:30,251 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:52,453 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:52,672 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:16:53,177 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:16:53,650 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:54,009 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:54,368 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:54,732 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:55,094 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:55,457 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:55,818 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:56,179 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:56,541 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:56,953 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:57,314 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:57,726 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:58,134 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:58,543 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:58,904 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:16:59,319 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:59,730 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:16:59,999 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:17:00,012 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:17:00,013 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:17:00,013 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:17:00,013 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:17:00,014 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:17:00,014 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:17:00,014 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:17:00,088 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:17:00,500 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:00,910 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:01,268 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:01,682 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:02,092 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:02,454 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:02,866 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:03,278 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:03,637 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:04,049 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:04,457 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:04,654 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:17:04,817 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:05,230 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:05,590 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:06,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:06,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:06,820 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:07,177 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:09,619 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:17:09,630 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:17:09,630 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:17:09,631 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:17:09,631 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:17:09,631 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:17:09,631 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:17:09,631 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:17:09,683 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:17:10,513 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:17:14,438 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:17:14,451 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:17:14,452 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:17:14,453 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:17:14,453 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:17:14,453 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:17:14,453 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:17:14,454 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:17:14,516 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:02,853 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:03,019 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:18:03,511 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:03,872 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:04,231 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:04,594 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:04,958 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:05,319 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:05,680 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:06,042 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:06,405 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:06,767 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:07,179 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:07,536 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:07,947 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:18:08,356 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:20:00,360 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:20:00,371 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:20:00,371 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:20:00,372 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:20:00,372 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:20:00,372 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:20:00,373 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:20:00,373 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:20:00,425 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:21:02,679 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:02,805 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:21:03,267 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:03,628 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:03,970 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:21:03,981 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:21:03,981 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:21:03,982 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:21:03,982 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:21:03,982 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:21:03,982 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:21:03,982 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:21:04,038 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:21:04,395 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:04,758 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:05,119 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:05,483 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:05,846 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:06,207 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:06,568 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:06,981 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:07,389 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:07,748 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:08,159 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:08,566 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:08,924 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:09,339 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:09,749 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:10,110 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:10,522 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:10,930 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:11,288 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:11,702 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:12,112 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:12,471 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:12,885 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:13,294 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:13,653 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:14,066 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:14,478 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:14,837 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:15,250 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:15,659 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:16,018 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:16,429 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:16,840 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:17,196 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:17,607 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:18,015 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:18,375 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:18,788 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:19,245 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:21:19,405 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:21:19,881 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:20,243 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:20,554 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:21:20,564 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:21:20,564 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:21:20,565 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:21:20,565 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:21:20,565 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:21:20,565 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:21:20,566 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:21:20,653 - watchfiles.main - INFO - 8 changes detected
+2025-12-10 02:21:20,786 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:21:21,246 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:21,603 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:21,987 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:21:21,998 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:21:21,999 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:21:21,999 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:21:21,999 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:21:22,000 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:21:22,000 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:21:22,000 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:21:22,064 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:21:22,418 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:22,780 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:23,145 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:23,506 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:23,872 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:24,230 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:24,593 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:24,953 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:25,314 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:25,728 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:26,136 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:26,542 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:26,898 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:21:27,395 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:21:57,677 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:21:57,688 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:21:57,688 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:21:57,689 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:21:57,689 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:21:57,689 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:21:57,690 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:21:57,690 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:24:19,170 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:24:21,479 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:24:21,490 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:24:21,491 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:24:21,491 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:24:21,491 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:24:21,492 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:24:21,492 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:24:21,492 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:24:21,548 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:24:23,914 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:24:26,819 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:24:26,830 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:24:26,830 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:24:26,831 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:24:26,831 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:24:26,832 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:24:26,832 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:24:26,832 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:24:42,654 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:25:35,347 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:25:35,358 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:25:35,359 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:25:35,359 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:25:35,360 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:25:35,360 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:25:35,360 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:25:35,360 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:25:35,454 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:26:31,463 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:31,659 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:26:32,137 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:32,499 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:26:32,859 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:33,221 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:33,635 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:33,997 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:34,409 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:34,823 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:35,231 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:35,638 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:35,998 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:36,413 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:36,823 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:37,183 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:37,593 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:38,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:38,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:38,823 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:26:39,182 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:28:09,987 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:28:09,998 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:28:09,999 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:28:09,999 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:28:10,000 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:28:10,000 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:28:10,000 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:28:10,000 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:28:10,074 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:28:57,957 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:29:21,085 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:29:21,096 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:29:21,096 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:29:21,097 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:29:21,097 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:29:21,097 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:29:21,098 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:29:21,098 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:34:16,192 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:34:16,204 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:34:16,205 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:34:16,205 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:34:16,205 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:34:16,206 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:34:16,206 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:34:16,206 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:34:17,592 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:34:17,604 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:34:17,604 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:34:17,605 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:34:17,605 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:34:17,605 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:34:17,605 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:34:17,606 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:36:10,462 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:36:14,649 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:36:14,660 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:36:14,661 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:36:14,661 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:36:14,661 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:36:14,661 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:36:14,662 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:36:14,662 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:38:29,308 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:38:35,972 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:38:35,984 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:38:35,984 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:38:35,985 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:38:35,985 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:38:35,985 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:38:35,986 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:38:35,986 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:38:36,047 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:38:49,231 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:38:49,582 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:38:54,718 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:38:55,075 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:28,987 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:29,123 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:39:29,615 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:29,977 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:30,336 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:39:30,444 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:39:30,454 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:39:30,454 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:39:30,455 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:39:30,455 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:39:30,456 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:39:30,456 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:39:30,456 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:39:30,697 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:39:31,060 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:31,421 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:31,781 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:32,141 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:32,504 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:32,914 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:33,321 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:33,679 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:34,092 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:34,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:34,860 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:35,074 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:39:35,580 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:35,944 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:36,305 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:39:36,319 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:39:36,331 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:39:36,331 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:39:36,331 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:39:36,332 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:39:36,332 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:39:36,332 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:39:36,332 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:39:36,665 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:39:37,027 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:37,388 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:37,749 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:38,111 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:38,474 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:38,837 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:39,202 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:39,565 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:39,929 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:40,343 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:40,750 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:41,162 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:41,520 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:41,933 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:42,342 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:39:42,617 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:39:48,107 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:39:48,118 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:39:48,118 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:39:48,119 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:39:48,119 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:39:48,119 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:39:48,119 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:39:48,119 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:41:40,851 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:41:42,103 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:41:42,116 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:41:42,117 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:41:42,117 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:41:42,117 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:41:42,118 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:41:42,118 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:41:42,118 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:41:43,386 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:41:43,398 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:41:43,399 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:41:43,400 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:41:43,400 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:41:43,400 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:41:43,400 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:41:43,400 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:41:59,022 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:42:04,383 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:42:04,396 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:42:04,397 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:42:04,397 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:42:04,398 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:42:04,398 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:42:04,398 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:42:04,398 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:42:04,462 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:25,410 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:25,624 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:42:26,130 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:26,489 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:42:26,945 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:27,306 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:27,659 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:42:27,670 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:42:27,671 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:42:27,671 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:42:27,671 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:42:27,672 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:42:27,672 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:42:27,672 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:42:27,769 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:42:28,224 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:28,626 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:29,036 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:29,444 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:29,803 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:30,213 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:30,624 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:30,982 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:31,393 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:31,803 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:32,164 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:32,628 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:32,983 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:33,345 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:33,497 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:42:33,990 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:34,351 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:34,713 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:34,806 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:42:34,818 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:42:34,818 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:42:34,819 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:42:34,819 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:42:34,819 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:42:34,819 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:42:34,820 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:42:35,076 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:42:35,437 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:35,798 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:36,161 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:36,524 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:36,886 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:37,248 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:37,658 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:38,067 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:38,426 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:38,838 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:39,245 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:39,603 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:40,014 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:40,421 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:40,827 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:41,182 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:41,596 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:42,005 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:42,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:42,769 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:43,181 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:43,591 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:43,950 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:44,359 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:44,769 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:45,179 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:45,539 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:45,949 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:46,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:46,766 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:47,176 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:47,534 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:47,947 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:48,356 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:48,713 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:49,127 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:49,538 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:49,896 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:50,259 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:50,443 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:42:50,937 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:51,297 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:42:51,660 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:52,067 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:52,426 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:52,837 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:53,245 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:53,653 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:54,055 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:54,412 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:54,822 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:55,180 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:55,591 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:42:55,998 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:43:13,020 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:43:13,031 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:43:13,032 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:43:13,032 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:43:13,032 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:43:13,033 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:43:13,033 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:43:13,033 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:43:13,119 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 02:44:28,940 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:44:45,025 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:44:45,037 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:44:45,037 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:44:45,038 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:44:45,038 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:44:45,038 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:44:45,038 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:44:45,039 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:48:54,945 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:48:58,503 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:48:58,513 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:48:58,514 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:48:58,515 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:48:58,515 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:48:58,515 - main - WARNING - ⚠️ Директория static не найдена: c:\Users\User\Downloads\import\app\static
+2025-12-10 02:48:58,515 - main - INFO - ✅ Создана директория static
+2025-12-10 02:48:58,516 - main - INFO - ✅ Создан базовый style.css
+2025-12-10 02:48:58,516 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:48:58,517 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:48:58,517 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:48:58,613 - watchfiles.main - INFO - 10 changes detected
+2025-12-10 02:48:59,028 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:50:01,580 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:50:01,938 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:50:22,582 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:50:50,218 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:51:02,129 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:51:10,724 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:51:26,150 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:51:31,823 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:51:31,834 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:51:31,834 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:51:31,835 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:51:31,835 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:51:31,835 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:51:31,835 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:51:31,835 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:51:31,930 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:51:37,618 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:51:42,280 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:51:44,562 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:51:44,573 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:51:44,574 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:51:44,574 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:51:44,575 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:51:44,575 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:51:44,575 - main - INFO - API документация: http://localhost:8080/api/v1/docs
+2025-12-10 02:51:44,575 - main - INFO - ReDoc документация: http://localhost:8080/api/v1/redoc
+2025-12-10 02:51:44,626 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:21,162 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:21,365 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:52:21,841 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:22,200 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:22,561 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:52:22,573 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:52:22,573 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:52:22,574 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:52:22,574 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:52:22,574 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:52:22,575 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:52:22,575 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:52:22,660 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:52:23,015 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:23,378 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:23,740 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:24,099 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:24,455 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:24,817 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:25,177 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:25,537 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:25,899 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:26,309 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:26,716 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:27,074 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:27,486 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:27,891 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:28,250 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:28,663 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:29,071 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:29,430 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:29,844 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:30,253 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:30,612 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:31,024 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:31,432 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:31,841 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:32,199 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:32,611 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:33,023 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:33,382 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:33,790 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:34,201 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:34,560 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:34,973 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:35,378 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:35,784 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:36,191 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:36,596 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:37,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:37,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:37,773 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:38,182 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:38,542 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:38,955 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:39,365 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:39,724 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:40,136 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:40,542 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:52:40,957 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:52:48,247 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:52:48,258 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:52:48,259 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:52:48,259 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:52:48,259 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:52:48,259 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:52:48,260 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:52:48,260 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:52:48,344 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:54:09,297 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:54:28,654 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:48,451 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:48,620 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:55:49,160 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:49,523 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:49,882 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:49,974 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:55:49,986 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:55:49,987 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:55:49,987 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:55:49,987 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:55:49,988 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:55:49,988 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:55:49,988 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:55:50,243 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:55:50,605 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:50,968 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:51,329 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:51,690 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:52,053 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:52,465 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:52,822 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:53,232 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:53,590 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:54,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:54,410 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:54,767 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:55,179 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:55,589 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:55,999 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:56,359 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:56,769 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:57,129 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:57,542 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:57,951 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:58,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:58,722 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:59,135 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:59,545 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:55:59,907 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:00,317 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:00,727 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:01,087 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:01,500 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:01,860 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:01,996 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:56:02,505 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:02,864 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:03,227 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:03,587 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:03,950 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:04,309 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:04,670 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:05,034 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:05,396 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:05,809 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:06,167 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:06,529 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:06,890 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:07,257 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:56:07,268 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:56:07,269 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:56:07,269 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:56:07,269 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:56:07,270 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:56:07,270 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:56:07,270 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:56:07,354 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:56:07,759 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:08,117 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:08,529 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:08,942 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:09,300 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:09,714 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:10,123 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:10,533 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:10,891 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:11,304 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:11,664 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:12,078 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:12,489 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:12,851 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:13,264 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:13,673 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:14,032 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:14,443 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:14,853 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:15,213 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:15,625 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:16,035 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:16,447 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:16,806 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:17,216 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:17,627 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:17,986 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:18,398 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:18,809 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:19,168 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:19,582 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:19,992 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:56:20,173 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:56:20,635 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:56:21,028 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:21,393 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:21,755 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:56:21,766 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:56:21,767 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:56:21,767 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:56:21,768 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:56:21,768 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:56:21,768 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:56:21,768 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:56:21,854 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:56:22,313 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:22,718 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:23,078 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:23,491 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:23,902 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:24,261 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:24,671 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:25,081 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:25,442 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:25,854 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:26,262 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:26,623 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:27,036 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:27,446 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:27,808 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:28,218 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:28,628 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:28,986 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:29,398 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:29,808 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:30,167 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:30,582 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:30,989 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:31,397 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:31,758 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:32,169 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:32,579 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:32,937 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:33,350 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:33,762 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:34,123 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:34,536 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:34,946 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:35,306 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:35,718 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:36,128 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:36,490 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:36,903 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:37,313 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:37,675 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:38,088 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:38,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:38,859 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:39,273 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:39,684 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:40,044 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:40,455 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:40,863 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:41,222 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:41,634 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:42,043 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:42,403 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:42,815 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:43,228 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:43,588 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:44,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:44,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:44,770 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:45,184 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:45,593 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:45,950 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:46,364 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:56:46,482 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:56:46,975 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:47,335 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:47,695 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:48,058 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:48,418 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:48,780 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:49,144 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:49,506 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:49,869 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:50,228 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:50,641 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:51,046 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:51,457 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:56:51,865 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:52,272 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:52,591 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:56:52,601 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:56:52,602 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:56:52,603 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:56:52,603 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:56:52,603 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:56:52,603 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:56:52,603 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:56:52,678 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:56:53,038 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:53,451 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:53,863 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:54,220 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:54,633 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:55,044 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:55,404 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:55,816 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:56,227 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:56,587 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:57,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:57,412 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:57,772 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:58,182 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:58,592 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:58,953 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:59,365 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:56:59,776 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:00,134 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:00,545 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:00,955 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:01,314 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:01,726 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:02,137 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:02,498 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:02,912 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:03,323 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:03,680 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:04,090 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:04,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:04,911 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:05,272 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:05,684 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:06,094 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:06,454 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:06,866 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:07,275 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:07,636 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:08,050 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:08,460 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:08,821 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:09,232 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:09,642 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:10,002 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:10,417 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:10,828 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:11,186 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:11,599 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:12,011 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:12,369 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:12,782 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:13,189 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:13,549 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:13,961 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:14,372 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:14,732 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:15,143 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:15,553 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:15,961 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:16,371 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:16,731 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 02:57:16,866 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:57:17,345 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:17,709 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:18,002 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:57:18,014 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:57:18,014 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:57:18,015 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:57:18,015 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:57:18,015 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:57:18,015 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:57:18,016 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:57:18,068 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 02:57:18,482 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:18,893 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:19,251 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:19,664 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:20,074 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:20,434 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:20,849 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:21,258 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:21,618 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:22,031 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:22,441 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:22,849 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:23,206 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:23,617 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:24,025 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:24,437 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:24,797 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:25,211 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:25,621 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:25,978 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:26,391 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:26,800 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:27,209 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:27,571 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:27,984 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:28,395 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:28,755 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:29,169 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:29,581 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:29,938 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:30,351 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:30,760 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:31,169 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:31,529 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:31,943 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:32,354 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:32,713 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:33,124 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:33,535 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:33,894 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:34,306 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:34,715 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:35,125 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:35,484 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:35,896 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:36,306 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:36,665 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:37,078 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:37,488 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:37,850 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:38,263 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:38,672 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:39,032 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:39,446 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:39,856 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:40,218 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:40,632 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:41,041 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:41,400 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:41,812 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:42,221 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:42,581 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:42,993 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:43,403 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:43,765 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:44,178 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:44,587 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:44,947 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:45,358 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:45,765 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:46,127 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:46,542 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:46,951 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:47,311 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:47,722 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:48,133 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:48,493 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:48,906 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:49,316 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:49,676 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:50,091 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:50,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:50,860 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:51,273 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:51,682 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:52,040 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:52,453 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:52,859 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:53,271 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:53,630 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:54,041 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:54,450 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:54,809 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:55,221 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:55,630 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:55,989 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:56,401 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:56,811 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:57,172 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:57,585 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:57,996 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:58,357 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:58,769 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:59,181 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:59,541 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:57:59,954 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:00,362 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:00,721 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:01,135 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:01,545 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:01,903 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:02,315 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:02,725 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:03,085 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:03,500 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:03,908 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:04,269 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:04,684 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:05,093 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:05,501 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:05,862 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:06,274 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:06,684 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:07,045 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:07,458 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:07,871 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:08,227 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:08,640 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:09,050 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:09,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:09,823 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:10,233 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:10,594 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:11,006 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:11,411 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:11,771 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:12,186 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:12,596 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:13,004 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:13,409 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:13,818 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:14,178 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:14,590 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:14,996 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:15,405 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:15,764 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:16,176 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:16,588 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:16,945 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:17,358 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:17,817 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:18,173 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:18,584 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:18,942 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:19,301 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:19,660 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:20,022 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:20,385 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:20,749 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:21,110 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:21,472 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:21,834 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:22,249 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:22,661 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:23,020 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:23,312 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 02:58:33,840 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 02:58:33,854 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 02:58:33,855 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 02:58:33,855 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 02:58:33,855 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 02:58:33,856 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 02:58:33,856 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 02:58:33,856 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 02:58:33,940 - watchfiles.main - INFO - 1 change detected
+2025-12-10 02:58:50,599 - watchfiles.main - INFO - 1 change detected
+2025-12-10 15:53:21,410 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 15:53:21,432 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 15:53:21,433 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 15:53:21,433 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 15:53:21,433 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 15:53:21,434 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 15:53:21,434 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 15:53:21,434 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 15:53:21,498 - watchfiles.main - INFO - 1 change detected
+2025-12-10 15:53:44,444 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:03:36,006 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:03:36,023 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:03:36,023 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:03:36,024 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:03:36,024 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:03:36,025 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:03:36,025 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:03:36,025 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:03:36,089 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:04:34,661 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:04:35,218 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:04:35,576 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:05:03,796 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:05:41,331 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:07:12,731 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:07:32,154 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:07:32,165 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:07:32,166 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:07:32,166 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:07:32,166 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:07:32,167 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:07:32,167 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:07:32,167 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:07:32,240 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:07:43,607 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:08:54,020 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:11:03,667 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:11:04,022 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:11:06,418 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:11:12,344 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:11:12,355 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:11:12,356 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:11:12,356 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:11:12,356 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:11:12,357 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:11:12,357 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:11:12,357 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:11:12,410 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:13:15,001 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:13:15,169 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:13:15,664 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:13:16,026 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:13:16,439 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 16:13:16,506 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:13:16,519 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:13:16,520 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:13:16,520 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:13:16,520 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:13:16,521 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:13:16,521 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:13:16,521 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:13:16,792 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:13:17,155 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:13:17,401 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:22:09,786 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:22:09,797 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:22:09,798 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:22:09,798 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:22:09,798 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:22:09,799 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:22:09,799 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:22:09,799 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:22:09,885 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:33,424 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:33,548 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:22:34,057 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:22:34,513 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:35,026 - watchfiles.main - INFO - 5 changes detected
+2025-12-10 16:22:35,234 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:22:35,245 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:22:35,245 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:22:35,246 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:22:35,246 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:22:35,246 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:22:35,246 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:22:35,246 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:22:35,378 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:22:35,740 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:36,103 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:36,515 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:36,875 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:37,288 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:37,696 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:38,103 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:38,462 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:38,875 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:39,282 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:39,641 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:40,051 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:40,462 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:40,874 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:41,231 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:41,644 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:42,052 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:42,462 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:42,870 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:43,229 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:43,640 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:22:43,837 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:22:44,330 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:44,690 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:45,053 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 16:22:45,122 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:22:45,135 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:22:45,135 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:22:45,136 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:22:45,136 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:22:45,136 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:22:45,136 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:22:45,136 - main - INFO - ReDoc документация: http://localhost:8000/api/v1/redoc
+2025-12-10 16:22:45,417 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:22:45,779 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:46,141 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:46,503 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:46,865 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:47,226 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:47,586 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:47,948 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:48,360 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:48,769 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:49,126 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:49,535 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:49,943 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:50,352 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:50,712 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:51,124 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:51,532 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:51,891 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:52,302 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:52,711 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:22:52,941 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:30:45,335 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:30:45,347 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:30:45,348 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:30:45,349 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:30:45,349 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:30:45,349 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:30:45,349 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:30:45,349 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:30:45,422 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 16:31:15,325 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:15,539 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:31:16,079 - watchfiles.main - INFO - 2 changes detected
+2025-12-10 16:31:16,478 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:16,838 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:17,199 - watchfiles.main - INFO - 6 changes detected
+2025-12-10 16:31:17,562 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:17,923 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:18,283 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:18,644 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:19,004 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:19,368 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:31:19,730 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:34:36,295 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:34:36,308 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:34:36,308 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:34:36,309 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:34:36,309 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:34:36,309 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:34:36,309 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:34:36,310 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:34:36,384 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:02,556 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:02,703 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:35:03,194 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:03,554 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:03,914 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:04,009 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:35:04,020 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:35:04,020 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:35:04,021 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:35:04,021 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:35:04,021 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:35:04,021 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:35:04,022 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:35:04,276 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 16:35:04,637 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:04,999 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:05,361 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:05,725 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:06,088 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:06,451 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:06,863 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:07,267 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:07,626 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:08,038 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:08,447 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:08,805 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:09,216 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:09,622 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:35:10,174 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:39:14,859 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:39:14,872 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:39:14,872 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:39:14,873 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:39:14,873 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:39:14,873 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:39:14,873 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:39:14,874 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:39:14,943 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:39:15,754 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:40:05,535 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:40:05,549 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:40:05,550 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:40:05,551 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:40:05,551 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:40:05,551 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:40:05,551 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:40:05,551 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:40:05,604 - watchfiles.main - INFO - 1 change detected
+2025-12-10 16:40:07,556 - app.database.database - ERROR - Transaction rolled back due to error: 401: Not authenticated
+2025-12-10 16:44:12,156 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:44:31,078 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:44:31,089 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:44:31,090 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:44:31,091 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:44:31,091 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:44:31,091 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:44:31,091 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:44:31,091 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:44:33,725 - app.database.database - ERROR - Transaction rolled back due to error: 401: Not authenticated
+2025-12-10 16:51:29,985 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 16:53:41,934 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 16:53:41,946 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 16:53:41,947 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 16:53:41,947 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 16:53:41,947 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 16:53:41,948 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 16:53:41,948 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 16:53:41,948 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 16:53:44,533 - app.database.database - ERROR - Transaction rolled back due to error: 401: Not authenticated
+2025-12-10 17:06:01,034 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 17:06:01,049 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 17:06:01,049 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 17:06:01,050 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 17:06:01,050 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 17:06:01,050 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 17:06:01,050 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 17:06:01,050 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 17:06:01,110 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:06:01,850 - app.database.database - ERROR - Transaction rolled back due to error: [{'type': 'int_parsing', 'loc': ('path', 'user_id'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'movies'}]
+2025-12-10 17:07:54,823 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:55,018 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 17:07:55,526 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:55,887 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:56,247 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:56,398 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 17:07:56,412 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 17:07:56,412 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 17:07:56,413 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 17:07:56,413 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 17:07:56,414 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 17:07:56,414 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 17:07:56,414 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 17:07:56,609 - watchfiles.main - INFO - 7 changes detected
+2025-12-10 17:07:56,972 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:57,335 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:57,699 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:58,058 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:58,472 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:58,882 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:59,241 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:07:59,651 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:08:00,052 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 17:14:34,036 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 17:14:34,047 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 17:14:34,048 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 17:14:34,048 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 17:14:34,048 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 17:14:34,049 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 17:14:34,049 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 17:14:34,049 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 17:19:26,036 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 17:20:22,699 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 17:20:22,711 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 17:20:22,712 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 17:20:22,712 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 17:20:22,712 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 17:20:22,712 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 17:20:22,713 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 17:20:22,713 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 17:20:22,771 - watchfiles.main - INFO - 159 changes detected
+2025-12-10 17:20:23,489 - watchfiles.main - INFO - 1 change detected
+2025-12-10 17:20:33,139 - watchfiles.main - INFO - 8 changes detected
+2025-12-10 17:20:45,587 - main - INFO - 🛑 Остановка KinoVzor API...
+2025-12-10 17:20:57,154 - main - INFO - 🚀 Запуск KinoVzor API v1.0.0
+2025-12-10 17:20:57,166 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-10 17:20:57,167 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-10 17:20:57,167 - app.database.database - INFO - ✅ Database tables created successfully
+2025-12-10 17:20:57,167 - main - INFO - ✅ Таблицы базы данных созданы
+2025-12-10 17:20:57,168 - main - INFO - ✅ Приложение успешно запущено
+2025-12-10 17:20:57,168 - main - INFO - API документация: http://localhost:8000/docs
+2025-12-10 17:20:57,168 - main - INFO - ReDoc документация: http://localhost:8000/redoc
+2025-12-10 17:21:16,963 - main - INFO - 🛑 Остановка KinoVzor API...

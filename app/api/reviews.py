@@ -6,8 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.reviews import Review, ReviewCreate, ReviewUpdate, ReviewResponse
 from app.services.reviews import ReviewService
 from app.database.database import get_db
-from app.api.dependencies import get_current_user, get_current_active_user
-from app.models.users import User
+# Убираем зависимости от аутентификации
+# from app.api.dependencies import get_current_user, get_current_active_user
+# from app.models.users import User
 
 router = APIRouter()
 
@@ -46,31 +47,43 @@ async def get_review(
         )
     return review
 
+@router.post("/", response_model=ReviewResponse, status_code=status.HTTP_201_CREATED)
+async def create_review(
+    review_create: ReviewCreate,
+    db: AsyncSession = Depends(get_db),
+    # Убираем аутентификацию
+    # current_user: User = Depends(get_current_active_user)
+):
+    """
+    Создать рецензию
+    """
+    # Временный user_id, так как нет аутентификации
+    # Можно добавить поле author_name в ReviewCreate
+    try:
+        review = await ReviewService(db).create_review(review_create)
+        return review
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Ошибка создания рецензии: {str(e)}"
+        )
+
 @router.put("/{review_id}", response_model=ReviewResponse)
 async def update_review(
     review_id: int,
     review_update: ReviewUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Убираем аутентификацию
+    # current_user: User = Depends(get_current_active_user)
 ):
     """
-    Обновить рецензию (только автор или администратор/модератор)
+    Обновить рецензию
     """
     review = await ReviewService(db).get_review(review_id)
     if not review:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Рецензия не найдена"
-        )
-    
-    # Проверка прав доступа
-    is_admin_or_moderator = any(role.name in ["Администратор", "Модератор"] for role in current_user.roles)
-    is_author = review.user_id == current_user.id
-    
-    if not (is_author or is_admin_or_moderator):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав для обновления рецензии"
         )
     
     updated_review = await ReviewService(db).update_review(review_id, review_update)
@@ -89,26 +102,17 @@ async def update_review(
 async def delete_review(
     review_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Убираем аутентификацию
+    # current_user: User = Depends(get_current_active_user)
 ):
     """
-    Удалить рецензию (только автор или администратор/модератор)
+    Удалить рецензию
     """
     review = await ReviewService(db).get_review(review_id)
     if not review:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Рецензия не найдена"
-        )
-    
-    # Проверка прав доступа
-    is_admin_or_moderator = any(role.name in ["Администратор", "Модератор"] for role in current_user.roles)
-    is_author = review.user_id == current_user.id
-    
-    if not (is_author or is_admin_or_moderator):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав для удаления рецензии"
         )
     
     movie_id = review.movie_id
@@ -131,12 +135,12 @@ async def delete_movie_review(
     movie_id: int,
     review_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Убираем аутентификацию
+    # current_user: User = Depends(get_current_active_user)
 ):
     """
     Удалить рецензию для конкретного фильма
     """
-    # Проверяем, существует ли фильм
     from app.services.movies import MovieService
     movie = await MovieService(db).get_movie(movie_id)
     if not movie:
@@ -145,7 +149,6 @@ async def delete_movie_review(
             detail="Фильм не найден"
         )
     
-    # Проверяем, существует ли рецензия и принадлежит ли фильму
     review = await ReviewService(db).get_review(review_id)
     if not review:
         raise HTTPException(
@@ -157,16 +160,6 @@ async def delete_movie_review(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Рецензия не принадлежит указанному фильму"
-        )
-    
-    # Проверка прав доступа
-    is_admin_or_moderator = any(role.name in ["Администратор", "Модератор"] for role in current_user.roles)
-    is_author = review.user_id == current_user.id
-    
-    if not (is_author or is_admin_or_moderator):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав для удаления рецензии"
         )
     
     deleted = await ReviewService(db).delete_review(review_id)

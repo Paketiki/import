@@ -8,7 +8,7 @@ from app.models.movies import Movie
 from app.models.reviews import Review
 from app.models.users import User, user_favorite_movies
 from app.models.picks import Pick
-from app.schemas.movies import MovieCreate, MovieUpdate, MovieFilters
+from app.schemas.movies import MovieCreate, MovieInDB, MovieUpdate, MovieFilters
 from app.schemas.reviews import ReviewCreate
 
 # app/services/movies.py
@@ -74,24 +74,39 @@ class MovieService:
         
         return movies
     
-    async def get_movie(self, movie_id: int) -> Optional[Movie]:
-        """Получить фильм по ID"""
-        stmt = select(Movie).options(
-            selectinload(Movie.picks),
-            selectinload(Movie.creator).load_only(User.username),
-            selectinload(Movie.reviews).selectinload(Review.user)
-        ).where(Movie.id == movie_id)
-        
-        result = await self.db.execute(stmt)
-        movie = result.scalar_one_or_none()
-        
-        if movie:
-            # Загружаем количество рецензий
-            count_stmt = select(func.count(Review.id)).where(Review.movie_id == movie_id)
-            count_result = await self.db.execute(count_stmt)
-            movie.reviews_count = count_result.scalar() or 0
-        
-        return movie
+    # app/services/movies.py - проверьте этот метод
+async def get_movies(
+    self,
+    skip: int = 0,
+    limit: int = 100,
+    **filters
+):
+    """
+    Получить список фильмов с фильтрацией
+    """
+    query = select(Movie)
+    
+    if filters.get('genre'):
+        query = query.where(Movie.genre.contains(filters['genre']))
+    
+    if filters.get('year'):
+        query = query.where(Movie.year == filters['year'])
+    
+    if filters.get('search'):
+        query = query.where(Movie.title.ilike(f"%{filters['search']}%"))
+    
+    if filters.get('rating_min'):
+        query = query.where(Movie.rating >= filters['rating_min'])
+    
+    if filters.get('rating_max'):
+        query = query.where(Movie.rating <= filters['rating_max'])
+    
+    query = query.offset(skip).limit(limit)
+    result = await self.db.execute(query)
+    movies = result.scalars().all()
+    
+    # Преобразуем в Pydantic модели
+    return [MovieInDB.model_validate(movie) for movie in movies]
     
     async def create_movie(self, movie_data: MovieCreate, created_by: int) -> Movie:
         """Создать новый фильм"""

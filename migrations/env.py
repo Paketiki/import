@@ -1,20 +1,19 @@
+import os
 import sys
-from os.path import abspath, dirname
-
-sys.path.insert(0, dirname(dirname(abspath(__file__))))
-
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from app.models import Base
-from app.utils.config import settings
+
+# Добавьте путь к вашему проекту
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+# Импортируйте ваши модели и Base
+from app.database import Base
+from app.models import *  # Импортируйте все модели
 
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
-
 fileConfig(config.config_file_name)
-
 target_metadata = Base.metadata
 
 def run_migrations_offline():
@@ -25,7 +24,6 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
@@ -35,12 +33,11 @@ def run_migrations_online():
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
-
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, 
+            target_metadata=target_metadata
         )
-
         with context.begin_transaction():
             context.run_migrations()
 

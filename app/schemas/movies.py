@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, ConfigDict, Field, validator
 from typing import Optional, List
 from datetime import datetime
 from .picks import PickInDB
@@ -46,12 +46,20 @@ class MovieFilters(BaseModel):
     year_to: Optional[int] = None
     pick: Optional[str] = None
 
-class MovieListResponse(BaseModel):
-    items: List[MovieResponse]
-    total: int
-    page: int
-    size: int
-    pages: int
+# В schemas/movies.py добавьте:
+class MovieResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str] = None
+    year: int
+    genre: str
+    rating: Optional[float] = None
+    poster_url: Optional[str] = None
+    duration: Optional[int] = None
+    director: Optional[str] = None
+    country: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)
     
 # Для обратной совместимости с существующим кодом
 Movie = MovieInDB

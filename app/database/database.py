@@ -1,5 +1,6 @@
 from sqlalchemy import event, text
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 import logging
 from typing import AsyncGenerator
@@ -13,9 +14,19 @@ from .base import Base
 # Настройка логирования
 logger = logging.getLogger(__name__)
 
+
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, 
+    connect_args={"check_same_thread": False}  # Только для SQLite
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 # Создаем асинхронный движок базы данных
 DATABASE_URL = getattr(settings, "DATABASE_URL", "sqlite:///./movies.db")
 DEBUG = getattr(settings, "DEBUG", False)
+
+
 
 # Преобразуем URL для асинхронного SQLite
 async_database_url = DATABASE_URL.replace("sqlite:///", "sqlite+aiosqlite:///")

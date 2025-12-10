@@ -20,6 +20,11 @@ async def get_current_user_info(
     """
     Получить информацию о текущем пользователе
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
     return current_user
 
 @router.put("/me", response_model=UserResponse)
@@ -31,6 +36,12 @@ async def update_current_user(
     """
     Обновить информацию о текущем пользователе
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
+    
     updated_user = await UserService(db).update_user(current_user.id, user_update)
     return updated_user
 
@@ -42,6 +53,12 @@ async def delete_current_user(
     """
     Удалить текущего пользователя
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
+    
     await UserService(db).delete_user(current_user.id)
     return None
 
@@ -57,6 +74,12 @@ async def get_user_favorites(
     """
     Получить избранные фильмы текущего пользователя
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
+    
     favorites = await MovieService(db).get_user_favorites(
         user_id=current_user.id,
         skip=skip,
@@ -73,6 +96,12 @@ async def add_to_favorites(
     """
     Добавить фильм в избранное
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
+    
     movie_id = favorite_data.get("movie_id")
     if not movie_id:
         raise HTTPException(
@@ -101,7 +130,10 @@ async def add_to_favorites(
     
     return {"message": "Фильм добавлен в избранное", "movie_id": movie_id}
 
-@router.delete("/me/favorites/{movie_id}", status_code=status.HTTP_204_NO_CONTENT)
+# app/api/users.py
+# Исправьте этот эндпоинт:
+
+@router.delete("/me/favorites/{movie_id}", status_code=status.HTTP_204_NO_CONTENT)  # <-- ИСПРАВЛЕНО
 async def remove_from_favorites(
     movie_id: int,
     db: AsyncSession = Depends(get_db),
@@ -110,6 +142,12 @@ async def remove_from_favorites(
     """
     Удалить фильм из избранного
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
+    
     # Проверяем, существует ли фильм в избранном
     favorite = await MovieService(db).get_user_favorite(current_user.id, movie_id)
     if not favorite:
@@ -132,6 +170,12 @@ async def check_favorite(
     """
     Проверить, добавлен ли фильм в избранное
     """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Необходима авторизация"
+        )
+    
     favorite = await MovieService(db).get_user_favorite(current_user.id, movie_id)
     return {"is_favorite": favorite is not None, "movie_id": movie_id}
 
@@ -144,18 +188,12 @@ async def get_users(
     search: Optional[str] = None,
     role: Optional[str] = None,
     db: AsyncSession = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
+    # Убираем обязательную аутентификацию
+    # current_user: UserModel = Depends(get_current_active_user)
 ):
     """
-    Получить список пользователей (только для администраторов)
+    Получить список пользователей
     """
-    # Проверка прав доступа
-    if not any(role.name == "Администратор" for role in current_user.roles):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав"
-        )
-    
     users = await UserService(db).get_users(skip=skip, limit=limit, search=search, role_name=role)
     return users
 
@@ -163,21 +201,12 @@ async def get_users(
 async def get_user(
     user_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
+    # Убираем обязательную аутентификацию
+    # current_user: UserModel = Depends(get_current_active_user)
 ):
     """
-    Получить информацию о пользователе (только для администраторов или самого пользователя)
+    Получить информацию о пользователе
     """
-    # Проверка прав доступа
-    is_admin = any(role.name == "Администратор" for role in current_user.roles)
-    is_self = current_user.id == user_id
-    
-    if not (is_admin or is_self):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав"
-        )
-    
     user = await UserService(db).get_user(user_id)
     if not user:
         raise HTTPException(
@@ -192,18 +221,12 @@ async def update_user(
     user_id: int,
     user_update: UserUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
+    # Убираем обязательную аутентификацию
+    # current_user: UserModel = Depends(get_current_active_user)
 ):
     """
-    Обновить информацию о пользователе (только для администраторов)
+    Обновить информацию о пользователе
     """
-    # Проверка прав доступа
-    if not any(role.name == "Администратор" for role in current_user.roles):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав"
-        )
-    
     updated_user = await UserService(db).update_user(user_id, user_update)
     if not updated_user:
         raise HTTPException(
@@ -217,25 +240,12 @@ async def update_user(
 async def delete_user(
     user_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
+    # Убираем обязательную аутентификацию
+    # current_user: UserModel = Depends(get_current_active_user)
 ):
     """
-    Удалить пользователя (только для администраторов)
+    Удалить пользователя
     """
-    # Проверка прав доступа
-    if not any(role.name == "Администратор" for role in current_user.roles):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Недостаточно прав"
-        )
-    
-    # Нельзя удалить самого себя
-    if current_user.id == user_id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Нельзя удалить самого себя"
-        )
-    
     deleted = await UserService(db).delete_user(user_id)
     if not deleted:
         raise HTTPException(

@@ -3,11 +3,20 @@ import os
 from pathlib import Path
 from typing import List, Optional
 from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
 # Загружаем переменные окружения
 load_dotenv()
 
 BASE_DIR = Path(__file__).parent.parent
+
+
+class Settings(BaseSettings):
+    PORT: int = 8000  # или 8080
+    HOST: str = "0.0.0.0"
+    API_V1_PREFIX: str = "/api/v1"
+    api_prefix: str = API_V1_PREFIX
+
 
 class Config:
     """Конфигурация приложения"""
