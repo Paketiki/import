@@ -1,7 +1,6 @@
-# app/api/auth.py
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 from app.database.database import get_db
 from app.schemas import Token, UserCreate, UserResponse
 from app.models import User
@@ -13,15 +12,20 @@ from app.utils.security import (
 
 router = APIRouter()
 
+class LoginRequest(BaseModel):
+    """Схема для запроса логина"""
+    username: str
+    password: str
+
 @router.post("/login", response_model=Token)
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    credentials: LoginRequest,
     db: Session = Depends(get_db)
 ):
     """Вход в систему"""
-    user = db.query(User).filter(User.username == form_data.username).first()
+    user = db.query(User).filter(User.username == credentials.username).first()
     
-    if not user or not verify_password(form_data.password, user.password_hash):
+    if not user or not verify_password(credentials.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Неверное имя пользователя или пароль",
@@ -52,7 +56,7 @@ async def register(
     hashed_password = get_password_hash(user_data.password)
     db_user = User(
         username=user_data.username,
-        email=user_data.email,
+        email=user_data.email or "",
         password_hash=hashed_password,
         is_active=True,
         is_superuser=False
