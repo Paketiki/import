@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from pathlib import Path
 import logging
 import importlib
+from contextlib import asynccontextmanager
 
 # Настройка логирования
 logging.basicConfig(
@@ -13,14 +14,37 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Инициализация FastAPI приложения
+# Переменная для хранения количества загруженных роутеров
+successfully_loaded = 0
+
+# ============================================================================
+# LIFESPAN CONTEXT MANAGER
+# ============================================================================
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Управление жизненным циклом приложения"""
+    # STARTUP
+    logger.info("="*60)
+    logger.info("КиноВзор API запущен")
+    logger.info(f"Подключено {successfully_loaded} роутеров")
+    logger.info("Документация доступна на /api/docs")
+    logger.info("="*60)
+    
+    yield
+    
+    # SHUTDOWN
+    logger.info("КиноВзор API остановлен")
+
+# Инициализация FastAPI приложения с lifespan
 app = FastAPI(
     title="КиноВзор API",
     description="API для веб-сайта КиноВзор с рецензиями и подборками фильмов",
     version="1.0.0",
     openapi_url="/api/openapi.json",
     docs_url="/api/docs",
-    redoc_url="/api/redoc"
+    redoc_url="/api/redoc",
+    lifespan=lifespan
 )
 
 # Настройка CORS
@@ -42,7 +66,7 @@ if static_dir.exists():
     logger.info(f"Статические файлы подключены из {static_dir}")
 
 # ============================================================================
-# ПОДКЛЮЧЕНИЕ ВСЕХ МАРШРУтОВ
+# ПОДКЛЮЧЕНИЕ ВСЕХ МАРШРУТОВ
 # ============================================================================
 
 # Список роутеров для подключения
@@ -60,7 +84,6 @@ routers_config = [
 
 # Подключение роутеров API с префиксами версий
 api_v1_prefix = "/api/v1"
-successfully_loaded = 0
 
 for module_path, router_name, tag_name in routers_config:
     try:
@@ -122,35 +145,18 @@ async def api_root():
     }
 
 # ============================================================================
-# ОБРАБОТКА ОШИБОК И СОБЫТИЯ ЖИЗНЕННОГО ЦИКЛА
-# ============================================================================
-
-@app.on_event("startup")
-async def startup_event():
-    """События при запуске приложения"""
-    logger.info("="*60)
-    logger.info("КиноВзор API запущен")
-    logger.info(f"Подключено {successfully_loaded} роутеров")
-    logger.info("Документация доступна на /api/docs")
-    logger.info("="*60)
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """События при остановке приложения"""
-    logger.info("КиноВзор API остановлен")
-
-# ============================================================================
 # ЗАПУСК ПРИЛОЖЕНИЯ
 # ============================================================================
 
 if __name__ == "__main__":
     import uvicorn
     
+    # Запускаем приложение без параметра reload в cli
+    # Используем строку импорта для работы reload с Windows
     uvicorn.run(
-        app,
+        "main:app",
         host="0.0.0.0",
         port=8000,
         log_level="info",
-        reload=True,
-        reload_dirs=["app"]
+        reload=True
     )
