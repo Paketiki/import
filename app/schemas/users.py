@@ -33,3 +33,6 @@ class UserInDB(UserResponse):
     
     class Config:
         from_attributes = True
+
+# Alias for compatibility
+User = UserResponse
