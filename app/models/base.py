@@ -1,5 +1,4 @@
-# app/models/base.py
+# Рээкспортируем Base из database.py
 from app.database.database import Base
 
-# Этот файл теперь просто реэкспортирует Base
-# или можно удалить его совсем и импортировать Base напрямую из database
+__all__ = ['Base']
