@@ -1,4 +1,4 @@
-// static/js/script.js - ПОЛНОА ОБНОВЛЕННАЯ ВЕРСИЯ С API, ОТЗЫВАМИ И Облюбленными
+// static/js/script.js - Обновленная версия с новым API
 
 const API_BASE_URL = window.location.origin;
 const API_ENDPOINTS = {
@@ -18,12 +18,14 @@ const API_ENDPOINTS = {
         create: `${API_BASE_URL}/api/v1/reviews`,
     },
     favorites: {
-        list: `${API_BASE_URL}/api/v1/favorites`,
-        add: (id) => `${API_BASE_URL}/api/v1/favorites/${id}`,
-        remove: (id) => `${API_BASE_URL}/api/v1/favorites/${id}`,
-        check: (id) => `${API_BASE_URL}/api/v1/favorites/${id}/is-favorite`,
+        list: (userId) => `${API_BASE_URL}/api/v1/favorites?user_id=${userId}`,
+        add: (id, userId) => `${API_BASE_URL}/api/v1/favorites/${id}?user_id=${userId}`,
+        remove: (id, userId) => `${API_BASE_URL}/api/v1/favorites/${id}?user_id=${userId}`,
+        check: (id, userId) => `${API_BASE_URL}/api/v1/favorites/check/${id}?user_id=${userId}`,
     },
-    genres: `${API_BASE_URL}/api/v1/movies/genres/list`,
+    genres: `${API_BASE_URL}/api/v1/genres`,
+    stats: `${API_BASE_URL}/api/v1/stats`,
+    search: (q) => `${API_BASE_URL}/api/v1/search?q=${encodeURIComponent(q)}`
 };
 
 // Глобальные переменные состояния
@@ -103,7 +105,7 @@ async function checkAuthState() {
             await loadUserFavorites();
             showNotification(`Добро пожаловать, ${currentUser.username}!`, 'success');
         } catch (error) {
-            console.error('Ошибка поверки авторизации:', error);
+            console.error('Ошибка проверки авторизации:', error);
             logout();
         }
     } else {
@@ -138,7 +140,7 @@ function updateAuthUI(isAuthenticated) {
     }
 }
 
-// Загрузка фильмов
+// Загружение фильмов
 async function loadMovies() {
     try {
         showLoading(true);
@@ -151,29 +153,29 @@ async function loadMovies() {
             updateGenresList();
         }
     } catch (error) {
-        console.error('Ошибка загрузки фильмов:', error);
-        showNotification('Не удалось загрузить фильмы', 'error');
+        console.error('Ошибка загружки фильмов:', error);
+        showNotification('Не удалось загружить фильмы', 'error');
     } finally {
         showLoading(false);
     }
 }
 
-// Загрузка избранных фильмов пользователя
+// Загружение избранных фильмов пользователя
 async function loadUserFavorites() {
-    if (!currentToken) return;
+    if (!currentToken || !currentUser) return;
     
     try {
-        const response = await apiRequest(API_ENDPOINTS.favorites.list, 'GET');
+        const response = await apiRequest(API_ENDPOINTS.favorites.list(currentUser.id), 'GET');
         if (response && Array.isArray(response)) {
             userFavorites.clear();
             response.forEach(movie => {
                 userFavorites.add(movie.id);
             });
-            // Обновим звездочки на карточках
+            // Обновим звездочки на карочках
             updateFavoritesUI();
         }
     } catch (error) {
-        console.error('Ошибка загрузки избранных:', error);
+        console.error('Ошибка загружки избранных:', error);
     }
 }
 
@@ -188,7 +190,7 @@ function updateFavoritesUI() {
     });
 }
 
-// Загрузка рецензий
+// Загружение рецензий
 async function loadReviews() {
     try {
         const response = await apiRequest(API_ENDPOINTS.reviews.list, 'GET');
@@ -359,7 +361,7 @@ async function showMovieDetails(movieId) {
                         ${movieReviews.length > 0 ? movieReviews.map(review => `
                             <div class="review-item">
                                 <div class="review-header">
-                                    <span class="review-author">${review.user?.username || 'Аноним'}</span>
+                                    <span class="review-author">${review.author_name || 'Аноним'}</span>
                                     <span class="review-rating-badge">${review.rating || 0}★</span>
                                 </div>
                                 <p class="review-text">${review.text || ''}</p>
@@ -403,7 +405,7 @@ async function showMovieDetails(movieId) {
         }
         
     } catch (error) {
-        console.error('Ошибка загрузки деталей фильма:', error);
+        console.error('Ошибка загружки деталей фильма:', error);
         showNotification('Не удалось загрузить информацию о фильме', 'error');
     } finally {
         showLoading(false);
@@ -427,7 +429,8 @@ async function submitReview(movieId) {
             movie_id: movieId,
             user_id: currentUser.id,
             text: reviewText,
-            rating: reviewRating
+            rating: reviewRating,
+            author_name: currentUser.username
         };
         
         const response = await apiRequest(API_ENDPOINTS.reviews.create, 'POST', reviewData);
@@ -453,7 +456,7 @@ async function submitReview(movieId) {
 async function toggleFavorite(movieId, event = null) {
     if (event) event.stopPropagation();
     
-    if (!currentToken) {
+    if (!currentToken || !currentUser) {
         showNotification('Войдите, чтобы добавлять в избранное', 'warning');
         document.getElementById('authButton').click();
         return;
@@ -464,11 +467,11 @@ async function toggleFavorite(movieId, event = null) {
         showLoading(true);
         
         if (isCurrentlyFavorite) {
-            await apiRequest(API_ENDPOINTS.favorites.remove(movieId), 'DELETE');
+            await apiRequest(API_ENDPOINTS.favorites.remove(movieId, currentUser.id), 'DELETE');
             userFavorites.delete(movieId);
             showNotification('Удалено из избранного', 'info');
         } else {
-            await apiRequest(API_ENDPOINTS.favorites.add(movieId), 'POST');
+            await apiRequest(API_ENDPOINTS.favorites.add(movieId, currentUser.id), 'POST');
             userFavorites.add(movieId);
             showNotification('Добавлено в избранное', 'success');
         }
@@ -515,7 +518,7 @@ function applyFilters() {
     renderMovies(filteredMovies);
 }
 
-// Ввод
+// Вход
 async function login(username, password) {
     try {
         if (!username || !password) {
@@ -542,7 +545,7 @@ async function login(username, password) {
             hideError('loginError');
         }
     } catch (error) {
-        console.error('Ошибка ввода:', error);
+        console.error('Ошибка входа:', error);
         showError('loginError', error.message || 'Неверный логин или пароль');
     } finally {
         showLoading(false);
@@ -620,7 +623,7 @@ async function logout() {
     }
 }
 
-// Ниже код стандартных инициализаций и вспомогательных функций
+// Вспомогательные функции
 
 function initEventListeners() {
     // Кнопки фильтров подборок
@@ -829,7 +832,7 @@ function showProfileModal() {
                 </div>` : 
                 `<div style="text-align: center; padding: 40px; color: var(--color-text-soft);">
                     <p>У вас пока нет избранных фильмов</p>
-                    <p><small>Нажимайте на звёздочку ★ на карточках фильмов, чтобы добавить их в избранное</small></p>
+                    <p><small>Нажимайте на звёздочку ★ на карочках фильмов, чтобы добавить их в избранное</small></p>
                 </div>`
             }
         </div>
