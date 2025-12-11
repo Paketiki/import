@@ -1,13 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.ext.declarative import declarative_base
+from app.database.base import Base  # Импортируем Base из base.py
 import os
 
 # Используем SQLite базу данных movies.db
 DATABASE_URL = "sqlite:///./movies.db"
-
-# Создаем Base для ORM моделей
-Base = declarative_base()
 
 # Создаем движок SQLAlchemy
 engine = create_engine(
