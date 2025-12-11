@@ -1,7 +1,7 @@
 """Единый API для КиноВзора с поддержкой:
-- Фильмов
-- Отзывов
-- Избранного
+- Фильмов (сохранение в БД)
+- Отзывов (сохранение и удаление)
+- Избранного (сохранение по пользователям)
 - Аутентификации
 """
 
@@ -17,6 +17,7 @@ from app.models.favorites import Favorite
 from app.models.users import User
 from app.models.picks import Pick
 from app.models.movie_picks import MoviePick
+from app.api.dependencies import get_current_user
 
 # Роутер
 router = APIRouter()
@@ -48,7 +49,8 @@ async def get_movies(db: Session = Depends(get_db)):
             "genre": movie.genre,
             "rating": movie.rating,
             "poster_url": movie.poster_url,
-            "picks": [p[0] for p in picks]
+            "picks": [p[0] for p in picks],
+            "created_by": movie.created_by
         })
     
     return result
@@ -77,7 +79,8 @@ async def get_movie(movie_id: int, db: Session = Depends(get_db)):
         "genre": movie.genre,
         "rating": movie.rating,
         "poster_url": movie.poster_url,
-        "picks": [p[0] for p in picks]
+        "picks": [p[0] for p in picks],
+        "created_by": movie.created_by
     }
 
 
@@ -89,18 +92,27 @@ async def create_movie(
     rating: float,
     overview: Optional[str] = None,
     poster_url: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     Создать новый фильм (только админ)
     """
+    # Проверяем, что это админ
+    if not current_user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="u0422олько администратор может добавлять фильмы"
+        )
+    
     movie = Movie(
         title=title,
         year=year,
         genre=genre,
         rating=rating,
         overview=overview,
-        poster_url=poster_url
+        poster_url=poster_url,
+        created_by=current_user.id
     )
     db.add(movie)
     db.commit()
@@ -111,7 +123,8 @@ async def create_movie(
         "title": movie.title,
         "year": movie.year,
         "genre": movie.genre,
-        "rating": movie.rating
+        "rating": movie.rating,
+        "created_by": movie.created_by
     }
 
 
@@ -151,8 +164,7 @@ async def create_review(
     movie_id: int,
     text: str,
     rating: float,
-    user_id: Optional[int] = None,
-    author_name: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
@@ -163,18 +175,12 @@ async def create_review(
     if not movie:
         raise HTTPException(status_code=404, detail="Фильм не найден")
     
-    # Проверяем, что user_id существует (если предоставлен)
-    if user_id:
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="Пользователь не найден")
-    
     review = Review(
         movie_id=movie_id,
-        user_id=user_id,
+        user_id=current_user.id,
         text=text,
         rating=rating,
-        author_name=author_name
+        author_name=current_user.username
     )
     db.add(review)
     db.commit()
@@ -191,21 +197,45 @@ async def create_review(
     }
 
 
+@router.delete("/reviews/{review_id}", tags=["Reviews"])
+async def delete_review(
+    review_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Удалить отзыв (только админ или автор отзыва)
+    """
+    review = db.query(Review).filter(Review.id == review_id).first()
+    if not review:
+        raise HTTPException(status_code=404, detail="u041eтзыв не найден")
+    
+    # Проверяем, что ето админ или автор отзыва
+    if not current_user.is_superuser and review.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="u0412ы не можете удалить этот отзыв"
+        )
+    
+    db.delete(review)
+    db.commit()
+    
+    return {"status": "deleted", "review_id": review_id}
+
+
 # ============================================================================
 # ИЗБРАННОЕ
 # ============================================================================
 
 @router.get("/favorites", tags=["Favorites"])
-async def get_user_favorites(user_id: int, db: Session = Depends(get_db)):
+async def get_user_favorites(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
-    Получить избранные фильмы пользователя
+    Получить избранные фильмы текущего пользователя
     """
-    # Проверяем пользователя
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Пользователь не найден")
-    
-    favorites = db.query(Favorite).filter(Favorite.user_id == user_id).all()
+    favorites = db.query(Favorite).filter(Favorite.user_id == current_user.id).all()
     result = []
     
     for fav in favorites:
@@ -231,15 +261,14 @@ async def get_user_favorites(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/favorites/{movie_id}", tags=["Favorites"])
-async def add_to_favorites(movie_id: int, user_id: int, db: Session = Depends(get_db)):
+async def add_to_favorites(
+    movie_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
     Добавить фильм в избранное
     """
-    # Проверяем пользователя
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Пользователь не найден")
-    
     # Проверяем фильм
     movie = db.query(Movie).filter(Movie.id == movie_id).first()
     if not movie:
@@ -247,14 +276,14 @@ async def add_to_favorites(movie_id: int, user_id: int, db: Session = Depends(ge
     
     # Проверяем, что не добавлено уже
     existing = db.query(Favorite).filter(
-        Favorite.user_id == user_id,
+        Favorite.user_id == current_user.id,
         Favorite.movie_id == movie_id
     ).first()
     
     if existing:
         raise HTTPException(status_code=400, detail="Фильм уже в избранном")
     
-    favorite = Favorite(user_id=user_id, movie_id=movie_id)
+    favorite = Favorite(user_id=current_user.id, movie_id=movie_id)
     db.add(favorite)
     db.commit()
     db.refresh(favorite)
@@ -263,12 +292,16 @@ async def add_to_favorites(movie_id: int, user_id: int, db: Session = Depends(ge
 
 
 @router.delete("/favorites/{movie_id}", tags=["Favorites"])
-async def remove_from_favorites(movie_id: int, user_id: int, db: Session = Depends(get_db)):
+async def remove_from_favorites(
+    movie_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
     Удалить фильм из избранного
     """
     favorite = db.query(Favorite).filter(
-        Favorite.user_id == user_id,
+        Favorite.user_id == current_user.id,
         Favorite.movie_id == movie_id
     ).first()
     
@@ -282,12 +315,16 @@ async def remove_from_favorites(movie_id: int, user_id: int, db: Session = Depen
 
 
 @router.get("/favorites/check/{movie_id}", tags=["Favorites"])
-async def check_favorite(movie_id: int, user_id: int, db: Session = Depends(get_db)):
+async def check_favorite(
+    movie_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
     Проверить, есть ли фильм в избранном
     """
     favorite = db.query(Favorite).filter(
-        Favorite.user_id == user_id,
+        Favorite.user_id == current_user.id,
         Favorite.movie_id == movie_id
     ).first()
     
@@ -295,7 +332,7 @@ async def check_favorite(movie_id: int, user_id: int, db: Session = Depends(get_
 
 
 # ============================================================================
-# СТАТИСТИКА И ПОИСК
+# НАВИГАЦИОННЫЕ ЭНдПОИНтЫ
 # ============================================================================
 
 @router.get("/search", tags=["Search"])
