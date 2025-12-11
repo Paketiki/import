@@ -29,8 +29,8 @@ def get_current_user(
         # Декодируем токен
         payload = jwt.decode(
             token, 
-            settings.secret_key, 
-            algorithms=[settings.algorithm]
+            settings.JWT_SECRET_KEY, 
+            algorithms=[settings.JWT_ALGORITHM]
         )
         username: str = payload.get("sub")
         if username is None:
