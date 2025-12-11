@@ -1,7 +1,7 @@
 # app/models/movies.py
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, Text, DateTime, Boolean
 from datetime import datetime
-from app.database.database import Base
+from app.database.base import Base  # Импортируем Base из base.py
 
 class Movie(Base):
     __tablename__ = "movies"
