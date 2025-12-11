@@ -1,4 +1,4 @@
-// static/js/script.js - Обновленная версия с новым API
+// static/js/script.js - Обновленная версия с поддержкой модератора
 
 const API_BASE_URL = window.location.origin;
 const API_ENDPOINTS = {
@@ -16,12 +16,13 @@ const API_ENDPOINTS = {
     reviews: {
         list: `${API_BASE_URL}/api/v1/reviews`,
         create: `${API_BASE_URL}/api/v1/reviews`,
+        delete: (id) => `${API_BASE_URL}/api/v1/reviews/${id}`,
     },
     favorites: {
-        list: (userId) => `${API_BASE_URL}/api/v1/favorites?user_id=${userId}`,
-        add: (id, userId) => `${API_BASE_URL}/api/v1/favorites/${id}?user_id=${userId}`,
-        remove: (id, userId) => `${API_BASE_URL}/api/v1/favorites/${id}?user_id=${userId}`,
-        check: (id, userId) => `${API_BASE_URL}/api/v1/favorites/check/${id}?user_id=${userId}`,
+        list: `${API_BASE_URL}/api/v1/favorites`,
+        add: (id) => `${API_BASE_URL}/api/v1/favorites/${id}`,
+        remove: (id) => `${API_BASE_URL}/api/v1/favorites/${id}`,
+        check: (id) => `${API_BASE_URL}/api/v1/favorites/check/${id}`,
     },
     genres: `${API_BASE_URL}/api/v1/genres`,
     stats: `${API_BASE_URL}/api/v1/stats`,
@@ -43,7 +44,7 @@ let currentDetailsMovieId = null;
 let userFavorites = new Set();
 let allReviews = [];
 
-// Инициализация при загрузке страницы
+// Инициализация при загружке страницы
 document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     initTheme();
@@ -154,7 +155,7 @@ async function loadMovies() {
         }
     } catch (error) {
         console.error('Ошибка загружки фильмов:', error);
-        showNotification('Не удалось загружить фильмы', 'error');
+        showNotification('Не удалось загрузить фильмы', 'error');
     } finally {
         showLoading(false);
     }
@@ -165,7 +166,7 @@ async function loadUserFavorites() {
     if (!currentToken || !currentUser) return;
     
     try {
-        const response = await apiRequest(API_ENDPOINTS.favorites.list(currentUser.id), 'GET');
+        const response = await apiRequest(API_ENDPOINTS.favorites.list, 'GET');
         if (response && Array.isArray(response)) {
             userFavorites.clear();
             response.forEach(movie => {
@@ -356,13 +357,18 @@ async function showMovieDetails(movieId) {
                 </div>
                 
                 <div class="details-section">
-                    <h4 class="details-section-title">Рецензии</h4>
+                    <h4 class="details-section-title">Рецензии (${movieReviews.length})</h4>
                     <div class="reviews-list">
                         ${movieReviews.length > 0 ? movieReviews.map(review => `
                             <div class="review-item">
                                 <div class="review-header">
-                                    <span class="review-author">${review.author_name || 'Аноним'}</span>
-                                    <span class="review-rating-badge">${review.rating || 0}★</span>
+                                    <div>
+                                        <span class="review-author">${review.author_name || 'Аноним'}</span>
+                                        <span class="review-rating-badge">${review.rating || 0}★</span>
+                                    </div>
+                                    ${(currentUser?.is_superuser || currentUser?.id === review.user_id) ? `
+                                        <button class="icon-button" onclick="deleteReview(${review.id})" title="Удалить">❌</button>
+                                    ` : ''}
                                 </div>
                                 <p class="review-text">${review.text || ''}</p>
                             </div>
@@ -427,10 +433,8 @@ async function submitReview(movieId) {
         
         const reviewData = {
             movie_id: movieId,
-            user_id: currentUser.id,
             text: reviewText,
-            rating: reviewRating,
-            author_name: currentUser.username
+            rating: reviewRating
         };
         
         const response = await apiRequest(API_ENDPOINTS.reviews.create, 'POST', reviewData);
@@ -452,6 +456,26 @@ async function submitReview(movieId) {
     }
 }
 
+// Удалить рецензию
+async function deleteReview(reviewId) {
+    if (!confirm('Вы уверены?')) return;
+    
+    try {
+        showLoading(true);
+        await apiRequest(API_ENDPOINTS.reviews.delete(reviewId), 'DELETE');
+        showNotification('Рецензия удалена', 'success');
+        
+        // Обновляем рецензии
+        allReviews = allReviews.filter(r => r.id !== reviewId);
+        showMovieDetails(currentDetailsMovieId);
+    } catch (error) {
+        console.error('Ошибка удаления рецензии:', error);
+        showNotification(`Ошибка: ${error.message}`, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
 // Переключение избранного
 async function toggleFavorite(movieId, event = null) {
     if (event) event.stopPropagation();
@@ -467,11 +491,11 @@ async function toggleFavorite(movieId, event = null) {
         showLoading(true);
         
         if (isCurrentlyFavorite) {
-            await apiRequest(API_ENDPOINTS.favorites.remove(movieId, currentUser.id), 'DELETE');
+            await apiRequest(API_ENDPOINTS.favorites.remove(movieId), 'DELETE');
             userFavorites.delete(movieId);
             showNotification('Удалено из избранного', 'info');
         } else {
-            await apiRequest(API_ENDPOINTS.favorites.add(movieId, currentUser.id), 'POST');
+            await apiRequest(API_ENDPOINTS.favorites.add(movieId), 'POST');
             userFavorites.add(movieId);
             showNotification('Добавлено в избранное', 'success');
         }
@@ -623,7 +647,7 @@ async function logout() {
     }
 }
 
-// Вспомогательные функции
+// Ниже стандартные вспомогательные функции
 
 function initEventListeners() {
     // Кнопки фильтров подборок
@@ -1057,3 +1081,4 @@ window.login = login;
 window.logout = logout;
 window.showAuthModal = showAuthModal;
 window.showProfileModal = showProfileModal;
+window.deleteReview = deleteReview;
