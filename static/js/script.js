@@ -1,4 +1,5 @@
-// static/js/script.js - ОБНОВЛЕННЫЙ С ПРОСТЫМИ ЭНДПОИНТАМИ
+// static/js/script.js - ПОЛНОА ОБНОВЛЕННАЯ ВЕРСИЯ С API, ОТЗЫВАМИ И Облюбленными
+
 const API_BASE_URL = window.location.origin;
 const API_ENDPOINTS = {
     auth: {
@@ -11,7 +12,18 @@ const API_ENDPOINTS = {
         list: `${API_BASE_URL}/api/v1/movies`,
         detail: (id) => `${API_BASE_URL}/api/v1/movies/${id}`,
         create: `${API_BASE_URL}/api/v1/movies`,
-    }
+    },
+    reviews: {
+        list: `${API_BASE_URL}/api/v1/reviews`,
+        create: `${API_BASE_URL}/api/v1/reviews`,
+    },
+    favorites: {
+        list: `${API_BASE_URL}/api/v1/favorites`,
+        add: (id) => `${API_BASE_URL}/api/v1/favorites/${id}`,
+        remove: (id) => `${API_BASE_URL}/api/v1/favorites/${id}`,
+        check: (id) => `${API_BASE_URL}/api/v1/favorites/${id}/is-favorite`,
+    },
+    genres: `${API_BASE_URL}/api/v1/movies/genres/list`,
 };
 
 // Глобальные переменные состояния
@@ -27,6 +39,7 @@ let currentFilters = {
 };
 let currentDetailsMovieId = null;
 let userFavorites = new Set();
+let allReviews = [];
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     checkAuthState();
     loadMovies();
+    loadReviews();
+    addGlobalStyles();
 });
 
 // Основные функции API
@@ -78,25 +93,17 @@ async function apiRequest(url, method = 'GET', data = null) {
     }
 }
 
-
-
-
-// Проверка состояния авторизации
+// Проверка авторизации
 async function checkAuthState() {
     if (currentToken) {
         try {
-            // Для тестирования создаем фиктивного пользователя
-            currentUser = {
-                id: 1,
-                username: localStorage.getItem('demo_username') || 'Демо-пользователь',
-                email: 'demo@example.com',
-                roles: [{ name: 'Зритель' }]
-            };
-            
+            const response = await apiRequest(API_ENDPOINTS.auth.me, 'GET');
+            currentUser = response;
             updateAuthUI(true);
-            showNotification('Добро пожаловать в демо-режим!', 'info');
+            await loadUserFavorites();
+            showNotification(`Добро пожаловать, ${currentUser.username}!`, 'success');
         } catch (error) {
-            console.error('Auth check failed:', error);
+            console.error('Ошибка поверки авторизации:', error);
             logout();
         }
     } else {
@@ -104,7 +111,7 @@ async function checkAuthState() {
     }
 }
 
-// Обновление UI в зависимости от авторизации
+// Обновление UI авторизации
 function updateAuthUI(isAuthenticated) {
     const authButton = document.getElementById('authButton');
     const userBadge = document.getElementById('userBadge');
@@ -115,11 +122,14 @@ function updateAuthUI(isAuthenticated) {
         userBadge.classList.remove('hidden');
         
         document.getElementById('userName').textContent = currentUser.username || 'Пользователь';
-        document.getElementById('userRole').textContent = 'Зритель';
+        const role = currentUser.is_superuser ? 'Админ' : 'Зритель';
+        document.getElementById('userRole').textContent = role;
         
-        // Для демо показываем админ-панель
-        adminPanel.classList.remove('hidden');
-        
+        if (currentUser.is_superuser) {
+            adminPanel.classList.remove('hidden');
+        } else {
+            adminPanel.classList.add('hidden');
+        }
     } else {
         authButton.classList.remove('hidden');
         userBadge.classList.add('hidden');
@@ -143,12 +153,50 @@ async function loadMovies() {
     } catch (error) {
         console.error('Ошибка загрузки фильмов:', error);
         showNotification('Не удалось загрузить фильмы', 'error');
-        // Показываем демо-фильмы только если API недоступно
-        allMovies = getDemoMovies();
-        renderMovies(allMovies);
-        updateGenresList();
     } finally {
         showLoading(false);
+    }
+}
+
+// Загрузка избранных фильмов пользователя
+async function loadUserFavorites() {
+    if (!currentToken) return;
+    
+    try {
+        const response = await apiRequest(API_ENDPOINTS.favorites.list, 'GET');
+        if (response && Array.isArray(response)) {
+            userFavorites.clear();
+            response.forEach(movie => {
+                userFavorites.add(movie.id);
+            });
+            // Обновим звездочки на карточках
+            updateFavoritesUI();
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки избранных:', error);
+    }
+}
+
+// Обновление UI избранных
+function updateFavoritesUI() {
+    document.querySelectorAll('.fav-button').forEach(btn => {
+        const card = btn.closest('.movie-card');
+        const movieId = card ? parseInt(card.dataset.id) : currentDetailsMovieId;
+        if (movieId) {
+            btn.classList.toggle('active', userFavorites.has(movieId));
+        }
+    });
+}
+
+// Загрузка рецензий
+async function loadReviews() {
+    try {
+        const response = await apiRequest(API_ENDPOINTS.reviews.list, 'GET');
+        if (response && Array.isArray(response)) {
+            allReviews = response;
+        }
+    } catch (error) {
+        console.error('Ошибка загружки рецензий:', error);
     }
 }
 
@@ -258,12 +306,17 @@ async function showMovieDetails(movieId) {
         showLoading(true);
         currentDetailsMovieId = movieId;
         
-        const movie = allMovies.find(m => m.id === movieId) || getDemoMovies().find(m => m.id === movieId);
+        const movie = allMovies.find(m => m.id === movieId);
+        if (!movie) {
+            showNotification('Фильм не найден', 'error');
+            return;
+        }
         
         const detailsPanel = document.getElementById('movieDetails');
         if (!detailsPanel) return;
         
         const posterUrl = movie.poster_url || 'https://via.placeholder.com/300x450/333/666?text=No+Poster';
+        const movieReviews = allReviews.filter(r => r.movie_id === movieId);
         
         detailsPanel.innerHTML = `
             <div class="details-scroll">
@@ -303,22 +356,15 @@ async function showMovieDetails(movieId) {
                 <div class="details-section">
                     <h4 class="details-section-title">Рецензии</h4>
                     <div class="reviews-list">
-                        <div class="review-item">
-                            <div class="review-header">
-                                <span class="review-author">Кинокритик</span>
-                                <span class="review-role">Эксперт</span>
-                                <span class="review-rating-badge">${(movie.rating - 0.5)?.toFixed(1) || '8.0'}</span>
+                        ${movieReviews.length > 0 ? movieReviews.map(review => `
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <span class="review-author">${review.user?.username || 'Аноним'}</span>
+                                    <span class="review-rating-badge">${review.rating || 0}★</span>
+                                </div>
+                                <p class="review-text">${review.text || ''}</p>
                             </div>
-                            <p class="review-text">${movie.overview ? movie.overview.substring(0, 200) + '...' : 'Отличный фильм, рекомендую к просмотру!'}</p>
-                        </div>
-                        <div class="review-item">
-                            <div class="review-header">
-                                <span class="review-author">Зритель</span>
-                                <span class="review-role">Обычный пользователь</span>
-                                <span class="review-rating-badge">${(movie.rating - 1)?.toFixed(1) || '7.5'}</span>
-                            </div>
-                            <p class="review-text">Интересный сюжет, хорошая игра актёров. Провёл время с удовольствием.</p>
-                        </div>
+                        `).join('') : '<p style="color: var(--color-text-soft);">Нет рецензий</p>'}
                     </div>
                 </div>
                 
@@ -328,7 +374,7 @@ async function showMovieDetails(movieId) {
                     <form id="reviewForm" class="review-form">
                         <div class="review-form-row">
                             <textarea id="reviewText" class="input" 
-                                      placeholder="Ваше мнение о фильме..." 
+                                      placeholder="u0412аше мнение о фильме..." 
                                       rows="3" required></textarea>
                         </div>
                         <div class="review-form-rating-row">
@@ -368,19 +414,38 @@ async function showMovieDetails(movieId) {
 async function submitReview(movieId) {
     try {
         const reviewText = document.getElementById('reviewText').value;
-        const reviewRating = document.getElementById('reviewRating').value;
+        const reviewRating = parseInt(document.getElementById('reviewRating').value);
         
         if (!reviewText.trim()) {
             showNotification('Введите текст рецензии', 'warning');
             return;
         }
         
-        showNotification('Рецензия отправлена (демо-режим)', 'success');
-        document.getElementById('reviewText').value = '';
+        showLoading(true);
         
+        const reviewData = {
+            movie_id: movieId,
+            user_id: currentUser.id,
+            text: reviewText,
+            rating: reviewRating
+        };
+        
+        const response = await apiRequest(API_ENDPOINTS.reviews.create, 'POST', reviewData);
+        
+        if (response) {
+            showNotification('Рецензия отправлена!', 'success');
+            document.getElementById('reviewText').value = '';
+            document.getElementById('reviewRating').value = '8';
+            
+            // Обновляем рецензии
+            allReviews.push(response);
+            showMovieDetails(movieId);
+        }
     } catch (error) {
         console.error('Ошибка отправки рецензии:', error);
-        showNotification('Ошибка при отправке рецензии', 'error');
+        showNotification(`Ошибка: ${error.message}`, 'error');
+    } finally {
+        showLoading(false);
     }
 }
 
@@ -394,47 +459,45 @@ async function toggleFavorite(movieId, event = null) {
         return;
     }
     
-    const isCurrentlyFavorite = userFavorites.has(movieId);
-    
-    if (isCurrentlyFavorite) {
-        userFavorites.delete(movieId);
-        showNotification('Удалено из избранного', 'info');
-    } else {
-        userFavorites.add(movieId);
-        showNotification('Добавлено в избранное', 'success');
-    }
-    
-    // Обновляем кнопки
-    document.querySelectorAll(`.fav-button`).forEach(btn => {
-        const card = btn.closest('.movie-card');
-        const details = btn.closest('.movie-details');
+    try {
+        const isCurrentlyFavorite = userFavorites.has(movieId);
+        showLoading(true);
         
-        if ((card && parseInt(card.dataset.id) === movieId) || 
-            (details && currentDetailsMovieId === movieId)) {
-            btn.classList.toggle('active', !isCurrentlyFavorite);
+        if (isCurrentlyFavorite) {
+            await apiRequest(API_ENDPOINTS.favorites.remove(movieId), 'DELETE');
+            userFavorites.delete(movieId);
+            showNotification('Удалено из избранного', 'info');
+        } else {
+            await apiRequest(API_ENDPOINTS.favorites.add(movieId), 'POST');
+            userFavorites.add(movieId);
+            showNotification('Добавлено в избранное', 'success');
         }
-    });
+        
+        updateFavoritesUI();
+    } catch (error) {
+        console.error('Ошибка тоггла избранного:', error);
+        showNotification(`Ошибка: ${error.message}`, 'error');
+    } finally {
+        showLoading(false);
+    }
 }
 
 // Применение фильтров
 function applyFilters() {
     let filteredMovies = [...allMovies];
     
-    // Фильтр по подборкам
     if (currentFilters.pick && currentFilters.pick !== 'all') {
         filteredMovies = filteredMovies.filter(movie => 
             movie.picks && movie.picks.includes(currentFilters.pick)
         );
     }
     
-    // Фильтр по жанру
     if (currentFilters.genre && currentFilters.genre !== 'all') {
         filteredMovies = filteredMovies.filter(movie => 
             movie.genre && movie.genre.includes(currentFilters.genre)
         );
     }
     
-    // Фильтр по рейтингу
     if (currentFilters.rating && currentFilters.rating !== 'all') {
         const minRating = parseFloat(currentFilters.rating);
         filteredMovies = filteredMovies.filter(movie => 
@@ -442,7 +505,6 @@ function applyFilters() {
         );
     }
     
-    // Фильтр по поиску
     if (currentFilters.search) {
         const searchLower = currentFilters.search.toLowerCase();
         filteredMovies = filteredMovies.filter(movie => 
@@ -453,7 +515,7 @@ function applyFilters() {
     renderMovies(filteredMovies);
 }
 
-// Вход
+// Ввод
 async function login(username, password) {
     try {
         if (!username || !password) {
@@ -471,27 +533,16 @@ async function login(username, password) {
         if (response && response.access_token) {
             currentToken = response.access_token;
             localStorage.setItem('auth_token', currentToken);
-            localStorage.setItem('demo_username', username.trim());
             
-            // Создаем фиктивного пользователя
-            currentUser = {
-                id: 1,
-                username: username.trim(),
-                email: `${username.trim().toLowerCase()}@example.com`,
-                roles: [{ name: 'Зритель' }]
-            };
-            
-            updateAuthUI(true);
-            loadMovies();
+            // Проверяем авторизацию
+            await checkAuthState();
             
             document.getElementById('authModal').classList.add('hidden');
-            showNotification(`Добро пожаловать, ${username.trim()}!`, 'success');
-            
             document.getElementById('loginForm').reset();
             hideError('loginError');
         }
     } catch (error) {
-        console.error('Ошибка входа:', error);
+        console.error('Ошибка ввода:', error);
         showError('loginError', error.message || 'Неверный логин или пароль');
     } finally {
         showLoading(false);
@@ -499,12 +550,11 @@ async function login(username, password) {
 }
 
 // Регистрация
-// script.js (частичное исправление в функции register)
 async function register(username, password) {
     try {
         if (!username || !password) {
-            showError('registerError', 'Пароль не должен быть именем пользователя')
-            return
+            showError('registerError', 'Пароль не должен быть именем пользователя');
+            return;
         }
         
         if (password.length < 4) {
@@ -520,19 +570,15 @@ async function register(username, password) {
         
         showLoading(true);
         
-        // Исправляем: передаем email как пустую строку
         const response = await apiRequest(API_ENDPOINTS.auth.register, 'POST', {
             username: username.trim(),
             password: password,
-            email: ""  // Явно передаем пустую строку
+            email: ""
         });
-        
-        // ... остальной код ...
         
         if (response) {
             showNotification('Регистрация успешна! Входим...', 'success');
             
-            // Автоматически входим после регистрации
             setTimeout(() => {
                 login(username, password);
             }, 1000);
@@ -551,7 +597,7 @@ async function register(username, password) {
 // Выход
 async function logout() {
     try {
-        if (currentToken && currentToken !== 'temp_token_for_testing') {
+        if (currentToken) {
             await apiRequest(API_ENDPOINTS.auth.logout, 'POST');
         }
     } catch (error) {
@@ -564,7 +610,6 @@ async function logout() {
         
         updateAuthUI(false);
         
-        // Очищаем детали
         const detailsPanel = document.getElementById('movieDetails');
         if (detailsPanel) {
             detailsPanel.innerHTML = '<p class="placeholder-text">Выберите фильм, чтобы посмотреть рецензию.</p>';
@@ -575,62 +620,8 @@ async function logout() {
     }
 }
 
-// Добавление фильма (админ)
-async function addMovie(movieData) {
-    try {
-        showLoading(true);
-        
-        // Проверяем обязательные поля
-        if (!movieData.title || !movieData.year || !movieData.rating || !movieData.genre) {
-            showNotification('Заполните все обязательные поля', 'warning');
-            return;
-        }
-        
-        // Преобразуем picks из чекбоксов
-        const picks = [];
-        document.querySelectorAll('.admin-pick input:checked').forEach(cb => {
-            picks.push(cb.value);
-        });
-        
-        const fullMovieData = {
-            title: movieData.title.trim(),
-            year: parseInt(movieData.year),
-            rating: parseFloat(movieData.rating),
-            genre: movieData.genre.trim(),
-            overview: movieData.overview || '',
-            poster_url: movieData.poster_url || 'https://via.placeholder.com/300x450/333/666?text=New+Movie',
-            picks: picks
-        };
-        
-        // В демо-режиме просто добавляем в локальный список
-        const newMovie = {
-            id: allMovies.length > 0 ? Math.max(...allMovies.map(m => m.id)) + 1 : 1,
-            ...fullMovieData
-        };
-        
-        allMovies.unshift(newMovie);
-        
-        showNotification('Фильм успешно добавлен! (демо-режим)', 'success');
-        
-        // Очищаем форму
-        document.getElementById('adminAddForm').reset();
-        document.querySelectorAll('.admin-pick input').forEach(cb => cb.checked = false);
-        
-        // Обновляем список фильмов
-        setTimeout(() => {
-            renderMovies(allMovies);
-            updateGenresList();
-        }, 500);
-        
-    } catch (error) {
-        console.error('Ошибка добавления фильма:', error);
-        showNotification(`Ошибка: ${error.message}`, 'error');
-    } finally {
-        showLoading(false);
-    }
-}
+// Ниже код стандартных инициализаций и вспомогательных функций
 
-// Инициализация обработчиков событий
 function initEventListeners() {
     // Кнопки фильтров подборок
     document.querySelectorAll('.pill-button[data-pick]').forEach(btn => {
@@ -666,7 +657,6 @@ function initEventListeners() {
             }, 300);
         });
         
-        // Очистка поиска по кнопке Escape
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 searchInput.value = '';
@@ -691,7 +681,7 @@ function initEventListeners() {
         themeToggle.addEventListener('click', toggleTheme);
     }
 
-    // Кнопка входа
+    // Кнопка въода
     const authButton = document.getElementById('authButton');
     if (authButton) {
         authButton.addEventListener('click', showAuthModal);
@@ -737,14 +727,6 @@ function initEventListeners() {
             const password = document.getElementById('loginPassword').value;
             login(username, password);
         });
-        
-        // Автозаполнение для тестирования
-        document.getElementById('loginUsername').addEventListener('focus', function() {
-            if (!this.value) {
-                this.value = 'user';
-                document.getElementById('loginPassword').value = '1234';
-            }
-        });
     }
 
     // Форма регистрации
@@ -758,48 +740,6 @@ function initEventListeners() {
         });
     }
 
-    // Форма добавления фильма (админ)
-    const adminForm = document.getElementById('adminAddForm');
-    if (adminForm) {
-        adminForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const movieData = {
-                title: document.getElementById('adminTitle').value,
-                year: document.getElementById('adminYear').value,
-                rating: document.getElementById('adminRating').value,
-                genre: document.getElementById('adminGenre').value,
-                overview: document.getElementById('adminOverview').value,
-                poster_url: document.getElementById('adminPoster').value
-            };
-            
-            addMovie(movieData);
-        });
-        
-        // Заполнение примерами для тестирования
-        document.getElementById('adminTitle').addEventListener('focus', function() {
-            if (!this.value) {
-                const demoMovies = [
-                    "Новый блокбастер 2024",
-                    "История любви в Париже", 
-                    "Космическая одиссея",
-                    "Детективная загадка"
-                ];
-                this.value = demoMovies[Math.floor(Math.random() * demoMovies.length)];
-                document.getElementById('adminYear').value = 2023 + Math.floor(Math.random() * 3);
-                document.getElementById('adminRating').value = (6 + Math.random() * 3).toFixed(1);
-                document.getElementById('adminGenre').value = ["Драма", "Комедия", "Боевик", "Фантастика"][Math.floor(Math.random() * 4)];
-                document.getElementById('adminOverview').value = "Увлекательный фильм с интересным сюжетом и отличной актёрской игрой. Рекомендуется к просмотру всем любителям кино.";
-                document.getElementById('adminPoster').value = "https://via.placeholder.com/300x450/333/666?text=New+Movie";
-                
-                // Отмечаем случайные чекбоксы
-                document.querySelectorAll('.admin-pick input').forEach(cb => {
-                    cb.checked = Math.random() > 0.5;
-                });
-            }
-        });
-    }
-
     // Профиль пользователя
     const userBadge = document.getElementById('userBadge');
     if (userBadge) {
@@ -810,7 +750,6 @@ function initEventListeners() {
         });
     }
     
-    // Профиль модального окна
     const profileModal = document.getElementById('profileModal');
     const closeProfileModal = document.getElementById('closeProfileModal');
     if (closeProfileModal) {
@@ -827,7 +766,6 @@ function initEventListeners() {
     }
 }
 
-// Вспомогательные функции
 function showAuthModal() {
     document.getElementById('authModal').classList.remove('hidden');
     switchAuthTab('login');
@@ -852,7 +790,6 @@ function showProfileModal() {
     const modal = document.getElementById('profileModal');
     const content = document.getElementById('profileContent');
     
-    // Собираем избранные фильмы
     const favoriteMovies = allMovies.filter(movie => userFavorites.has(movie.id));
     
     content.innerHTML = `
@@ -860,7 +797,6 @@ function showProfileModal() {
             <h3 style="margin-bottom: 10px; color: var(--color-text);">Профиль пользователя</h3>
             <div style="background: var(--color-bg-soft); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--color-border);">
                 <p><strong>Имя пользователя:</strong> ${currentUser.username || 'Не указано'}</p>
-                <p><strong>Роль:</strong> ${currentUser.roles?.[0]?.name || 'Зритель'}</p>
                 <p><strong>Email:</strong> ${currentUser.email || 'Не указан'}</p>
                 <p><strong>Избранных фильмов:</strong> ${userFavorites.size}</p>
             </div>
@@ -911,8 +847,6 @@ function toggleTheme() {
     
     const theme = isLight ? 'dark' : 'light';
     localStorage.setItem('theme', theme);
-    
-    showNotification(`Тема изменена на ${isLight ? 'тёмную' : 'светлую'}`, 'info');
 }
 
 function initTheme() {
@@ -940,7 +874,6 @@ function hideError(elementId) {
 }
 
 function showNotification(message, type = 'info') {
-    // Удаляем старые уведомления
     document.querySelectorAll('.notification').forEach(n => {
         if (n.parentNode) n.parentNode.removeChild(n);
     });
@@ -1017,7 +950,7 @@ function showLoading(show) {
                     border-radius: 50%;
                     animation: spin 1s linear infinite;
                 "></div>
-                <span style="color: var(--color-text-soft); font-size: 14px;">Загрузка...</span>
+                <span style="color: var(--color-text-soft); font-size: 14px;">Загружа...</span>
             </div>
         `;
         document.body.appendChild(loader);
@@ -1028,7 +961,6 @@ function showLoading(show) {
     }
 }
 
-// Глобальные стили для анимаций
 function addGlobalStyles() {
     if (!document.querySelector('#global-styles')) {
         const style = document.createElement('style');
@@ -1043,7 +975,6 @@ function addGlobalStyles() {
                 to { opacity: 1; transform: translateY(0); }
             }
             
-            /* Стили для скроллбара */
             ::-webkit-scrollbar {
                 width: 8px;
                 height: 8px;
@@ -1059,12 +990,10 @@ function addGlobalStyles() {
                 background: var(--color-text-soft);
             }
             
-            /* Анимация появления карточек */
             .movie-card {
                 animation: fadeIn 0.3s ease-out;
             }
             
-            /* Адаптивность для мобильных */
             @media (max-width: 768px) {
                 .main-layout {
                     grid-template-columns: 1fr;
@@ -1090,7 +1019,6 @@ function addGlobalStyles() {
     }
 }
 
-// Добавляем обработчик для Enter в формах
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.classList.contains('input')) {
         const form = e.target.closest('form');
@@ -1103,7 +1031,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Добавляем обработчик для Escape для закрытия модалок
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         const authModal = document.getElementById('authModal');
@@ -1119,11 +1046,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Инициализация
-addGlobalStyles();
-initTheme();
-
-// Экспортируем функции для использования в консоли
+// Экспортируем функции
 window.toggleFavorite = toggleFavorite;
 window.showMovieDetails = showMovieDetails;
 window.loadMovies = loadMovies;
@@ -1131,6 +1054,3 @@ window.login = login;
 window.logout = logout;
 window.showAuthModal = showAuthModal;
 window.showProfileModal = showProfileModal;
-
-
-        
