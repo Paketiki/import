@@ -12,7 +12,6 @@ from app.models.picks import Pick  # noqa: F401
 from app.models.movies import Movie  # noqa: F401
 from app.models.reviews import Review  # noqa: F401
 from app.models.movie_picks import MoviePick  # noqa: F401
-from app.models.movie_stats import MovieStat  # noqa: F401
 from app.models.favorites import Favorite  # noqa: F401
 
 MOVIES_DATA = [
