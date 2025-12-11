@@ -1,4 +1,3 @@
-# app/schemas/users.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
@@ -24,6 +23,13 @@ class UserResponse(UserBase):
     is_active: bool
     is_superuser: bool
     created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+class UserInDB(UserResponse):
+    """User schema as it appears in database"""
+    password_hash: Optional[str] = None
     
     class Config:
         from_attributes = True
