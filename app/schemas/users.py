@@ -1,13 +1,21 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import datetime
 
 class UserBase(BaseModel):
     username: str
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
 
 class UserCreate(UserBase):
     password: str
+    
+    @field_validator('email', mode='before')
+    @classmethod
+    def validate_email(cls, v):
+        # Поделаня трансформация пустого email в None
+        if v == "" or v is None:
+            return None
+        return v
 
 class UserLogin(BaseModel):
     username: str
@@ -15,7 +23,7 @@ class UserLogin(BaseModel):
 
 class UserUpdate(BaseModel):
     username: Optional[str] = None
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     password: Optional[str] = None
 
 class UserResponse(UserBase):
