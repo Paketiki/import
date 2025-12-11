@@ -1,14 +1,12 @@
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, func, desc
-from sqlalchemy.orm import selectinload, joinedload
+from sqlalchemy import select, or_, func, desc
 
 from app.models.movies import Movie
 from app.models.reviews import Review
-from app.models.users import User
 from app.models.picks import Pick
 from app.models.movie_picks import MoviePick
-from app.schemas.movies import MovieCreate, MovieInDB, MovieUpdate, MovieFilters
+from app.schemas.movies import MovieCreate, MovieUpdate, MovieFilters
 
 
 class MovieService:
@@ -18,10 +16,7 @@ class MovieService:
     async def get_movies(self, skip: int = 0, limit: int = 100, 
                         filters: Optional[MovieFilters] = None) -> List[Movie]:
         """Получить список фильмов с фильтрацией"""
-        stmt = select(Movie).options(
-            selectinload(Movie.picks),
-            selectinload(Movie.creator).load_only(User.username)
-        )
+        stmt = select(Movie)
         
         # Применяем фильтры
         if filters:
@@ -50,31 +45,27 @@ class MovieService:
                 stmt = stmt.where(Movie.year <= filters.year_to)
             
             if filters.pick and filters.pick != 'all':
-                # Фильтрация по подборкам
+                # Фильтрация по подборкам через таблицу связей
                 subquery = select(MoviePick.movie_id).join(
                     Pick, MoviePick.pick_id == Pick.id
-                ).where(Pick.name == filters.pick).subquery()
+                ).where(Pick.slug == filters.pick).subquery()
                 
                 stmt = stmt.where(Movie.id.in_(subquery))
         
         stmt = stmt.offset(skip).limit(limit).order_by(desc(Movie.rating), desc(Movie.created_at))
         
         result = await self.db.execute(stmt)
-        movies = result.scalars().unique().all()
+        movies = result.scalars().all()
         
         return movies
     
     async def get_movie(self, movie_id: int) -> Optional[Movie]:
         """Получить один фильм по ID"""
-        stmt = select(Movie).where(Movie.id == movie_id).options(
-            selectinload(Movie.picks),
-            selectinload(Movie.creator).load_only(User.username),
-            selectinload(Movie.reviews)
-        )
+        stmt = select(Movie).where(Movie.id == movie_id)
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
     
-    async def create_movie(self, movie_data: MovieCreate, created_by: int) -> Movie:
+    async def create_movie(self, movie_data: MovieCreate, created_by: Optional[int] = None) -> Movie:
         """Создать новый фильм"""
         movie_dict = movie_data.dict(exclude={'picks'})
         movie_dict['created_by'] = created_by
@@ -86,8 +77,8 @@ class MovieService:
         
         # Добавляем подборки если указаны
         if movie_data.picks:
-            for pick_name in movie_data.picks:
-                pick_stmt = select(Pick).where(Pick.name == pick_name)
+            for pick_slug in movie_data.picks:
+                pick_stmt = select(Pick).where(Pick.slug == pick_slug)
                 pick_result = await self.db.execute(pick_stmt)
                 pick = pick_result.scalar_one_or_none()
                 
@@ -138,13 +129,10 @@ class MovieService:
         """Поиск фильмов по названию"""
         stmt = select(Movie).where(
             Movie.title.ilike(f"%{title}%")
-        ).options(
-            selectinload(Movie.picks),
-            selectinload(Movie.creator).load_only(User.username)
         ).offset(skip).limit(limit).order_by(desc(Movie.rating))
         
         result = await self.db.execute(stmt)
-        return result.scalars().unique().all()
+        return result.scalars().all()
     
     async def update_movie_rating(self, movie_id: int) -> Optional[float]:
         """Обновить средний рейтинг фильма на основе рецензий"""
