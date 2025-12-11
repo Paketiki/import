@@ -34,6 +34,7 @@ let currentUser = null;
 let currentToken = localStorage.getItem('auth_token') || null;
 let allMovies = [];
 let allGenres = new Set();
+let allPicks = new Set();
 let currentFilters = {
     pick: 'all',
     genre: 'all',
@@ -152,6 +153,7 @@ async function loadMovies() {
             allMovies = Array.isArray(response) ? response : [];
             renderMovies(allMovies);
             updateGenresList();
+            updatePicksList();
         }
     } catch (error) {
         console.error('Ошибка загружки фильмов:', error);
@@ -159,6 +161,20 @@ async function loadMovies() {
     } finally {
         showLoading(false);
     }
+}
+
+// Обновление списка подборок
+function updatePicksList() {
+    allPicks.clear();
+    allMovies.forEach(movie => {
+        if (movie.picks && Array.isArray(movie.picks)) {
+            movie.picks.forEach(pick => {
+                allPicks.add(pick);
+            });
+        }
+    });
+    
+    console.log('Available picks:', Array.from(allPicks));
 }
 
 // Загружение избранных фильмов пользователя
@@ -258,7 +274,7 @@ function renderMovies(movies) {
         movieCard.className = 'movie-card';
         movieCard.dataset.id = movie.id;
         
-        const picksHTML = movie.picks ? movie.picks.map(pick => 
+        const picksHTML = movie.picks && Array.isArray(movie.picks) ? movie.picks.map(pick => 
             `<span class="movie-pick-chip">${pick}</span>`
         ).join('') : '';
         
@@ -344,7 +360,7 @@ async function showMovieDetails(movieId) {
                             <span class="badge-rating">${movie.rating?.toFixed(1) || 'N/A'}</span>
                         </div>
                         <div class="details-tags">
-                            ${movie.picks ? movie.picks.map(pick => 
+                            ${movie.picks && Array.isArray(movie.picks) ? movie.picks.map(pick => 
                                 `<span class="movie-pick-chip">${pick}</span>`
                             ).join('') : ''}
                         </div>
@@ -382,7 +398,7 @@ async function showMovieDetails(movieId) {
                     <form id="reviewForm" class="review-form">
                         <div class="review-form-row">
                             <textarea id="reviewText" class="input" 
-                                      placeholder="u0412аше мнение о фильме..." 
+                                      placeholder="Ваше мнение о фильме..." 
                                       rows="3" required></textarea>
                         </div>
                         <div class="review-form-rating-row">
@@ -514,9 +530,10 @@ function applyFilters() {
     let filteredMovies = [...allMovies];
     
     if (currentFilters.pick && currentFilters.pick !== 'all') {
-        filteredMovies = filteredMovies.filter(movie => 
-            movie.picks && movie.picks.includes(currentFilters.pick)
-        );
+        filteredMovies = filteredMovies.filter(movie => {
+            console.log(`Filtering ${movie.title} picks:`, movie.picks, 'looking for:', currentFilters.pick);
+            return movie.picks && Array.isArray(movie.picks) && movie.picks.includes(currentFilters.pick);
+        });
     }
     
     if (currentFilters.genre && currentFilters.genre !== 'all') {
@@ -539,6 +556,7 @@ function applyFilters() {
         );
     }
     
+    console.log('Filtered movies:', filteredMovies.length, 'from', allMovies.length);
     renderMovies(filteredMovies);
 }
 
@@ -657,6 +675,7 @@ function initEventListeners() {
             document.querySelectorAll('.pill-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentFilters.pick = btn.dataset.pick;
+            console.log('Pick filter changed to:', currentFilters.pick);
             applyFilters();
         });
     });
