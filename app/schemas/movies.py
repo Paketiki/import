@@ -1,6 +1,5 @@
-# app/schemas/movies.py
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 from datetime import datetime
 
 class MovieBase(BaseModel):
@@ -37,3 +36,19 @@ class MovieDetailResponse(MovieResponse):
     
     class Config:
         from_attributes = True
+
+class MovieInDB(MovieResponse):
+    """Movie schema as it appears in database"""
+    
+    class Config:
+        from_attributes = True
+
+class MovieFilters(BaseModel):
+    """Filters for movie search and filtering"""
+    search: Optional[str] = None
+    genre: Optional[str] = None
+    min_rating: Optional[float] = None
+    max_rating: Optional[float] = None
+    year_from: Optional[int] = None
+    year_to: Optional[int] = None
+    pick: Optional[str] = None
