@@ -1,4 +1,3 @@
-# app/schemas/roles.py
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -9,6 +8,11 @@ class RoleBase(BaseModel):
 
 class RoleCreate(RoleBase):
     pass
+
+class RoleUpdate(BaseModel):
+    """Update role schema"""
+    name: Optional[str] = None
+    description: Optional[str] = None
 
 class RoleResponse(RoleBase):
     id: int
