@@ -3,16 +3,14 @@ import os
 from app.database import database as db_sync
 from app.database import base as db_base
 
-# Импортируем модели, чтобы они зарегистрировались в metadata
-from app.models import movies as _movies  # noqa: F401
-from app.models import picks as _picks  # noqa: F401
-from app.models import movie_picks as _movie_picks  # noqa: F401
-from app.models import users as _users  # noqa: F401
-
-from app.models.movies import Movie
-from app.models.picks import Pick
-from app.models.movie_picks import MoviePick
-
+# Импортируем ВСЕ модели, чтобы они зарегистрировались в metadata
+# ВАЖНО: это нужно, чтобы все FK были видны SQLAlchemy
+from app.models.movies import Movie  # noqa: F401
+from app.models.picks import Pick  # noqa: F401
+from app.models.movie_picks import MoviePick  # noqa: F401
+from app.models.users import User  # noqa: F401
+from app.models.reviews import Review  # noqa: F401
+from app.models.roles import Role  # noqa: F401
 
 MOVIES_DATA = [
     {
@@ -52,7 +50,7 @@ MOVIES_DATA = [
         "genre": "Фантастика",
         "rating": 8.6,
         "poster_url": "",
-        "overview": "Команда исследователей отправляется через червоточину в поисках нового дома для человечества.",
+        "overview": "Команда исследователей отправляется через чёрную дыру в поисках нового дома для человечества.",
         "picks": ["hits", "new"],
     },
     {
@@ -372,7 +370,7 @@ MOVIES_DATA = [
         "genre": "Драма",
         "rating": 8.3,
         "poster_url": "",
-        "overview": "Одинокий таксист постепенно теряет связь с реальности на фоне ночного Нью-Йорка.",
+        "overview": "Одинокий таксист постепенно теряет связь с реальностью на фоне ночного Нью-Йорка.",
         "picks": ["classic"],
     },
     {
@@ -529,25 +527,29 @@ def reset_and_seed_db(db_path: str = "movies.db") -> None:
     # 1. Удаляем старую БД, если есть
     if os.path.exists(db_path):
         os.remove(db_path)
+        print(f"✓ Удалена старая база данных {db_path}")
 
-    # 2. Создаём таблицы для двух разных Base
+    # 2. Создаём таблицы для двух Base
+    # ВАЖНО: импортируем модели выше, чтобы они регистрировались в metadata
     db_sync.Base.metadata.create_all(bind=db_sync.engine)
-    db_base.Base.metadata.create_all(bind=db_sync.engine)
+    print("✓ Таблицы созданы")
 
     # 3. Заполняем данными
     db = db_sync.SessionLocal()
     try:
-        # Подборки
+        # Сначала добавляем подборки
         slug_to_id = {}
         for pick_data in PICKS_DATA:
             pick = Pick(**pick_data)
             db.add(pick)
         db.commit()
+        print(f"✓ Добавлено {len(PICKS_DATA)} подборок")
 
+        # Маппим slug → id для связей
         for pick in db.query(Pick).all():
             slug_to_id[pick.slug] = pick.id
 
-        # Фильмы
+        # Теперь добавляем фильмы
         for item in MOVIES_DATA:
             movie = Movie(
                 id=item["id"],
@@ -562,16 +564,23 @@ def reset_and_seed_db(db_path: str = "movies.db") -> None:
             db.add(movie)
             db.flush()
 
+            # Добавляем связи с подборками
             for slug in item.get("picks", []):
                 pick_id = slug_to_id.get(slug)
                 if pick_id:
                     db.add(MoviePick(movie_id=movie.id, pick_id=pick_id))
 
         db.commit()
+        print(f"✓ Добавлено {len(MOVIES_DATA)} фильмов")
+        print("\n✅ База данных успешно пересоздана и заполнена!")
+
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Ошибка при заполнении БД: {e}")
+        raise
     finally:
         db.close()
 
 
 if __name__ == "__main__":
     reset_and_seed_db()
-    print("База данных пересоздана и заполнена начальными фильмами.")
