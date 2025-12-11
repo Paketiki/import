@@ -6,7 +6,7 @@ from .movies import (
 from .reviews import ReviewBase, ReviewCreate, ReviewResponse, ReviewUpdate
 from .users import UserBase, UserCreate, UserResponse, UserUpdate, UserInDB, User
 from .roles import RoleBase, RoleCreate, RoleResponse, RoleUpdate, Role
-from .picks import PickBase, PickCreate, PickResponse
+from .picks import PickBase, PickCreate, PickResponse, PickInDB
 
 __all__ = [
     "Token",
@@ -36,4 +36,5 @@ __all__ = [
     "PickBase",
     "PickCreate",
     "PickResponse",
+    "PickInDB",
 ]
