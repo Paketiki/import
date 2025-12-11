@@ -90,6 +90,7 @@ async def create_movie(
     year: int,
     genre: str,
     rating: float,
+    picks: List[str] = [],
     overview: Optional[str] = None,
     poster_url: Optional[str] = None,
     current_user: User = Depends(get_current_user),
@@ -102,7 +103,14 @@ async def create_movie(
     if not current_user.is_superuser:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="u0422олько администратор может добавлять фильмы"
+            detail="Только администратор может добавлять фильмы"
+        )
+    
+    # Проверяем что выбраны подборки
+    if not picks or len(picks) < 2:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Выберите минимум 2 подборки для фильма"
         )
     
     movie = Movie(
@@ -115,8 +123,24 @@ async def create_movie(
         created_by=current_user.id
     )
     db.add(movie)
+    db.flush()  # Получаем ID
+    
+    # Добавляем подборки
+    for pick_slug in picks:
+        pick = db.query(Pick).filter(Pick.slug == pick_slug).first()
+        if pick:
+            movie_pick = MoviePick(movie_id=movie.id, pick_id=pick.id)
+            db.add(movie_pick)
+    
     db.commit()
     db.refresh(movie)
+    
+    # Возвращаем полный объект фильма с подборками
+    pick_names = db.query(Pick.name).join(
+        MoviePick, MoviePick.pick_id == Pick.id
+    ).filter(
+        MoviePick.movie_id == movie.id
+    ).all()
     
     return {
         "id": movie.id,
@@ -124,6 +148,9 @@ async def create_movie(
         "year": movie.year,
         "genre": movie.genre,
         "rating": movie.rating,
+        "overview": movie.overview,
+        "poster_url": movie.poster_url,
+        "picks": [p[0] for p in pick_names],
         "created_by": movie.created_by
     }
 
@@ -208,13 +235,13 @@ async def delete_review(
     """
     review = db.query(Review).filter(Review.id == review_id).first()
     if not review:
-        raise HTTPException(status_code=404, detail="u041eтзыв не найден")
+        raise HTTPException(status_code=404, detail="Отзыв не найден")
     
-    # Проверяем, что ето админ или автор отзыва
+    # Проверяем, что это админ или автор отзыва
     if not current_user.is_superuser and review.user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="u0412ы не можете удалить этот отзыв"
+            detail="Вы не можете удалить этот отзыв"
         )
     
     db.delete(review)
@@ -332,7 +359,7 @@ async def check_favorite(
 
 
 # ============================================================================
-# НАВИГАЦИОННЫЕ ЭНдПОИНтЫ
+# НАВИГАЦИОННЫЕ ЭНДПОИНТЫ
 # ============================================================================
 
 @router.get("/search", tags=["Search"])
