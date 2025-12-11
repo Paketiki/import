@@ -33,7 +33,7 @@ MOVIES_DATA = [
         "rating": 9.0,
         "poster_url": "",
         "overview": "Бэтмен вступает в смертельную игру с Джокером, чья цель — погружить город в хаос.",
-        "picks": ["hits"],
+        "picks": ["hits", "new"],
     },
     {
         "id": 3,
@@ -43,7 +43,7 @@ MOVIES_DATA = [
         "rating": 8.8,
         "poster_url": "",
         "overview": "Профессиональный вор, специализирующийся на проникновении в сны, получает шанс на искупление.",
-        "picks": ["hits", "new"],
+        "picks": ["hits", "classic"],
     },
     {
         "id": 4,
@@ -53,7 +53,7 @@ MOVIES_DATA = [
         "rating": 8.6,
         "poster_url": "",
         "overview": "Команда исследователей отправляется через чёрную дыру в поисках нового дома для человечества.",
-        "picks": ["hits", "new"],
+        "picks": ["new", "classic"],
     },
     {
         "id": 5,
@@ -63,7 +63,7 @@ MOVIES_DATA = [
         "rating": 8.9,
         "poster_url": "",
         "overview": "История простодушного Форреста, который становится свидетелем важнейших событий в истории УСА.",
-        "picks": ["classic"],
+        "picks": ["hits", "classic"],
     },
     {
         "id": 6,
@@ -73,7 +73,7 @@ MOVIES_DATA = [
         "rating": 8.7,
         "poster_url": "",
         "overview": "Программист Нео узнаёт, что реальность — всего лишь симуляция, созданная машинами.",
-        "picks": ["classic"],
+        "picks": ["new", "classic"],
     },
 ]
 
@@ -159,14 +159,14 @@ def reset_and_seed_db(db_path: str = "movies.db") -> None:
             db.add(movie)
             db.flush()
 
-            # Добавляем связи с подборками
+            # Добавляем связи с подборками (равно 2 на каждый фильм)
             for slug in item.get("picks", []):
                 pick_id = slug_to_id.get(slug)
                 if pick_id:
                     db.add(MoviePick(movie_id=movie.id, pick_id=pick_id))
 
         db.commit()
-        print(f"✓ Добавлено {len(MOVIES_DATA)} фильмов")
+        print(f"✓ Добавлено {len(MOVIES_DATA)} фильмов (each in 2 picks)")
         print("\n✅ База данных успешно пересоздана и заполнена!")
 
     except Exception as e:
