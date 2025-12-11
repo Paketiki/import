@@ -12,8 +12,8 @@ class Favorite(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Отношения
-    user = relationship("User", backref="favorites")
-    movie = relationship("Movie", backref="favorited_by")
+    user = relationship("User", back_populates="favorites")
+    movie = relationship("Movie", back_populates="favorites")
     
     def __repr__(self):
         return f"<Favorite(user_id={self.user_id}, movie_id={self.movie_id})>"
