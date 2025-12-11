@@ -1,12 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
-from .enums import UserRole
-
-# app/schemas/reviews.py
-from pydantic import BaseModel, Field
-from typing import Optional
-from datetime import datetime
 
 class ReviewBase(BaseModel):
     movie_id: int
@@ -28,3 +22,6 @@ class ReviewResponse(ReviewBase):
     
     class Config:
         from_attributes = True
+
+# Alias for compatibility
+Review = ReviewResponse
