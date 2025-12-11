@@ -16,8 +16,11 @@ class Movie(Base):
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Добавляем отношение к MovieStat
-    stat = relationship("MovieStat", back_populates="movie", uselist=False, cascade="all, delete-orphan")
+    # Отношения
+    creator = relationship("User", foreign_keys=[created_by])
+    reviews = relationship("Review", back_populates="movie", cascade="all, delete-orphan")
+    favorites = relationship("Favorite", back_populates="movie", cascade="all, delete-orphan")
+    picks = relationship("MoviePick", back_populates="movie", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<Movie(id={self.id}, title='{self.title}')>"
