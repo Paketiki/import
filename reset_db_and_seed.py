@@ -2,6 +2,7 @@ import os
 
 from app.database.database import engine, SessionLocal
 from app.database.base import Base  # Импортируем Base из base.py
+from app.utils.security import get_password_hash
 
 # Импортируем ВСЕ модели, чтобы они зарегистрировались в metadata
 # ВАЖНО: это нужно, чтобы все FK были видны SQLAlchemy
@@ -83,6 +84,25 @@ PICKS_DATA = [
     {"id": 3, "name": "Классика", "slug": "classic", "description": "Великие классические фильмы"},
 ]
 
+DEMO_USERS = [
+    {
+        "id": 1,
+        "username": "user",
+        "email": "user@example.com",
+        "password": "1234",
+        "is_active": True,
+        "is_superuser": False,
+    },
+    {
+        "id": 2,
+        "username": "moderator",
+        "email": "moderator@example.com",
+        "password": "1234",
+        "is_active": True,
+        "is_superuser": True,
+    },
+]
+
 
 def reset_and_seed_db(db_path: str = "movies.db") -> None:
     """Полностью пересоздать базу и заполнить её начальными фильмами и подборками."""
@@ -99,6 +119,20 @@ def reset_and_seed_db(db_path: str = "movies.db") -> None:
     # 3. Заполняем данными
     db = SessionLocal()
     try:
+        # Добавляем демо-пользователей
+        for user_data in DEMO_USERS:
+            user = User(
+                id=user_data["id"],
+                username=user_data["username"],
+                email=user_data["email"],
+                password_hash=get_password_hash(user_data["password"]),
+                is_active=user_data["is_active"],
+                is_superuser=user_data["is_superuser"],
+            )
+            db.add(user)
+        db.commit()
+        print(f"✓ Добавлено {len(DEMO_USERS)} пользователей (demo: user/1234, moderator/1234)")
+
         # Сначала добавляем подборки
         slug_to_id = {}
         for pick_data in PICKS_DATA:
