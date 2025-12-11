@@ -525,6 +525,67 @@ async function toggleFavorite(movieId, event = null) {
     }
 }
 
+// Добавление нового фильма (админ)
+async function addNewMovie(e) {
+    e.preventDefault();
+    
+    if (!currentUser?.is_superuser) {
+        showNotification('Только администратор может добавлять фильмы', 'error');
+        return;
+    }
+    
+    try {
+        showLoading(true);
+        
+        const title = document.getElementById('adminTitle').value.trim();
+        const year = parseInt(document.getElementById('adminYear').value);
+        const rating = parseFloat(document.getElementById('adminRating').value);
+        const genre = document.getElementById('adminGenre').value.trim();
+        const poster = document.getElementById('adminPoster').value.trim();
+        const overview = document.getElementById('adminOverview').value.trim();
+        
+        // Собираем выбранные подборки
+        const picks = [];
+        document.querySelectorAll('.admin-picks input[type="checkbox"]:checked').forEach(checkbox => {
+            picks.push(checkbox.value);
+        });
+        
+        if (!title || !year || !genre || picks.length < 2) {
+            showNotification('Заполните все поля и выберите хотя бы 2 подборки', 'warning');
+            showLoading(false);
+            return;
+        }
+        
+        const movieData = {
+            title: title,
+            year: year,
+            rating: rating,
+            genre: genre,
+            poster_url: poster || null,
+            overview: overview,
+            picks: picks
+        };
+        
+        console.log('Sending movie data:', movieData);
+        
+        const response = await apiRequest(API_ENDPOINTS.movies.create, 'POST', movieData);
+        
+        if (response) {
+            showNotification('Фильм успешно добавлен!', 'success');
+            document.getElementById('adminAddForm').reset();
+            
+            // Перезагружаем список фильмов
+            await loadMovies();
+            loadReviews();
+        }
+    } catch (error) {
+        console.error('Ошибка добавления фильма:', error);
+        showNotification(`Ошибка: ${error.message}`, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
 // Применение фильтров
 function applyFilters() {
     let filteredMovies = [...allMovies];
@@ -786,6 +847,12 @@ function initEventListeners() {
         });
     }
 
+    // Форма добавления фильма (админ)
+    const adminAddForm = document.getElementById('adminAddForm');
+    if (adminAddForm) {
+        adminAddForm.addEventListener('submit', addNewMovie);
+    }
+
     // Профиль пользователя
     const userBadge = document.getElementById('userBadge');
     if (userBadge) {
@@ -823,7 +890,7 @@ function switchAuthTab(tabName) {
     });
     
     document.querySelectorAll('.tab-panel').forEach(panel => {
-        panel.classList.toggle('active', panel.dataset.panel === tabName);
+        panel.classList.toggle('active', panel.data-panel === tabName);
     });
     
     hideError('loginError');
@@ -1101,3 +1168,4 @@ window.logout = logout;
 window.showAuthModal = showAuthModal;
 window.showProfileModal = showProfileModal;
 window.deleteReview = deleteReview;
+window.addNewMovie = addNewMovie;
