@@ -1,19 +1,38 @@
-# main.py
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
-from pydantic import BaseModel, ConfigDict
-from typing import List, Optional
-from datetime import datetime
-import os
-import sqlite3
 from pathlib import Path
+import logging
 
+# Импортируем все роутеры из app.api
+from app.api import (
+    auth,
+    movies,
+    movies_real,
+    reviews,
+    users,
+    picks,
+    movie_picks,
+    movie_stats,
+    roles,
+)
+
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Инициализация FastAPI приложения
 app = FastAPI(
     title="КиноВзор API",
-    description="API для сайта КиноВзор",
-    version="1.0.0"
+    description="API для веб-сайта КиноВзор с рецензиями и подборками фильмов",
+    version="1.0.0",
+    openapi_url="/api/openapi.json",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
 )
 
 # Настройка CORS
@@ -32,204 +51,151 @@ BASE_DIR = Path(__file__).parent
 static_dir = BASE_DIR / "static"
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
+    logger.info(f"Статические файлы подключены из {static_dir}")
 
-# Подключение к базе данных
-def get_db_connection():
-    conn = sqlite3.connect('movies.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# ============================================================================
+# ПОДКЛЮЧЕНИЕ ВСЕХ РОУТЕРОВ
+# ============================================================================
 
-# Модели Pydantic
-class UserLogin(BaseModel):
-    username: str
-    password: str
+# Подключение роутеров API с префиксами версий
+api_v1_prefix = "/api/v1"
 
-class UserCreate(BaseModel):
-    username: str
-    password: str
-    email: Optional[str] = ""
+# Аутентификация и авторизация
+app.include_router(
+    auth.router,
+    prefix=f"{api_v1_prefix}/auth",
+    tags=["Аутентификация"]
+)
+logger.info("Роутер auth подключен")
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+app.include_router(
+    roles.router,
+    prefix=f"{api_v1_prefix}/roles",
+    tags=["Роли"]
+)
+logger.info("Роутер roles подключен")
 
-class MovieResponse(BaseModel):
-    id: int
-    title: str
-    year: int
-    rating: float
-    genre: str
-    poster_url: Optional[str] = None
-    overview: Optional[str] = None
-    
-    model_config = ConfigDict(from_attributes=True)
+# Фильмы
+app.include_router(
+    movies.router,
+    prefix=f"{api_v1_prefix}/movies",
+    tags=["Фильмы"]
+)
+logger.info("Роутер movies подключен")
 
-# API endpoints
+app.include_router(
+    movies_real.router,
+    prefix=f"{api_v1_prefix}/movies-real",
+    tags=["Фильмы (Real)"]
+)
+logger.info("Роутер movies_real подключен")
+
+# Рецензии
+app.include_router(
+    reviews.router,
+    prefix=f"{api_v1_prefix}/reviews",
+    tags=["Рецензии"]
+)
+logger.info("Роутер reviews подключен")
+
+# Пользователи
+app.include_router(
+    users.router,
+    prefix=f"{api_v1_prefix}/users",
+    tags=["Пользователи"]
+)
+logger.info("Роутер users подключен")
+
+# Подборки
+app.include_router(
+    picks.router,
+    prefix=f"{api_v1_prefix}/picks",
+    tags=["Подборки"]
+)
+logger.info("Роутер picks подключен")
+
+# Связь фильмов и подборок
+app.include_router(
+    movie_picks.router,
+    prefix=f"{api_v1_prefix}/movie-picks",
+    tags=["Фильмы и подборки"]
+)
+logger.info("Роутер movie_picks подключен")
+
+# Статистика по фильмам
+app.include_router(
+    movie_stats.router,
+    prefix=f"{api_v1_prefix}/movie-stats",
+    tags=["Статистика фильмов"]
+)
+logger.info("Роутер movie_stats подключен")
+
+# ============================================================================
+# ОСНОВНЫЕ МАРШРУТЫ
+# ============================================================================
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
-    index_path = BASE_DIR / "templates" / "index.html"
-    if index_path.exists():
-        return FileResponse(index_path)
-    return HTMLResponse(content="<h1>КиноВзор API работает</h1>")
-
-@app.get("/api/v1/movies", response_model=List[MovieResponse])
-async def get_movies(
-    genre: Optional[str] = None,
-    rating_min: Optional[float] = None,
-    pick: Optional[str] = None,
-    search: Optional[str] = None
-):
-    """Получить список фильмов"""
-    conn = get_db_connection()
-    
-    query = "SELECT * FROM movies WHERE 1=1"
-    params = []
-    
-    if genre and genre != "all":
-        query += " AND genre LIKE ?"
-        params.append(f"%{genre}%")
-    
-    if rating_min:
-        query += " AND rating >= ?"
-        params.append(rating_min)
-    
-    if search:
-        query += " AND title LIKE ?"
-        params.append(f"%{search}%")
-    
-    cursor = conn.execute(query, params)
-    movies = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-    
-    return movies
-
-@app.get("/api/v1/movies/{movie_id}")
-async def get_movie(movie_id: int):
-    """Получить информацию о фильме"""
-    conn = get_db_connection()
-    cursor = conn.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))
-    movie = cursor.fetchone()
-    conn.close()
-    
-    if not movie:
-        raise HTTPException(status_code=404, detail="Фильм не найден")
-    
-    # Получаем подборки
-    conn = get_db_connection()
-    cursor = conn.execute("""
-        SELECT p.slug FROM picks p
-        JOIN movie_picks mp ON p.id = mp.pick_id
-        WHERE mp.movie_id = ?
-    """, (movie_id,))
-    picks = [row[0] for row in cursor.fetchall()]
-    conn.close()
-    
-    movie_dict = dict(movie)
-    movie_dict["picks"] = picks
-    return movie_dict
-
-@app.get("/api/v1/movies/genres/list")
-async def get_genres_list():
-    """Получить список всех жанров"""
-    conn = get_db_connection()
-    cursor = conn.execute("SELECT DISTINCT genre FROM movies")
-    genres_set = set()
-    
-    for row in cursor.fetchall():
-        if row[0]:
-            for genre in row[0].split(','):
-                genres_set.add(genre.strip())
-    
-    conn.close()
-    return {"genres": sorted(list(genres_set))}
-
-@app.post("/api/v1/auth/login")
-async def login(user_data: UserLogin):
-    """Вход в систему"""
-    conn = get_db_connection()
-    cursor = conn.execute(
-        "SELECT * FROM users WHERE username = ?", 
-        (user_data.username,)
+    """Главная страница приложения"""
+    templates_dir = BASE_DIR / "templates"
+    if templates_dir.exists():
+        index_path = templates_dir / "index.html"
+        if index_path.exists():
+            return FileResponse(index_path)
+    return HTMLResponse(
+        content="<h1>КиноВзор API</h1><p>API работает. Смотрите документацию на /api/docs</p>"
     )
-    user = cursor.fetchone()
-    conn.close()
-    
-    if not user:
-        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
-    
-    # В реальном приложении проверяем хэш пароля
-    if user["password_hash"] != user_data.password:
-        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
-    
-    # В реальном приложении генерируем JWT токен
-    return {
-        "access_token": f"token_{user['id']}",
-        "token_type": "bearer"
-    }
 
-@app.post("/api/v1/auth/register")
-async def register(user_data: UserCreate):
-    """Регистрация нового пользователя"""
-    conn = get_db_connection()
-    
-    # Проверяем существование пользователя
-    cursor = conn.execute(
-        "SELECT * FROM users WHERE username = ?", 
-        (user_data.username,)
-    )
-    if cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=400, detail="Пользователь с таким именем уже существует")
-    
-    # Используем пустую строку вместо None для email
-    email_value = user_data.email or ""
-    
-    # Создаем пользователя
-    conn.execute(
-        "INSERT INTO users (username, email, password_hash, is_active, is_superuser, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (user_data.username, email_value, user_data.password, True, False, datetime.now())
-    )
-    conn.commit()
-    
-    # Получаем ID нового пользователя
-    cursor = conn.execute("SELECT last_insert_rowid()")
-    user_id = cursor.fetchone()[0]
-    conn.close()
-    
-    return {
-        "access_token": f"token_{user_id}",
-        "token_type": "bearer"
-    }
-
-@app.get("/api/v1/users/me")
-async def get_current_user():
-    """Получить информацию о текущем пользователе (заглушка)"""
-    return {
-        "id": 1,
-        "username": "demo",
-        "email": "demo@example.com",
-        "is_active": True,
-        "is_superuser": False
-    }
-
-# Простые рецензии
-@app.get("/api/v1/reviews")
-async def get_reviews(movie_id: int):
-    """Получить рецензии для фильма"""
-    conn = get_db_connection()
-    cursor = conn.execute(
-        "SELECT * FROM reviews WHERE movie_id = ? ORDER BY created_at DESC",
-        (movie_id,)
-    )
-    reviews = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-    return reviews
-
-@app.get("/api/health")
+@app.get("/health")
 async def health_check():
-    return {"status": "ok", "message": "API работает нормально"}
+    """Проверка здоровья приложения"""
+    return {
+        "status": "ok",
+        "message": "КиноВзор API работает нормально",
+        "version": "1.0.0"
+    }
+
+@app.get("/api")
+async def api_root():
+    """Информация об API"""
+    return {
+        "title": "КиноВзор API",
+        "version": "1.0.0",
+        "docs_url": "/api/docs",
+        "redoc_url": "/api/redoc",
+        "openapi_url": "/api/openapi.json"
+    }
+
+# ============================================================================
+# ОБРАБОТКА ОШИБОК И СОБЫТИЯ ЖИЗНЕННОГО ЦИКЛА
+# ============================================================================
+
+@app.on_event("startup")
+async def startup_event():
+    """События при запуске приложения"""
+    logger.info("="*60)
+    logger.info("КиноВзор API запущен")
+    logger.info("Все роутеры успешно подключены")
+    logger.info("Документация доступна на /api/docs")
+    logger.info("="*60)
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """События при остановке приложения"""
+    logger.info("КиноВзор API остановлен")
+
+# ============================================================================
+# ЗАПУСК ПРИЛОЖЕНИЯ
+# ============================================================================
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=8000,
+        log_level="info",
+        reload=True,
+        reload_dirs=["app"]
+    )
