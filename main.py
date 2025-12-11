@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from pathlib import Path
 import logging
-import importlib
 from contextlib import asynccontextmanager
 
 # Настройка логирования
@@ -14,7 +13,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Переменная для хранения количества загруженных роутеров
+# Переменная для хранения количества загруженных маршрутов
 successfully_loaded = 0
 
 # ============================================================================
@@ -27,7 +26,7 @@ async def lifespan(app: FastAPI):
     # STARTUP
     logger.info("="*60)
     logger.info("КиноВзор API запущен")
-    logger.info(f"Подключено {successfully_loaded} роутеров")
+    logger.info(f"Подключено {successfully_loaded} маршрутизаторов")
     logger.info("Документация доступна на /api/docs")
     logger.info("="*60)
     
@@ -39,7 +38,7 @@ async def lifespan(app: FastAPI):
 # Инициализация FastAPI приложения с lifespan
 app = FastAPI(
     title="КиноВзор API",
-    description="API для веб-сайта КиноВзор с рецензиями и подборками фильмов",
+    description="API для веб-сайта КиноВзор с фильмами, отзывами и избранным",
     version="1.0.0",
     openapi_url="/api/openapi.json",
     docs_url="/api/docs",
@@ -66,47 +65,54 @@ if static_dir.exists():
     logger.info(f"Статические файлы подключены из {static_dir}")
 
 # ============================================================================
-# ПОДКЛЮЧЕНИЕ ВСЕХ МАРШРУТОВ
+# ПОДКЛЮЧЕНИЕ МАРШРУТОВ
 # ============================================================================
 
-# Список роутеров для подключения
-routers_config = [
-    ('app.api.auth', 'auth', 'Аутентификация'),
-    ('app.api.roles', 'roles', 'Роли'),
-    ('app.api.movies', 'movies', 'Фильмы'),
-    ('app.api.movies_real', 'movies_real', 'Фильмы (Real)'),
-    ('app.api.reviews', 'reviews', 'Рецензии'),
-    ('app.api.users', 'users', 'Пользователи'),
-    ('app.api.picks', 'picks', 'Подборки'),
-    ('app.api.movie_picks', 'movie_picks', 'Фильмы и подборки'),
-    ('app.api.movie_stats', 'movie_stats', 'Статистика фильмов'),
-]
+# Импортируем только нужные маршруты
+from app.api.auth import router as auth_router
+from app.api.users import router as users_router
+from app.api.main_api import router as main_api_router
 
-# Подключение роутеров API с префиксами версий
+# Подключение маршрутов
 api_v1_prefix = "/api/v1"
 
-for module_path, router_name, tag_name in routers_config:
-    try:
-        # Импортируем модуль динамически
-        router_module = importlib.import_module(module_path)
-        
-        # Проверяем наличие router'a
-        if hasattr(router_module, 'router'):
-            app.include_router(
-                router_module.router,
-                prefix=f"{api_v1_prefix}/{router_name.replace('_', '-')}",
-                tags=[tag_name]
-            )
-            logger.info(f"✓ Роутер {router_name} подключен")
-            successfully_loaded += 1
-        else:
-            logger.warning(f"⚠ Модуль {router_name} не содержит 'router'")
-    except ImportError as e:
-        logger.warning(f"⚠ Не удалось импортировать {module_path}: {e}")
-    except Exception as e:
-        logger.error(f"❌ Ошибка при подключении {router_name}: {e}")
+try:
+    # Auth маршруты
+    app.include_router(
+        auth_router,
+        prefix=f"{api_v1_prefix}/auth",
+        tags=["Authentication"]
+    )
+    logger.info("✓ Маршрут auth подключен")
+    successfully_loaded += 1
+except Exception as e:
+    logger.error(f"❌ Ошибка при подключении auth: {e}")
 
-logger.info(f"\n✓ Подключено {successfully_loaded}/{len(routers_config)} роутеров\n")
+try:
+    # Users маршруты
+    app.include_router(
+        users_router,
+        prefix=f"{api_v1_prefix}/users",
+        tags=["Users"]
+    )
+    logger.info("✓ Маршрут users подключен")
+    successfully_loaded += 1
+except Exception as e:
+    logger.error(f"❌ Ошибка при подключении users: {e}")
+
+try:
+    # Основной API маршрут (фильмы, отзывы, избранное)
+    app.include_router(
+        main_api_router,
+        prefix=f"{api_v1_prefix}",
+        tags=["Main API"]
+    )
+    logger.info("✓ Маршрут main_api подключен")
+    successfully_loaded += 1
+except Exception as e:
+    logger.error(f"❌ Ошибка при подключении main_api: {e}")
+
+logger.info(f"\n✓ Подключено {successfully_loaded}/3 маршрутизаторов\n")
 
 # ============================================================================
 # ОСНОВНЫЕ МАРШРУТЫ
@@ -151,8 +157,7 @@ async def api_root():
 if __name__ == "__main__":
     import uvicorn
     
-    # Запускаем приложение без параметра reload в cli
-    # Используем строку импорта для работы reload с Windows
+    # Запускаем приложение с использованием строки импорта для поддержки reload
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
