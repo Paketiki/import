@@ -1,6 +1,6 @@
-# app/models/reviews.py
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.database.base import Base
 
 class Review(Base):
@@ -13,3 +13,7 @@ class Review(Base):
     rating = Column(Float, nullable=False)
     author_name = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # Отношения
+    movie = relationship("Movie", back_populates="reviews")
+    user = relationship("User", back_populates="reviews")
