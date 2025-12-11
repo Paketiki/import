@@ -1,4 +1,3 @@
-# app/schemas/picks.py
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -16,5 +15,10 @@ class PickResponse(PickBase):
     created_by: Optional[int] = None
     created_at: datetime
     
+    class Config:
+        from_attributes = True
+
+class PickInDB(PickResponse):
+    """Pick schema as it appears in database (alias for compatibility)"""
     class Config:
         from_attributes = True
