@@ -4,20 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from pathlib import Path
 import logging
-
-# Импортируем все роутеры из app.api
-from app.api import (
-    auth,
-    movies,
-    movies_real,
-    reviews,
-    users,
-    picks,
-    movie_picks,
-    movie_stats,
-    roles,
-    favorites,
-)
+import sys
 
 # Настройка логирования
 logging.basicConfig(
@@ -58,86 +45,48 @@ if static_dir.exists():
 # ПОДКЛЮЧЕНИЕ ВСЕХ МАРШРУТОВ
 # ============================================================================
 
+# Список роутеров для подключения
+routers_to_include = [
+    ('auth', 'Аутентификация'),
+    ('roles', 'Роли'),
+    ('movies', 'Фильмы'),
+    ('movies_real', 'Фильмы (Real)'),
+    ('reviews', 'Рецензии'),
+    ('users', 'Пользователи'),
+    ('picks', 'Подборки'),
+    ('movie_picks', 'Фильмы и подборки'),
+    ('movie_stats', 'Статистика фильмов'),
+]
+
 # Подключение роутеров API с префиксами версий
 api_v1_prefix = "/api/v1"
 
-# Аутентификация и авторизация
-app.include_router(
-    auth.router,
-    prefix=f"{api_v1_prefix}/auth",
-    tags=["Аутентификация"]
-)
-logger.info("Роутер auth подключен")
-
-app.include_router(
-    roles.router,
-    prefix=f"{api_v1_prefix}/roles",
-    tags=["Роли"]
-)
-logger.info("Роутер roles подключен")
-
-# Фильмы
-app.include_router(
-    movies.router,
-    prefix=f"{api_v1_prefix}/movies",
-    tags=["Фильмы"]
-)
-logger.info("Роутер movies подключен")
-
-app.include_router(
-    movies_real.router,
-    prefix=f"{api_v1_prefix}/movies-real",
-    tags=["Фильмы (Real)"]
-)
-logger.info("Роутер movies_real подключен")
-
-# Рецензии
-app.include_router(
-    reviews.router,
-    prefix=f"{api_v1_prefix}/reviews",
-    tags=["Рецензии"]
-)
-logger.info("Роутер reviews подключен")
-
-# Пользователи
-app.include_router(
-    users.router,
-    prefix=f"{api_v1_prefix}/users",
-    tags=["Пользователи"]
-)
-logger.info("Роутер users подключен")
-
-# Подборки
-app.include_router(
-    picks.router,
-    prefix=f"{api_v1_prefix}/picks",
-    tags=["Подборки"]
-)
-logger.info("Роутер picks подключен")
-
-# Связь фильмов и подборок
-app.include_router(
-    movie_picks.router,
-    prefix=f"{api_v1_prefix}/movie-picks",
-    tags=["Фильмы и подборки"]
-)
-logger.info("Роутер movie_picks подключен")
-
-# Статистика по фильмам
-app.include_router(
-    movie_stats.router,
-    prefix=f"{api_v1_prefix}/movie-stats",
-    tags=["Статистика фильмов"]
-)
-logger.info("Роутер movie_stats подключен")
-
-# Избранные фильмы
-app.include_router(
-    favorites.router,
-    prefix=f"{api_v1_prefix}/favorites",
-    tags=["Избранные фильмы"]
-)
-logger.info("Роутер favorites подключен")
+try:
+    # Импортируем роутеры динамически
+    from app import api
+    
+    for router_name, tag_name in routers_to_include:
+        try:
+            router_module = getattr(api, router_name)
+            if hasattr(router_module, 'router'):
+                app.include_router(
+                    router_module.router,
+                    prefix=f"{api_v1_prefix}/{router_name.replace('_', '-')}",
+                    tags=[tag_name]
+                )
+                logger.info(f"✓ Роутер {router_name} подключен")
+            else:
+                logger.warning(f"⚠ Модуль {router_name} не содержит атрибут 'router'")
+        except (ImportError, AttributeError) as e:
+            logger.warning(f"⚠ Не удалось подключить роутер {router_name}: {e}")
+            continue
+    
+    logger.info(f"\n✓ Успешно подключено {len(routers_to_include)} роутеров\n")
+    
+except ImportError as e:
+    logger.error(f"Критическая ошибка при импорте app.api: {e}")
+    logger.error(f"Пожалуйста, проверьте структуру проекта")
+    sys.exit(1)
 
 # ============================================================================
 # ОСНОВНЫЕ МАРШРУТЫ
