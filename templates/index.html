@@ -1,113 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>КиноВзор</title>
-  <link rel="stylesheet" href="/static/styles/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КиноВзор — Каталог фильмов</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
 </head>
-<body>
-  <div id="app">
+<body class="theme-dark">
+<div id="app">
     <!-- Top bar -->
     <div class="top-bar">
-      <div class="logo">
-        <div class="logo-mark">K</div>
-        <div class="logo-text">КиноВзор</div>
-      </div>
-      <div class="top-bar-center" id="statusArea"></div>
-      <div class="top-bar-right" id="authArea"></div>
+        <div class="logo">
+            <div class="logo-mark">📽</div>
+            <div class="logo-text">КиноВзор</div>
+        </div>
+        <div class="top-bar-center">
+            <div class="pill-button active" onclick="filterByPick('all')">Все</div>
+            <div class="pill-button" onclick="filterByPick('hits')">Хиты</div>
+            <div class="pill-button" onclick="filterByPick('new')">Новинки</div>
+            <div class="pill-button" onclick="filterByPick('classic')">Классика</div>
+        </div>
+        <div class="top-bar-right">
+            <button class="icon-button" id="themeToggle" onclick="toggleTheme()">
+                <span class="icon-sun">☀️</span>
+                <span class="icon-moon">🌙</span>
+            </button>
+            <button class="secondary-button" onclick="showAuthModal()">Вход</button>
+        </div>
     </div>
 
     <!-- Main layout -->
     <div class="main-layout">
-      <!-- Filters panel (left) -->
-      <div class="filters-panel" id="filtersPanel">
-        <div class="filter-block">
-          <div class="filter-label">Подборки</div>
-          <div id="filtersContainer" style="display: flex; flex-direction: column; gap: 4px;"></div>
+        <!-- Left panel: Filters -->
+        <div class="filters-panel">
+            <div class="filter-block">
+                <div class="filter-label">🎬 Подборки</div>
+                <button class="chip-button active" onclick="filterByPick('all')">Все</button>
+                <button class="chip-button" onclick="filterByPick('hits')">Хиты</button>
+                <button class="chip-button" onclick="filterByPick('new')">Новинки</button>
+                <button class="chip-button" onclick="filterByPick('classic')">Классика</button>
+            </div>
+            <div class="filter-block">
+                <div class="filter-label">⭐ Рейтинг</div>
+                <button class="chip-button active" onclick="filterByRating(0)">Все</button>
+                <button class="chip-button" onclick="filterByRating(8)">8.0+</button>
+                <button class="chip-button" onclick="filterByRating(8.5)">8.5+</button>
+                <button class="chip-button" onclick="filterByRating(9)">9.0+</button>
+            </div>
         </div>
-      </div>
 
-      <!-- Movies panel (center) -->
-      <div class="movies-panel">
-        <ul class="movies-list" id="moviesList"></ul>
-      </div>
+        <!-- Center: Movies -->
+        <div class="movies-panel">
+            <ul class="movies-list" id="moviesList"></ul>
+        </div>
 
-      <!-- Details panel (right) -->
-      <div class="details-panel">
-        <div id="detailsView" style="display: none;">
-          <h2 id="detailTitle" class="modal-title"></h2>
-          <div id="detailsContent"></div>
-          <div class="tabs" style="margin-top: 12px;">
-            <button class="tab-button active" data-tab="about">О фильме</button>
-            <button class="tab-button" data-tab="reviews">Рецензии</button>
-          </div>
-          <div id="about" class="tab-panel active" style="font-size: 12px; color: var(--color-text-soft); margin-bottom: 12px;"></div>
-          <div id="reviews" class="tab-panel" style="max-height: 300px; overflow-y: auto;"></div>
+        <!-- Right panel: Details -->
+        <div class="details-panel" id="detailsPanel">
+            <div class="movie-details empty">
+                <div class="placeholder-text">Выберите фильм, чтобы посмотреть рецензию.</div>
+                <div style="font-size: 11px; color: var(--color-muted); margin-top: 16px;">
+                    <strong>Демо-доступ:</strong>
+                    <br><br>
+                    • <strong>Зритель</strong> — логин <code>user</code>, пароль <code>1234</code>
+                    <br><br>
+                    • <strong>Модератор</strong> — логин <code>moderator</code>, пароль <code>1234</code>
+                    <br><br>
+                    Новые пользователи регистрируются как Зритель.
+                    <br><br>
+                    <em>Ваши избранные фильмы будут здесь.</em>
+                </div>
+            </div>
         </div>
-        <div id="emptyState" style="text-align: center; color: var(--color-text-soft); padding: 20px; font-size: 12px;">
-          <p>Выберите фильм, чтобы посмотреть рецензию.</p>
-          <p style="margin-top: 16px; font-size: 11px; color: var(--color-muted);"><strong>Демо-доступ:</strong></p>
-          <p style="margin: 4px 0; font-size: 11px; color: var(--color-muted);">• Зритель — логин user, пароль 1234</p>
-          <p style="margin: 4px 0; font-size: 11px; color: var(--color-muted);">• Модератор — логин moderator, пароль 1234</p>
-          <p style="margin-top: 12px; font-size: 11px; color: var(--color-muted);">Новые пользователи регистрируются как Зритель.</p>
-        </div>
-        <div id="favoritesView" style="display: none;">
-          <h2 class="modal-title" style="margin-bottom: 12px;">🎬 Ваши фильмы</h2>
-          <div id="favoritesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;"></div>
-          <div id="emptyFavorites" style="text-align: center; color: var(--color-text-soft); padding: 20px; font-size: 12px;">
-            Ваши избранные фильмы будут здесь.
-          </div>
-        </div>
-      </div>
     </div>
+</div>
 
-    <!-- Auth modals -->
-    <div id="loginModal" class="modal hidden">
-      <div class="modal-content" style="position: relative;">
-        <button class="icon-button modal-close" onclick="closeLoginModal()">✕</button>
-        <h2 class="modal-title">Вход</h2>
-        <div class="form">
-          <div class="form-row">
-            <label class="form-label">Имя пользователя</label>
-            <input type="text" id="loginUsername" class="input" placeholder="user" />
-          </div>
-          <div class="form-row">
-            <label class="form-label">Пароль</label>
-            <input type="password" id="loginPassword" class="input" placeholder="пароль" />
-          </div>
-          <div id="loginError" class="error-text" style="display: none;"></div>
-          <button class="primary-button full-width" onclick="handleLogin()" style="margin-top: 8px;">Войти</button>
-          <button class="secondary-button full-width" onclick="switchToRegister()" style="margin-top: 6px;">Нет аккаунта?</button>
+<!-- Auth Modal -->
+<div id="authModal" class="modal hidden">
+    <div class="modal-backdrop" onclick="hideAuthModal()"></div>
+    <div class="modal-content">
+        <h3 class="modal-title">Вход / Регистрация</h3>
+        <button class="icon-button modal-close" onclick="hideAuthModal()">✕</button>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchAuthTab('login')">Вход</button>
+            <button class="tab-button" onclick="switchAuthTab('register')">Регистрация</button>
         </div>
-      </div>
-    </div>
-
-    <div id="registerModal" class="modal hidden">
-      <div class="modal-content" style="position: relative;">
-        <button class="icon-button modal-close" onclick="closeRegisterModal()">✕</button>
-        <h2 class="modal-title">Регистрация</h2>
-        <div class="form">
-          <div class="form-row">
-            <label class="form-label">Имя пользователя</label>
-            <input type="text" id="regUsername" class="input" placeholder="ваше имя" />
-          </div>
-          <div class="form-row">
-            <label class="form-label">Электронная почта</label>
-            <input type="email" id="regEmail" class="input" placeholder="email@example.com" />
-          </div>
-          <div class="form-row">
-            <label class="form-label">Пароль</label>
-            <input type="password" id="regPassword" class="input" placeholder="пароль" />
-          </div>
-          <div id="regError" class="error-text" style="display: none;"></div>
-          <button class="primary-button full-width" onclick="handleRegister()" style="margin-top: 8px;">Создать аккаунт</button>
-          <button class="secondary-button full-width" onclick="switchToLogin()" style="margin-top: 6px;">Уже есть аккаунт?</button>
+        
+        <div id="loginTab" class="tab-panel active">
+            <form class="form" id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-row">
+                    <label class="form-label">Логин</label>
+                    <input type="text" class="input" id="loginUsername" required>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="input" id="loginPassword" required>
+                </div>
+                <button type="submit" class="primary-button full-width">Войти</button>
+                <div class="quick-roles">
+                    <button type="button" class="secondary-button" onclick="quickLogin('user')">Демо: Зритель (user/1234)</button>
+                    <button type="button" class="secondary-button" onclick="quickLogin('moderator')">Демо: Модератор (moderator/1234)</button>
+                </div>
+            </form>
         </div>
-      </div>
+        
+        <div id="registerTab" class="tab-panel">
+            <form class="form" id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-row">
+                    <label class="form-label">Логин</label>
+                    <input type="text" class="input" id="registerUsername" required>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="input" id="registerEmail" required>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="input" id="registerPassword" required>
+                </div>
+                <button type="submit" class="primary-button full-width">Зарегистрироваться</button>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
 
-  <script src="/static/js/app.js"></script>
+<!-- Profile Modal -->
+<div id="profileModal" class="modal hidden">
+    <div class="modal-backdrop" onclick="hideProfileModal()"></div>
+    <div class="modal-content">
+        <h3 class="modal-title">Профиль</h3>
+        <button class="icon-button modal-close" onclick="hideProfileModal()">✕</button>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchProfileTab('profile')">Профиль</button>
+            <button class="tab-button" onclick="switchProfileTab('favorites')">Избранные</button>
+            <button class="tab-button" id="adminTabButton" class="tab-button" onclick="switchProfileTab('admin')" style="display: none;">Администрация</button>
+        </div>
+        
+        <div id="profileTab" class="tab-panel active">
+            <div class="form">
+                <div class="user-badge">
+                    <div>
+                        <div class="user-name" id="profileUsername"></div>
+                        <div class="user-role" id="profileRole"></div>
+                    </div>
+                </div>
+                <button class="primary-button full-width" onclick="handleLogout()">Выйти</button>
+            </div>
+        </div>
+        
+        <div id="favoritesTab" class="tab-panel">
+            <ul id="favoritesList" class="movies-list"></ul>
+        </div>
+        
+        <div id="adminTab" class="tab-panel">
+            <div class="admin-panel">
+                <h4 class="admin-title">Добавить новый фильм</h4>
+                <form class="form admin-form" id="addMovieForm" onsubmit="handleAddMovie(event)">
+                    <div class="admin-grid">
+                        <div class="form-row">
+                            <label class="form-label">Название</label>
+                            <input type="text" class="input" id="adminTitle" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Год</label>
+                            <input type="number" class="input" id="adminYear" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Жанр</label>
+                            <input type="text" class="input" id="adminGenre" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Рейтинг (1-10)</label>
+                            <input type="number" class="input" id="adminRating" min="1" max="10" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Описание</label>
+                        <textarea class="input admin-textarea" id="adminOverview" rows="3" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Подборки</label>
+                        <div class="admin-picks">
+                            <label class="admin-pick">
+                                <input type="checkbox" name="picks" value="hits"> Хиты
+                            </label>
+                            <label class="admin-pick">
+                                <input type="checkbox" name="picks" value="new"> Новинки
+                            </label>
+                            <label class="admin-pick">
+                                <input type="checkbox" name="picks" value="classic"> Классика
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="primary-button full-width">Добавить фильм</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/app.js"></script>
 </body>
 </html>
