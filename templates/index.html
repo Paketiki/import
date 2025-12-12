@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>КиноВзор</title>
+  <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="logo">
+        <div class="logo-mark">K</div>
+        <div class="logo-text">КиноВзор</div>
+      </div>
+      <div class="top-bar-center" id="statusArea"></div>
+      <div class="top-bar-right" id="authArea"></div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="main-layout">
+      <!-- Filters panel (left) -->
+      <div class="filters-panel" id="filtersPanel">
+        <div class="filter-block">
+          <div class="filter-label">Подборки</div>
+          <div id="filtersContainer" style="display: flex; flex-direction: column; gap: 4px;"></div>
+        </div>
+      </div>
+
+      <!-- Movies panel (center) -->
+      <div class="movies-panel">
+        <ul class="movies-list" id="moviesList"></ul>
+      </div>
+
+      <!-- Details panel (right) -->
+      <div class="details-panel">
+        <div id="detailsView" style="display: none;">
+          <h2 id="detailTitle" class="modal-title"></h2>
+          <div id="detailsContent"></div>
+          <div class="tabs" style="margin-top: 12px;">
+            <button class="tab-button active" data-tab="about">О фильме</button>
+            <button class="tab-button" data-tab="reviews">Рецензии</button>
+          </div>
+          <div id="about" class="tab-panel active" style="font-size: 12px; color: var(--color-text-soft); margin-bottom: 12px;"></div>
+          <div id="reviews" class="tab-panel" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+        <div id="emptyState" style="text-align: center; color: var(--color-text-soft); padding: 20px; font-size: 12px;">
+          <p>Выберите фильм, чтобы посмотреть рецензию.</p>
+          <p style="margin-top: 16px; font-size: 11px; color: var(--color-muted);"><strong>Демо-доступ:</strong></p>
+          <p style="margin: 4px 0; font-size: 11px; color: var(--color-muted);">• Зритель — логин user, пароль 1234</p>
+          <p style="margin: 4px 0; font-size: 11px; color: var(--color-muted);">• Модератор — логин moderator, пароль 1234</p>
+          <p style="margin-top: 12px; font-size: 11px; color: var(--color-muted);">Новые пользователи регистрируются как Зритель.</p>
+        </div>
+        <div id="favoritesView" style="display: none;">
+          <h2 class="modal-title" style="margin-bottom: 12px;">🎬 Ваши фильмы</h2>
+          <div id="favoritesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;"></div>
+          <div id="emptyFavorites" style="text-align: center; color: var(--color-text-soft); padding: 20px; font-size: 12px;">
+            Ваши избранные фильмы будут здесь.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth modals -->
+    <div id="loginModal" class="modal hidden">
+      <div class="modal-content" style="position: relative;">
+        <button class="icon-button modal-close" onclick="closeLoginModal()">✕</button>
+        <h2 class="modal-title">Вход</h2>
+        <div class="form">
+          <div class="form-row">
+            <label class="form-label">Имя пользователя</label>
+            <input type="text" id="loginUsername" class="input" placeholder="user" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">Пароль</label>
+            <input type="password" id="loginPassword" class="input" placeholder="пароль" />
+          </div>
+          <div id="loginError" class="error-text" style="display: none;"></div>
+          <button class="primary-button full-width" onclick="handleLogin()" style="margin-top: 8px;">Войти</button>
+          <button class="secondary-button full-width" onclick="switchToRegister()" style="margin-top: 6px;">Нет аккаунта?</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="registerModal" class="modal hidden">
+      <div class="modal-content" style="position: relative;">
+        <button class="icon-button modal-close" onclick="closeRegisterModal()">✕</button>
+        <h2 class="modal-title">Регистрация</h2>
+        <div class="form">
+          <div class="form-row">
+            <label class="form-label">Имя пользователя</label>
+            <input type="text" id="regUsername" class="input" placeholder="ваше имя" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">Электронная почта</label>
+            <input type="email" id="regEmail" class="input" placeholder="email@example.com" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">Пароль</label>
+            <input type="password" id="regPassword" class="input" placeholder="пароль" />
+          </div>
+          <div id="regError" class="error-text" style="display: none;"></div>
+          <button class="primary-button full-width" onclick="handleRegister()" style="margin-top: 8px;">Создать аккаунт</button>
+          <button class="secondary-button full-width" onclick="switchToLogin()" style="margin-top: 6px;">Уже есть аккаунт?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
