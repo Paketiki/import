@@ -4,45 +4,7 @@
   <meta charset="UTF-8" />
   <title>КиноВзор</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/static/styles/style.css" rel="stylesheet">
-  <style>
-    /* Дополнительные стили для уведомлений */
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      color: white;
-      z-index: 9999;
-      animation: fadeIn 0.3s ease-out;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      max-width: 300px;
-      word-break: break-word;
-      font-size: 14px;
-    }
-    
-    .notification-success {
-      background: #52c41a;
-    }
-    
-    .notification-error {
-      background: #ff4d4f;
-    }
-    
-    .notification-warning {
-      background: #faad14;
-    }
-    
-    .notification-info {
-      background: #1890ff;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  <link rel="stylesheet" href="/static/styles/style.css" />
 </head>
 <body class="theme-dark">
   <div id="app">
@@ -92,7 +54,6 @@
           <label class="filter-label" for="genreSelect">Жанр</label>
           <select id="genreSelect" class="input">
             <option value="all">Все жанры</option>
-            <!-- Жанры будут загружены динамически -->
           </select>
         </div>
 
@@ -106,7 +67,6 @@
           </div>
         </div>
 
-        <!-- Админ-панель (показывается только админам) -->
         <section id="adminPanel" class="admin-panel hidden">
           <h3 class="admin-title">Добавить фильм (только админ)</h3>
           <form id="adminAddForm" class="form admin-form">
@@ -126,7 +86,7 @@
             </div>
             <div class="form-row">
               <label class="form-label" for="adminGenre">Жанр</label>
-              <input id="adminGenre" class="input" type="text" placeholder="Например: Драма, Комедия" required />
+              <input id="adminGenre" class="input" type="text" placeholder="Например: Драма" required />
             </div>
             <div class="form-row">
               <label class="form-label">Подборки</label>
@@ -148,7 +108,7 @@
                 id="adminPoster"
                 class="input"
                 type="url"
-                placeholder="https://example.com/poster.jpg"
+                placeholder="https://..."
               />
             </div>
             <div class="form-row">
@@ -156,8 +116,7 @@
               <textarea
                 id="adminOverview"
                 class="input admin-textarea"
-                rows="3"
-                placeholder="Описание фильма..."
+                rows="2"
               ></textarea>
             </div>
             <button type="submit" class="primary-button full-width">
@@ -168,9 +127,7 @@
       </section>
 
       <section class="movies-panel">
-        <ul id="moviesList" class="movies-list">
-          <!-- Фильмы будут загружены динамически -->
-        </ul>
+        <ul id="moviesList" class="movies-list"></ul>
       </section>
 
       <section class="details-panel">
@@ -183,7 +140,6 @@
     </main>
   </div>
 
-  <!-- Модальное окно авторизации -->
   <div id="authModal" class="modal hidden">
     <div class="modal-backdrop"></div>
     <div class="modal-content">
@@ -271,18 +227,18 @@
     </div>
   </div>
 
-  <!-- Модальное окно профиля -->
-  <div id="profileModal" class="modal hidden">
+  <div id="profileModal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop"></div>
     <div class="modal-content">
       <button id="closeProfileModal" class="icon-button modal-close">✕</button>
       <h2 class="modal-title">Личный кабинет</h2>
       <div id="profileContent">
-        <!-- Контент будет загружен динамически -->
+        <p class="placeholder-text">Ваши избранные фильмы будут здесь.</p>
+        <ul id="favoritesList" class="movies-list" style="margin-top:8px;"></ul>
       </div>
     </div>
   </div>
 
-  <script src="/static/js/script.js"></script>
+  <script src="/static/js/script.js" defer></script>
 </body>
 </html>
