@@ -47,12 +47,14 @@ let allReviews = [];
 
 // Инициализация при загружке страницы
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🔧 DOMContentLoaded: Инициализация приложения...');
     initEventListeners();
     initTheme();
     checkAuthState();
     loadMovies();
     loadReviews();
     addGlobalStyles();
+    console.log('✓ Инициализация завершена');
 });
 
 // Основные функции API
@@ -726,24 +728,114 @@ async function logout() {
     }
 }
 
-// Ниже стандартные вспомогательные функции
-
+// ===== ИНИЦИАЛИЗАЦИЯ EVENT LISTENERS =====
 function initEventListeners() {
-    // Кнопки фильтров подборок
-    document.querySelectorAll('.pill-button[data-pick]').forEach(btn => {
+    console.log('🎯 Инициализация event listeners...');
+    
+    // === Кнопка входа (ГЛАВНАЯ) ===
+    const authButton = document.getElementById('authButton');
+    if (authButton) {
+        console.log('✓ Найдена кнопка #authButton');
+        authButton.addEventListener('click', (e) => {
+            console.log('⚡ Клик на кнопку входа');
+            e.preventDefault();
+            showAuthModal();
+        });
+    } else {
+        console.warn('❌ Кнопка #authButton НЕ найдена в DOM!');
+    }
+
+    // === Модальное окно авторизации ===
+    const authModal = document.getElementById('authModal');
+    const closeAuthModal = document.getElementById('closeAuthModal');
+    
+    if (closeAuthModal) {
+        console.log('✓ Найдена кнопка закрытия модали #closeAuthModal');
+        closeAuthModal.addEventListener('click', (e) => {
+            e.preventDefault();
+            authModal.classList.add('hidden');
+        });
+    }
+    
+    if (authModal) {
+        console.log('✓ Найдена модаль авторизации #authModal');
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal || e.target.classList.contains('modal-backdrop')) {
+                authModal.classList.add('hidden');
+            }
+        });
+    }
+
+    // === Табы в модалке ===
+    document.querySelectorAll('.tab-button').forEach((tab, idx) => {
+        console.log(`✓ Найдена вкладка ${idx + 1}: data-tab="${tab.dataset.tab}"`);
+        tab.addEventListener('click', (e) => {
+            console.log(`⚡ Переключение на вкладку: ${tab.dataset.tab}`);
+            e.stopPropagation();
+            const tabName = tab.dataset.tab;
+            switchAuthTab(tabName);
+        });
+    });
+
+    // === Форма входа ===
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        console.log('✓ Найдена форма входа #loginForm');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('⚡ Submit формы входа');
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            login(username, password);
+        });
+    } else {
+        console.warn('❌ Форма входа #loginForm НЕ найдена');
+    }
+
+    // === Форма регистрации ===
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        console.log('✓ Найдена форма регистрации #registerForm');
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('⚡ Submit формы регистрации');
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            register(username, password);
+        });
+    } else {
+        console.warn('❌ Форма регистрации #registerForm НЕ найдена');
+    }
+
+    // === Кнопка выхода ===
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        console.log('✓ Найдена кнопка выхода #logoutButton');
+        logoutButton.addEventListener('click', (e) => {
+            console.log('⚡ Клик на кнопку выхода');
+            e.preventDefault();
+            logout();
+        });
+    }
+
+    // === Фильтры подборок (pills) ===
+    document.querySelectorAll('.pill-button[data-pick]').forEach((btn, idx) => {
+        console.log(`✓ Найдена кнопка подборки ${idx + 1}: data-pick="${btn.dataset.pick}"`);
         btn.addEventListener('click', (e) => {
+            console.log(`⚡ Фильтр подборки: ${btn.dataset.pick}`);
             e.stopPropagation();
             document.querySelectorAll('.pill-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentFilters.pick = btn.dataset.pick;
-            console.log('Pick filter changed to:', currentFilters.pick);
             applyFilters();
         });
     });
 
-    // Кнопки фильтров рейтинга
-    document.querySelectorAll('.chip-button[data-rating]').forEach(btn => {
+    // === Фильтры оценок (chips) ===
+    document.querySelectorAll('.chip-button[data-rating]').forEach((btn, idx) => {
+        console.log(`✓ Найдена кнопка оценки ${idx + 1}: data-rating="${btn.dataset.rating}"`);
         btn.addEventListener('click', (e) => {
+            console.log(`⚡ Фильтр оценки: ${btn.dataset.rating}`);
             e.stopPropagation();
             document.querySelectorAll('.chip-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -752,14 +844,16 @@ function initEventListeners() {
         });
     });
 
-    // Поиск
+    // === Поиск ===
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
+        console.log('✓ Найдено поле поиска #searchInput');
         let searchTimeout;
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 currentFilters.search = e.target.value.trim();
+                console.log(`⚡ Поиск: "${currentFilters.search}"`);
                 applyFilters();
             }, 300);
         });
@@ -773,118 +867,78 @@ function initEventListeners() {
         });
     }
 
-    // Выбор жанра
+    // === Выбор жанра ===
     const genreSelect = document.getElementById('genreSelect');
     if (genreSelect) {
+        console.log('✓ Найдено поле жанра #genreSelect');
         genreSelect.addEventListener('change', (e) => {
             currentFilters.genre = e.target.value;
+            console.log(`⚡ Жанр: ${e.target.value}`);
             applyFilters();
         });
     }
 
-    // Переключение темы
+    // === Переключение темы ===
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-
-    // Кнопка входа
-    const authButton = document.getElementById('authButton');
-    if (authButton) {
-        authButton.addEventListener('click', showAuthModal);
-    }
-
-    // Кнопка выхода
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', logout);
-    }
-
-    // Модальное окно авторизации
-    const authModal = document.getElementById('authModal');
-    const closeAuthModal = document.getElementById('closeAuthModal');
-    if (closeAuthModal) {
-        closeAuthModal.addEventListener('click', () => {
-            authModal.classList.add('hidden');
-        });
-    }
-    if (authModal) {
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal || e.target.classList.contains('modal-backdrop')) {
-                authModal.classList.add('hidden');
-            }
-        });
-    }
-
-    // Табы в модалке авторизации
-    document.querySelectorAll('.tab-button').forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const tabName = tab.dataset.tab;
-            switchAuthTab(tabName);
-        });
-    });
-
-    // Форма логина
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        console.log('✓ Найдена кнопка темы #themeToggle');
+        themeToggle.addEventListener('click', (e) => {
             e.preventDefault();
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            login(username, password);
+            console.log('⚡ Переключение темы');
+            toggleTheme();
         });
     }
 
-    // Форма регистрации
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-            register(username, password);
-        });
-    }
-
-    // Форма добавления фильма (админ)
+    // === Форма добавления фильма (админ) ===
     const adminAddForm = document.getElementById('adminAddForm');
     if (adminAddForm) {
+        console.log('✓ Найдена форма добавления фильма #adminAddForm');
         adminAddForm.addEventListener('submit', addNewMovie);
     }
 
-    // Профиль пользователя
+    // === Профиль пользователя ===
     const userBadge = document.getElementById('userBadge');
     if (userBadge) {
+        console.log('✓ Найден badge пользователя #userBadge');
         userBadge.addEventListener('click', (e) => {
             if (!e.target.classList.contains('icon-button')) {
+                console.log('⚡ Открытие профиля');
                 showProfileModal();
             }
         });
     }
     
+    // === Модаль профиля ===
     const profileModal = document.getElementById('profileModal');
     const closeProfileModal = document.getElementById('closeProfileModal');
+    
     if (closeProfileModal) {
+        console.log('✓ Найдена кнопка закрытия профиля #closeProfileModal');
         closeProfileModal.addEventListener('click', () => {
             profileModal.classList.add('hidden');
         });
     }
+    
     if (profileModal) {
+        console.log('✓ Найдена модаль профиля #profileModal');
         profileModal.addEventListener('click', (e) => {
             if (e.target === profileModal || e.target.classList.contains('modal-backdrop')) {
                 profileModal.classList.add('hidden');
             }
         });
     }
+    
+    console.log('✅ Event listeners инициализированы успешно');
 }
 
 function showAuthModal() {
+    console.log('📄 showAuthModal(): открытие модали авторизации');
     document.getElementById('authModal').classList.remove('hidden');
     switchAuthTab('login');
 }
 
 function switchAuthTab(tabName) {
+    console.log(`📋 switchAuthTab("${tabName}"): переключение на вкладку`);
     // Переключение активных табов
     document.querySelectorAll('.tab-button').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.tab === tabName);
