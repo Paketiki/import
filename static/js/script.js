@@ -1,4 +1,4 @@
-// static/js/script.js - Обновленная версия с поддержкой модератора
+// static/js/script.js - Полнофункциональный скрипт с авторизацией
 
 const API_BASE_URL = window.location.origin;
 const API_ENDPOINTS = {
@@ -659,7 +659,7 @@ async function login(username, password) {
 async function register(username, password) {
     try {
         if (!username || !password) {
-            showError('registerError', 'Пароль не должен быть именем пользователя');
+            showError('registerError', 'Введите логин и пароль');
             return;
         }
         
@@ -788,7 +788,7 @@ function initEventListeners() {
         themeToggle.addEventListener('click', toggleTheme);
     }
 
-    // Кнопка въода
+    // Кнопка входа
     const authButton = document.getElementById('authButton');
     if (authButton) {
         authButton.addEventListener('click', showAuthModal);
@@ -885,12 +885,14 @@ function showAuthModal() {
 }
 
 function switchAuthTab(tabName) {
+    // Переключение активных табов
     document.querySelectorAll('.tab-button').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.tab === tabName);
     });
     
+    // Переключение активных панелей
     document.querySelectorAll('.tab-panel').forEach(panel => {
-        panel.classList.toggle('active', panel.data-panel === tabName);
+        panel.classList.toggle('active', panel.getAttribute('data-panel') === tabName);
     });
     
     hideError('loginError');
@@ -942,7 +944,7 @@ function showProfileModal() {
                 </div>` : 
                 `<div style="text-align: center; padding: 40px; color: var(--color-text-soft);">
                     <p>У вас пока нет избранных фильмов</p>
-                    <p><small>Нажимайте на звёздочку ★ на карочках фильмов, чтобы добавить их в избранное</small></p>
+                    <p><small>Нажимайте на звёздочку ★ на карточках фильмов, чтобы добавить их в избранное</small></p>
                 </div>`
             }
         </div>
