@@ -55,27 +55,59 @@ function updateAuthUI() {
 }
 
 function showAuthModal() {
-  document.getElementById('authModal').classList.remove('hidden');
+  const modal = document.getElementById('authModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
 }
 
 function hideAuthModal() {
-  document.getElementById('authModal').classList.add('hidden');
-  document.getElementById('loginForm').reset();
-  document.getElementById('registerForm').reset();
+  const modal = document.getElementById('authModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.reset();
+  }
+  const registerForm = document.getElementById('registerForm');
+  if (registerForm) {
+    registerForm.reset();
+  }
 }
 
 function switchAuthTab(tab) {
-  document.querySelectorAll('#authModal .tab-button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#authModal .tab-panel').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById(tab + 'Tab').classList.add('active');
+  const tabButtons = document.querySelectorAll('#authModal .tab-button');
+  const tabPanels = document.querySelectorAll('#authModal .tab-panel');
+  
+  tabButtons.forEach(b => b.classList.remove('active'));
+  tabPanels.forEach(p => p.classList.remove('active'));
+  
+  if (event && event.target) {
+    event.target.classList.add('active');
+  }
+  
+  const tabPanel = document.getElementById(tab + 'Tab');
+  if (tabPanel) {
+    tabPanel.classList.add('active');
+  }
 }
 
 function switchProfileTab(tab) {
-  document.querySelectorAll('#profileModal .tab-button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#profileModal .tab-panel').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById(tab + 'Tab').classList.add('active');
+  const tabButtons = document.querySelectorAll('#profileModal .tab-button');
+  const tabPanels = document.querySelectorAll('#profileModal .tab-panel');
+  
+  tabButtons.forEach(b => b.classList.remove('active'));
+  tabPanels.forEach(p => p.classList.remove('active'));
+  
+  if (event && event.target) {
+    event.target.classList.add('active');
+  }
+  
+  const tabPanel = document.getElementById(tab + 'Tab');
+  if (tabPanel) {
+    tabPanel.classList.add('active');
+  }
   
   if (tab === 'favorites') {
     loadFavorites();
@@ -83,28 +115,42 @@ function switchProfileTab(tab) {
 }
 
 function showProfileModal() {
-  document.getElementById('profileUsername').textContent = currentUser;
-  document.getElementById('profileRole').textContent = currentUserRole === 'admin' ? 'Администратор' : 'Зритель';
-  
-  const adminTab = document.getElementById('adminTabButton');
-  if (currentUserRole === 'admin') {
-    adminTab.style.display = 'block';
-  } else {
-    adminTab.style.display = 'none';
+  const usernameEl = document.getElementById('profileUsername');
+  if (usernameEl) {
+    usernameEl.textContent = currentUser || 'Пользователь';
   }
   
-  document.getElementById('profileModal').classList.remove('hidden');
+  const roleEl = document.getElementById('profileRole');
+  if (roleEl) {
+    roleEl.textContent = currentUserRole === 'admin' ? 'Администратор' : 'Зритель';
+  }
+  
+  const adminTab = document.getElementById('adminTabButton');
+  if (adminTab) {
+    adminTab.style.display = currentUserRole === 'admin' ? 'block' : 'none';
+  }
+  
+  const modal = document.getElementById('profileModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
 }
 
 function hideProfileModal() {
-  document.getElementById('profileModal').classList.add('hidden');
+  const modal = document.getElementById('profileModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
 }
 
-// AUTH LOGIN - FIX 422 ERROR
+// AUTH LOGIN
 async function handleLogin(e) {
   e.preventDefault();
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
+  const usernameEl = document.getElementById('loginUsername');
+  const passwordEl = document.getElementById('loginPassword');
+  
+  const username = usernameEl ? usernameEl.value.trim() : '';
+  const password = passwordEl ? passwordEl.value.trim() : '';
   
   if (!username || !password) {
     alert('Заполните логин и пароль');
@@ -112,14 +158,13 @@ async function handleLogin(e) {
   }
   
   try {
-    // Use FormData for proper content-type
     const formData = new FormData();
     formData.append('username', username);
     formData.append('password', password);
     
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
-      body: formData  // Don't set Content-Type, browser will set it
+      body: formData
     });
     
     if (response.ok) {
@@ -136,7 +181,7 @@ async function handleLogin(e) {
       loadFavoritesSet();
     } else {
       const error = await response.json();
-      alert(анат данные: ' + (error.detail || 'Ошибка входа'));
+      alert('Неверные данные: ' + (error.detail || 'Ошибка входа'));
     }
   } catch (err) {
     console.error('Login error:', err);
@@ -179,11 +224,13 @@ async function quickLogin(username) {
 
 async function handleRegister(e) {
   e.preventDefault();
-  const username = document.getElementById('registerUsername').value.trim();
-  const email = document.getElementById('registerEmail').value.trim();
-  const password = document.getElementById('registerPassword').value.trim();
+  const usernameEl = document.getElementById('registerUsername');
+  const passwordEl = document.getElementById('registerPassword');
   
-  if (!username || !email || !password) {
+  const username = usernameEl ? usernameEl.value.trim() : '';
+  const password = passwordEl ? passwordEl.value.trim() : '';
+  
+  if (!username || !password) {
     alert('Заполните все поля');
     return;
   }
@@ -192,12 +239,15 @@ async function handleRegister(e) {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
+      body: JSON.stringify({ username, email: '', password })
     });
     
     if (response.ok) {
-      alert('Регистрация успешна! Нажмите "Вход" для вохода.');
-      document.getElementById('registerForm').reset();
+      alert('Регистрация успешна! Нажмите "Войти" для входа.');
+      const registerForm = document.getElementById('registerForm');
+      if (registerForm) {
+        registerForm.reset();
+      }
       switchAuthTab('login');
     } else {
       const error = await response.json();
@@ -270,26 +320,34 @@ function updateFavButtonStates() {
 
 function filterByPick(pick) {
   currentFilter.pick = pick;
-  document.querySelectorAll('.filter-block:first-child .chip-button').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
   
-  // Also update top bar buttons
+  // Update pill buttons
   document.querySelectorAll('.top-bar-center .pill-button').forEach(btn => btn.classList.remove('active'));
-  event.target.parentElement?.querySelector(`[onclick="filterByPick('${pick}')"]`)?.classList.add('active') || 
-  document.querySelectorAll('.top-bar-center .pill-button')[0].classList.add('active');
+  const activeBtn = Array.from(document.querySelectorAll('.top-bar-center .pill-button')).find(btn => btn.getAttribute('data-pick') === pick);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+  }
   
   renderMovies();
 }
 
 function filterByRating(rating) {
   currentFilter.rating = rating;
-  document.querySelectorAll('.filter-block:last-child .chip-button').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+  
+  // Update chip buttons
+  document.querySelectorAll('.rating-filter .chip-button').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = Array.from(document.querySelectorAll('.rating-filter .chip-button')).find(btn => btn.getAttribute('data-rating') === rating.toString());
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+  }
+  
   renderMovies();
 }
 
 function renderMovies() {
   const list = document.getElementById('moviesList');
+  if (!list) return;
+  
   list.innerHTML = '';
   
   let filtered = allMovies;
@@ -307,27 +365,30 @@ function renderMovies() {
   filtered.forEach(movie => {
     const li = document.createElement('li');
     li.className = 'movie-card';
+    li.dataset.id = movie.id;
     li.onclick = () => showMovieDetails(movie);
     
     const picksHtml = (movie.picks || []).map(p => 
-      `<div class="movie-pick-chip">${p}</div>`
+      `<span class="movie-pick-chip">${p}</span>`
     ).join('');
     
     li.innerHTML = `
       <div class="movie-poster-wrapper">
-        <img src="${movie.poster_url || 'https://via.placeholder.com/200x300'}" class="movie-poster" alt="${movie.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23333%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+        <img src="${movie.poster_url || 'https://via.placeholder.com/200x300'}" class="movie-poster" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300/333/666?text=No+Poster'">
       </div>
       <div class="movie-card-body">
         <div class="movie-card-header">
-          <div class="movie-title">${movie.title}</div>
+          <h3 class="movie-title">${movie.title}</h3>
           <button class="fav-button" data-movie-id="${movie.id}" onclick="event.stopPropagation(); toggleFavorite(${movie.id}, this)" title="Добавить в избранное">☆</button>
         </div>
         <div class="movie-meta">
-          <span>${movie.year}</span>
-          <span class="badge-rating">⭐ ${movie.rating}</span>
+          <span class="badge-rating">★ ${movie.rating}</span>
           <span class="badge-genre">${movie.genre || 'N/A'}</span>
         </div>
-        <div class="movie-picks">${picksHtml}</div>
+        <div class="movie-card-footer">
+          <span>${movie.year}</span>
+          <div class="movie-picks">${picksHtml}</div>
+        </div>
       </div>
     `;
     
@@ -339,52 +400,59 @@ function renderMovies() {
 
 async function showMovieDetails(movie) {
   selectedMovieId = movie.id;
-  const details = document.getElementById('detailsPanel');
+  const details = document.getElementById('movieDetails');
+  if (!details) return;
+  
   details.innerHTML = `
-    <div class="movie-details">
+    <div class="details-scroll">
       <div class="details-header-top">
         <div class="details-poster-wrapper">
           <img src="${movie.poster_url || 'https://via.placeholder.com/90x115'}" class="details-poster" alt="${movie.title}">
         </div>
         <div class="details-header">
           <div class="details-title-row">
-            <div>
-              <div class="details-title">${movie.title}</div>
-              <div class="details-year">${movie.year}</div>
-            </div>
+            <h2 class="details-title">${movie.title}</h2>
             <button class="fav-button" data-movie-id="${movie.id}" onclick="toggleFavorite(${movie.id}, this)" title="Добавить в избранное">☆</button>
           </div>
           <div class="details-meta-row">
+            <span>${movie.year}</span>
+            <span>•</span>
             <span>${movie.genre}</span>
-            <span style="background: rgba(46, 204, 113, 0.16); padding: 2px 6px; border-radius: 999px; color: #7bed9f;">⭐ ${movie.rating}</span>
+            <span>•</span>
+            <span class="badge-rating">★ ${movie.rating}</span>
           </div>
         </div>
       </div>
       
-      <div class="details-scroll">
-        <div class="details-section-title">О фильме</div>
-        <div class="details-overview">${movie.overview || 'Описание отсутствует'}</div>
-        
-        <div class="details-section-title" style="margin-top: 12px;">Рецензии</div>
-        <div id="reviewsList">Загружаю...</div>
-        
-        ${currentToken ? `
-          <div class="review-form">
-            <div class="form-row">
-              <label class="form-label">Моя рецензия</label>
-              <textarea class="input" id="reviewText" placeholder="Ваше мнение..." rows="2"></textarea>
-            </div>
-            <div class="review-form-rating-row">
-              <label class="form-label">Оценка (1-10)</label>
-              <input type="number" class="input review-rating-select" id="reviewRating" min="1" max="10" placeholder="10">
-            </div>
-            <button class="primary-button" onclick="submitReview(${movie.id})">Отправить</button>
-          </div>
-        ` : ''}
+      <div class="details-section">
+        <h4 class="details-section-title">Описание</h4>
+        <p class="details-overview">${movie.overview || 'Описание отсутствует'}</p>
       </div>
+      
+      <div class="details-section">
+        <h4 class="details-section-title">Рецензии</h4>
+        <div id="reviewsList">Гружу...</div>
+      </div>
+      
+      ${currentToken ? `
+      <div class="details-section">
+        <h4 class="details-section-title">Моя рецензия</h4>
+        <form class="review-form">
+          <div class="review-form-row">
+            <textarea class="input" id="reviewText" placeholder="Ваше мнение..." rows="3" required></textarea>
+          </div>
+          <div class="review-form-rating-row">
+            <label class="form-label">Оценка (1-10):</label>
+            <input type="number" class="input review-rating-select" id="reviewRating" min="1" max="10" value="8" required>
+            <button type="button" class="primary-button small" onclick="submitReview(${movie.id})">Okправить</button>
+          </div>
+        </form>
+      </div>
+      ` : ''}
     </div>
   `;
   
+  details.classList.remove('empty');
   loadReviews(movie.id);
   updateFavButtonStates();
 }
@@ -395,18 +463,18 @@ async function loadReviews(movieId) {
     if (response.ok) {
       const reviews = await response.json();
       const container = document.getElementById('reviewsList');
+      if (!container) return;
       
       if (reviews.length === 0) {
-        container.innerHTML = '<div class="placeholder-text">Рецензий нет</div>';
+        container.innerHTML = '<p style="color: var(--color-muted);">Рецензий нет</p>';
       } else {
         container.innerHTML = reviews.map(r => `
           <div class="review-item">
             <div class="review-header">
               <span class="review-author">${r.author_name}</span>
-              <span class="review-role">${r.author_role || 'Зритель'}</span>
-              <span class="review-rating-badge">⭐ ${r.rating}</span>
+              <span class="review-rating-badge">★ ${r.rating}</span>
             </div>
-            <div class="review-text">${r.text}</div>
+            <p class="review-text">${r.text}</p>
           </div>
         `).join('');
       }
@@ -417,8 +485,11 @@ async function loadReviews(movieId) {
 }
 
 async function submitReview(movieId) {
-  const text = document.getElementById('reviewText').value.trim();
-  const rating = parseInt(document.getElementById('reviewRating').value);
+  const textEl = document.getElementById('reviewText');
+  const ratingEl = document.getElementById('reviewRating');
+  
+  const text = textEl ? textEl.value.trim() : '';
+  const rating = ratingEl ? parseInt(ratingEl.value) : 0;
   
   if (!text || !rating) {
     alert('Заполните текст и оценку');
@@ -436,11 +507,12 @@ async function submitReview(movieId) {
     });
     
     if (response.ok) {
-      document.getElementById('reviewText').value = '';
-      document.getElementById('reviewRating').value = '';
+      if (textEl) textEl.value = '';
+      if (ratingEl) ratingEl.value = '8';
       loadReviews(movieId);
+      alert('Рецензия добавлена!');
     } else {
-      alert('Ошибка при аддении рецензии');
+      alert('Ошибка при добавлении рецензии');
     }
   } catch (err) {
     console.error(err);
@@ -486,12 +558,13 @@ async function loadFavorites() {
     if (response.ok) {
       const favorites = await response.json();
       const list = document.getElementById('favoritesList');
+      if (!list) return;
       
       if (favorites.length === 0) {
         list.innerHTML = '<li style="text-align: center; color: var(--color-muted); padding: 16px;">Избранных нет</li>';
       } else {
         list.innerHTML = favorites.map(m => `
-          <li class="movie-card" onclick="showMovieDetails({id: ${m.id}, title: '${m.title.replace(/'/g, "\\'")}'})">
+          <li class="movie-card" onclick="showMovieDetails({id: ${m.id}, title: '${m.title.replace(/'/g, "\\'")}'})" style="cursor: pointer;">
             <div class="movie-poster-wrapper">
               <img src="${m.poster_url}" class="movie-poster" alt="${m.title}">
             </div>
@@ -513,12 +586,20 @@ async function handleAddMovie(e) {
     return;
   }
   
-  const title = document.getElementById('adminTitle').value.trim();
-  const year = parseInt(document.getElementById('adminYear').value);
-  const genre = document.getElementById('adminGenre').value.trim();
-  const rating = parseFloat(document.getElementById('adminRating').value);
-  const overview = document.getElementById('adminOverview').value.trim();
-  const picks = Array.from(document.querySelectorAll('#addMovieForm input[name="picks"]:checked')).map(cb => cb.value);
+  const titleEl = document.getElementById('adminTitle');
+  const yearEl = document.getElementById('adminYear');
+  const genreEl = document.getElementById('adminGenre');
+  const ratingEl = document.getElementById('adminRating');
+  const overviewEl = document.getElementById('adminOverview');
+  
+  const title = titleEl ? titleEl.value.trim() : '';
+  const year = yearEl ? parseInt(yearEl.value) : 0;
+  const genre = genreEl ? genreEl.value.trim() : '';
+  const rating = ratingEl ? parseFloat(ratingEl.value) : 0;
+  const overview = overviewEl ? overviewEl.value.trim() : '';
+  
+  const picsCheckboxes = document.querySelectorAll('.admin-picks input[type="checkbox"]:checked');
+  const picks = Array.from(picsCheckboxes).map(cb => cb.value);
   
   if (!title || !year || !genre || !rating || !overview || picks.length === 0) {
     alert('Заполните все поля и выберите подборки');
@@ -537,7 +618,10 @@ async function handleAddMovie(e) {
     
     if (response.ok) {
       alert('Фильм добавлен!');
-      document.getElementById('addMovieForm').reset();
+      const form = document.getElementById('adminAddForm');
+      if (form) {
+        form.reset();
+      }
       loadMovies();
     } else {
       const error = await response.json();
